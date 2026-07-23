@@ -1,57 +1,87 @@
-<view class="sr-page">
-  <!-- 我的令数 -->
-  <view class="ling-banner">
-    <view class="sr-col">
-      <text class="ling-banner__label">我的长河令</text>
-      <text class="ling-banner__num">{{myLing}}</text>
+<view class="dk-page sr-enter">
+  <!-- 资产卡（弥散光 · 大数字） -->
+  <view class="asset sr-glow-card">
+    <view class="sr-glow-a"></view>
+    <view class="sr-glow-b"></view>
+    <view class="asset__head">
+      <text class="asset__label">我的长河令</text>
+      <image class="asset__icon" src="/assets/icons/ivory/activity-token.png" mode="aspectFit" />
     </view>
-    <text class="ling-banner__seal">令</text>
+    <view class="asset__balance">
+      <text class="asset__num sr-num">{{myLing}}</text>
+      <text class="asset__unit">令</text>
+    </view>
+    <view class="asset__actions">
+      <view class="asset__cta sr-touch" hover-class="sr-touch--cta" hover-stay-time="60" bindtap="goMycode">
+        <image class="asset__cta-icon" src="/assets/icons/ivory/activity-scan.png" mode="aspectFit" />
+        <text>出示令牌码</text>
+      </view>
+    </view>
   </view>
 
+  <!-- 江湖悬赏榜（整行可点） -->
+  <view class="dk-sec">
+    <text class="dk-sec__title">江湖悬赏榜</text>
+    <text class="dk-sec__sub">参与活动 · 赢奖励令数</text>
+  </view>
+  <view class="hunt sr-touch" hover-class="sr-touch--press" hover-stay-time="60"
+        wx:for="{{earnList}}" wx:key="id" data-id="{{item.id}}" bindtap="onEarnTap">
+    <view class="hunt__iconbox">
+      <image class="hunt__icon" src="/assets/icons/ivory/activity-task.png" mode="aspectFit" />
+    </view>
+    <view class="hunt__body">
+      <text class="hunt__name">{{item.name}}</text>
+      <text class="hunt__meta">{{item.time}} · {{item.location}}</text>
+    </view>
+    <view class="hunt__right">
+      <text class="hunt__reward">{{item.reward > 0 ? '奖励 ' + item.reward + ' 令' : '现场公示'}}</text>
+      <text wx:if="{{item.join > 0}}" class="hunt__join">参与 {{item.join}} 令</text>
+    </view>
+  </view>
+
+  <!-- 兑换（长按预览） -->
+  <view class="dk-sec">
+    <text class="dk-sec__title">侠客兑换</text>
+    <text class="dk-sec__sub">长按查看所需令数</text>
+  </view>
+  <view class="ex-grid">
+    <view class="ex sr-touch" hover-class="sr-touch--press" hover-stay-time="60"
+          wx:for="{{exchangeList}}" wx:key="id"
+          data-id="{{item.id}}" bindlongpress="onExchangePreview" bindtap="onExchangePreview">
+      <image class="ex__icon" src="/assets/icons/ivory/activity-reward.png" mode="aspectFit" />
+      <text class="ex__name">{{item.name}}</text>
+      <text class="ex__cost">{{item.cost ? item.cost + ' 令' : '介绍'}}</text>
+    </view>
+  </view>
+  <text class="dk-tip">※ 兑换与拍卖当前为预览展示，线上兑换将于秋季开放</text>
+
   <!-- 江湖故事 -->
-  <view class="sr-card">
-    <text class="sr-subtitle">江湖故事</text>
-    <view class="sr-divider"></view>
+  <view class="sr-dark-card">
+    <text class="dk-sec__title">江湖故事</text>
     <text class="story">{{story}}</text>
   </view>
 
-  <!-- 怎么赚令 -->
-  <view class="sr-card">
-    <text class="sr-subtitle">怎么赚令</text>
-    <view class="sr-divider"></view>
-    <view class="earn" wx:for="{{earnList}}" wx:key="id">
-      <view class="earn__main">
-        <text class="earn__name">{{item.name}}</text>
-        <text class="earn__meta">{{item.time}} · {{item.location}}</text>
-      </view>
-      <view class="earn__ling">
-        <text class="earn__reward">奖励 {{item.reward}} 令</text>
-        <text wx:if="{{item.join}}" class="earn__join">参与 {{item.join}} 令</text>
-      </view>
-    </view>
-  </view>
-
-  <!-- 怎么用令 -->
-  <view class="sr-card">
-    <text class="sr-subtitle">怎么用令</text>
-    <view class="sr-divider"></view>
-    <view class="exchange">
-      <view class="exchange__item" wx:for="{{exchangeList}}" wx:key="id">
-        <text class="exchange__name">{{item.name}}</text>
-        <text class="exchange__cost">{{item.cost ? item.cost + ' 令' : '介绍'}}</text>
-      </view>
-    </view>
-    <text class="tip">※ 兑换与拍卖当前为预览展示，线上兑换将于秋季开放</text>
-  </view>
-
   <!-- NPC 巡游 -->
-  <view class="sr-card">
-    <text class="sr-subtitle">NPC 巡游时刻</text>
-    <view class="sr-divider"></view>
+  <view class="sr-dark-card">
+    <text class="dk-sec__title">NPC 巡游时刻</text>
     <view class="npc" wx:for="{{npcSchedule}}" wx:key="id">
-      <text class="npc__name">{{item.name}}</text>
-      <text class="npc__time">{{item.time}}</text>
-      <text class="npc__route">{{item.route}}</text>
+      <image class="npc__icon" src="/assets/icons/ivory/activity-schedule.png" mode="aspectFit" />
+      <view class="npc__body">
+        <text class="npc__name">{{item.name}}</text>
+        <text class="npc__meta">{{item.time}} · {{item.route}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 长按兑换预览层 -->
+  <view class="pv" wx:if="{{preview}}" bindtap="closePreview">
+    <view class="pv__card sr-glow-card">
+      <view class="sr-glow-a"></view>
+      <image class="pv__icon" src="/assets/icons/ivory/activity-reward.png" mode="aspectFit" />
+      <text class="pv__name">{{preview.name}}</text>
+      <text class="pv__cost sr-num">{{preview.cost ? preview.cost : '—'}}</text>
+      <text class="pv__unit">{{preview.cost ? '所需令数' : '拍卖会仅作介绍 · 不做线上竞拍'}}</text>
+      <text class="pv__close">点击任意处关闭</text>
     </view>
   </view>
 </view>
