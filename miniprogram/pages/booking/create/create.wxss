@@ -1,7 +1,7 @@
 /* 溪降预约 - 创建预约 */
 .container {
   padding: 20rpx;
-  background-color: #F5F1E9;
+  background-color: #F6F4F0;
   min-height: 100vh;
   padding-bottom: 120rpx;
 }
@@ -10,7 +10,7 @@
 .session-info-card,
 .form-card,
 .notice-card {
-  background: #FAF6EE;
+  background: #FFFFFF;
   border-radius: 16rpx;
   padding: 30rpx;
   margin-bottom: 20rpx;
@@ -20,7 +20,7 @@
 .card-title {
   font-size: 28rpx;
   font-weight: bold;
-  color: #2A4D3A;
+  color: #244B36;
   margin-bottom: 20rpx;
   padding-bottom: 20rpx;
   border-bottom: 1rpx solid #E8E3D8;
@@ -46,7 +46,7 @@
 }
 
 .info-value.warning {
-  color: #B23A2E;
+  color: #F07055;
   font-weight: bold;
 }
 
@@ -86,7 +86,7 @@
 }
 
 .notice-dot {
-  color: #2A4D3A;
+  color: #244B36;
   margin-right: 12rpx;
   font-size: 28rpx;
 }
@@ -104,7 +104,7 @@
   bottom: 40rpx;
   left: 20rpx;
   right: 20rpx;
-  background: #2A4D3A;
+  background: #244B36;
   color: white;
   text-align: center;
   padding: 28rpx;

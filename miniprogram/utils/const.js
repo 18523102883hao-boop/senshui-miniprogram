@@ -56,12 +56,12 @@ const BENEFIT_TYPE = {
 
 // 主题色（供 JS 内联样式使用，wxss 见 app.wxss 变量）
 const THEME = {
-  bg: '#F5F1E9',
-  bgCard: '#FAF6EE',
-  primary: '#2A4D3A',
+  bg: '#F6F4F0',
+  bgCard: '#FFFFFF',
+  primary: '#244B36',
   primaryLight: '#3A6B4F',
-  seal: '#B23A2E',
-  gold: '#B8860B',
+  seal: '#F07055',
+  gold: '#D5A43A',
   text: '#2B2B2B',
   textSub: '#6B6B6B'
 }

@@ -1,13 +1,13 @@
 /* 溪降预约 - 场次列表 */
 .container {
   padding: 20rpx;
-  background-color: #F5F1E9;
+  background-color: #F6F4F0;
   min-height: 100vh;
 }
 
 /* 日期选择器 */
 .date-picker {
-  background: #FAF6EE;
+  background: #FFFFFF;
   border-radius: 16rpx;
   padding: 30rpx;
   margin-bottom: 20rpx;
@@ -23,7 +23,7 @@
 .date-text {
   font-size: 32rpx;
   font-weight: bold;
-  color: #2A4D3A;
+  color: #244B36;
 }
 
 .date-arrow {
@@ -37,7 +37,7 @@
 }
 
 .session-card {
-  background: #FAF6EE;
+  background: #FFFFFF;
   border-radius: 16rpx;
   padding: 30rpx;
   margin-bottom: 20rpx;
@@ -56,7 +56,7 @@
 .session-time {
   font-size: 36rpx;
   font-weight: bold;
-  color: #2A4D3A;
+  color: #244B36;
 }
 
 .session-status {
@@ -68,7 +68,7 @@
 }
 
 .session-status.closed {
-  color: #B23A2E;
+  color: #F07055;
   background: #FFEBEE;
 }
 
@@ -96,7 +96,7 @@
 }
 
 .info-value.warning {
-  color: #B23A2E;
+  color: #F07055;
 }
 
 .session-footer {
@@ -107,7 +107,7 @@
 
 .session-note {
   font-size: 24rpx;
-  color: #B23A2E;
+  color: #F07055;
 }
 
 /* 空状态 */
@@ -127,7 +127,7 @@
   bottom: 40rpx;
   left: 50%;
   transform: translateX(-50%);
-  background: #2A4D3A;
+  background: #244B36;
   color: white;
   padding: 20rpx 60rpx;
   border-radius: 50rpx;

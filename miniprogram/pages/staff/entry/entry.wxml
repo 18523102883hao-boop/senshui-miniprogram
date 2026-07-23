@@ -29,23 +29,23 @@
     </view>
 
     <view class="sr-card actions">
-      <view class="action" wx:if="{{role === 'front' || role === 'admin'}}" bindtap="goCharge">
+      <view class="action sr-touch" hover-class="sr-touch--press" hover-stay-time="60" wx:if="{{role === 'front' || role === 'admin'}}" bindtap="goCharge">
         <text class="action__title">补差价收款</text>
         <text class="action__desc">出示收款码 · 客户扫码升级补差价</text>
       </view>
-      <view class="action" wx:if="{{role === 'admin'}}" bindtap="goMaps">
+      <view class="action sr-touch" hover-class="sr-touch--press" hover-stay-time="60" wx:if="{{role === 'admin'}}" bindtap="goMaps">
         <text class="action__title">园区地图管理</text>
         <text class="action__desc">上传 / 更换 营地·溪降 游览图</text>
       </view>
-      <view class="action" wx:if="{{role === 'front' || role === 'admin'}}" bindtap="goLingExchange">
+      <view class="action sr-touch" hover-class="sr-touch--press" hover-stay-time="60" wx:if="{{role === 'front' || role === 'admin'}}" bindtap="goLingExchange">
         <text class="action__title">长河令兑换</text>
         <text class="action__desc">实体 ↔ 电子长河令 互兑</text>
       </view>
-      <view class="action" bindtap="goVerify">
+      <view class="action sr-touch" hover-class="sr-touch--press" hover-stay-time="60" bindtap="goVerify">
         <text class="action__title">会员核销台</text>
-        <text class="action__desc">扫码核销 令 / 酒 / 折扣券</text>
+        <text class="action__desc">扫码核销 令 / 生日 85 折</text>
       </view>
-      <view class="action" bindtap="goCreek">
+      <view class="action sr-touch" hover-class="sr-touch--press" hover-stay-time="60" bindtap="goCreek">
         <text class="action__title">溪降检票核销</text>
         <text class="action__desc">扫预约码 · 当场人数台账</text>
       </view>

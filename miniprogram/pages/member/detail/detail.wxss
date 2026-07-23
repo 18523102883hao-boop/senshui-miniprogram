@@ -1,15 +1,15 @@
 .detail { padding-bottom: 180rpx; }
 
 .hero {
-  background: linear-gradient(135deg, #2A4D3A, #1F3A2C);
+  background: linear-gradient(135deg, #244B36, #173628);
   border-radius: var(--sr-radius); padding: 48rpx 40rpx; margin-bottom: 24rpx;
   display: flex; flex-direction: column; position: relative; overflow: hidden;
 }
 .hero__badge {
-  align-self: flex-start; font-size: 22rpx; font-weight: 700; color: #1F3A2C;
-  background: #F5D98B; border-radius: 6rpx; padding: 2rpx 14rpx;
+  align-self: flex-start; font-size: 22rpx; font-weight: 700; color: #173628;
+  background: #E0B95C; border-radius: 6rpx; padding: 2rpx 14rpx;
 }
-.hero__title { font-size: 44rpx; font-weight: 800; color: #F5D98B; margin-top: 20rpx; }
+.hero__title { font-size: 44rpx; font-weight: 800; color: #E0B95C; margin-top: 20rpx; }
 .hero__price { display: flex; align-items: baseline; margin-top: 12rpx; color: #fff; }
 .hero__cur { font-size: 32rpx; }
 .hero__num { font-size: 72rpx; font-weight: 800; margin-left: 4rpx; }

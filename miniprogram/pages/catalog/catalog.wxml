@@ -1,10 +1,16 @@
 <view class="sr-page">
-  <!-- 分类 tab -->
-  <view class="tabs" wx:if="{{sections.length}}">
-    <view wx:for="{{sections}}" wx:key="key"
-          class="tab {{activeKey === item.key ? 'tab--on' : ''}}"
-          data-key="{{item.key}}" bindtap="switchTab">{{item.title}}</view>
-  </view>
+  <!-- 分类（横滑选择 · 吸附选中态） -->
+  <scroll-view scroll-x enable-flick class="tabs-scroll" wx:if="{{sections.length}}">
+    <view class="tabs">
+      <view wx:for="{{sections}}" wx:key="key"
+            class="tab sr-touch {{activeKey === item.key ? 'tab--on' : ''}}"
+            hover-class="sr-touch--press" hover-stay-time="60"
+            data-key="{{item.key}}" bindtap="switchTab">
+        <image class="tab__icon" src="{{item.iconPath}}" mode="aspectFit" />
+        <text class="tab__text">{{item.title}}</text>
+      </view>
+    </view>
+  </scroll-view>
 
   <block wx:for="{{sections}}" wx:key="key">
     <view wx:if="{{activeKey === item.key}}">
