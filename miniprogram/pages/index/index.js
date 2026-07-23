@@ -27,6 +27,12 @@ Page({
     this.loadData()
   },
 
+  onShow() {
+    if (typeof this.getTabBar === 'function' && this.getTabBar()) {
+      this.getTabBar().setData({ selected: 0, theme: 'light' })
+    }
+  },
+
   onPullDownRefresh() {
     this.loadData().then(() => wx.stopPullDownRefresh())
   },

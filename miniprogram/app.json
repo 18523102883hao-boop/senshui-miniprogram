@@ -26,21 +26,21 @@
   ],
   "window": {
     "backgroundTextStyle": "dark",
-    "navigationBarBackgroundColor": "#2A4D3A",
+    "navigationBarBackgroundColor": "#244B36",
     "navigationBarTitleText": "森水长河",
     "navigationBarTextStyle": "white",
-    "backgroundColor": "#F5F1E9",
+    "backgroundColor": "#F6F4F0",
     "enablePullDownRefresh": false
   },
   "tabBar": {
-    "color": "#8A8072",
-    "selectedColor": "#2A4D3A",
-    "backgroundColor": "#FAF6EE",
-    "borderStyle": "white",
+    "custom": true,
+    "color": "#8B938E",
+    "selectedColor": "#244B36",
+    "backgroundColor": "#F6F4F0",
     "list": [
-      { "pagePath": "pages/index/index", "text": "向导", "iconPath": "images/tab/guide.png", "selectedIconPath": "images/tab/guide-on.png" },
-      { "pagePath": "pages/ling/ling", "text": "长河令", "iconPath": "images/tab/ling.png", "selectedIconPath": "images/tab/ling-on.png" },
-      { "pagePath": "pages/mine/mine", "text": "我的", "iconPath": "images/tab/mine.png", "selectedIconPath": "images/tab/mine-on.png" }
+      { "pagePath": "pages/index/index", "text": "向导" },
+      { "pagePath": "pages/ling/ling", "text": "长河令" },
+      { "pagePath": "pages/mine/mine", "text": "我的" }
     ]
   },
   "usingComponents": {},

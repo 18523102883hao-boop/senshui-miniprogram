@@ -1,0 +1,16 @@
+<view class="bar bar--{{theme}}">
+  <view
+    wx:for="{{list}}"
+    wx:key="pagePath"
+    class="item"
+    data-index="{{index}}"
+    bindtap="onTap"
+  >
+    <image
+      class="item__icon {{selected === index ? 'is-on' : ''}}"
+      src="{{theme === 'dark' ? item.iconDark : (selected === index ? item.iconActive : item.icon)}}"
+      mode="aspectFit"
+    />
+    <text class="item__label {{selected === index ? 'is-on' : ''}}">{{item.text}}</text>
+  </view>
+</view>
