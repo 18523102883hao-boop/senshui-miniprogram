@@ -1,0 +1,1 @@
+Component({externalClasses:['custom-class'],methods:{onTap(e){this.triggerEvent('tap',e.detail)},onLongPress(e){this.triggerEvent('longpress',e.detail)}}});

@@ -1,0 +1,1 @@
+.vibe-press{transform:scale(1);transition:transform 120ms cubic-bezier(.2,.8,.2,1),opacity 120ms ease;transform-origin:center}.vibe-press--active{transform:scale(.96);opacity:.92}

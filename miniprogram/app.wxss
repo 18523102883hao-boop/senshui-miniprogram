@@ -83,3 +83,19 @@ page {
   background: var(--sr-seal); color: #fff;
 }
 .sr-divider { height: 1rpx; background: var(--sr-line); margin: 24rpx 0; }
+
+/* ---------- 黑金会员卡（可复用，含流光反光）---------- */
+.sr-goldcard {
+  background: linear-gradient(135deg, #14231B 0%, #2A4D3A 55%, #1B3529 100%);
+  position: relative; overflow: hidden;
+}
+.sr-goldcard::after {
+  content: ''; position: absolute; top: 0; left: -120%;
+  width: 55%; height: 100%; pointer-events: none;
+  background: linear-gradient(100deg, rgba(255,255,255,0) 0%, rgba(245,217,139,0.16) 50%, rgba(255,255,255,0) 100%);
+  transform: skewX(-22deg); animation: sr-shine 5s ease-in-out infinite;
+}
+@keyframes sr-shine { 0% { left: -120%; } 30% { left: 220%; } 100% { left: 220%; } }
+.sr-goldcard > * { position: relative; z-index: 1; }
+/* 金色描边点缀 */
+.sr-gold-hairline { border: 1rpx solid rgba(245,217,139,0.28); }

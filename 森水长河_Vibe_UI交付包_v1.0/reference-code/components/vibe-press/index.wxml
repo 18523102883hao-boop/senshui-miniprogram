@@ -1,0 +1,1 @@
+<view class="vibe-press custom-class" hover-class="vibe-press--active" hover-start-time="0" hover-stay-time="90" bindtap="onTap" bindlongpress="onLongPress"><slot /></view>
