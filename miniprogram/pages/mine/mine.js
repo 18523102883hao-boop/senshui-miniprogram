@@ -4,6 +4,7 @@ const auth = require('../../utils/auth.js')
 const request = require('../../utils/request.js')
 const env = require('../../env.js')
 const { makePhoneCall } = require('../../utils/util.js')
+const { haptic } = require('../../utils/haptics.js')
 
 Page({
   data: {
@@ -13,10 +14,10 @@ Page({
     member: null, // { status, expireText }
     frontPhone: env.frontDeskPhone,
     grid: [
-      { key: 'coupon', title: '我的卡券', sub: '' },
-      { key: 'ling', title: '长河令', sub: '' },
-      { key: 'lingcode', title: '我的令码', sub: '' },
-      { key: 'order', title: '我的订单', sub: '' }
+      { key: 'coupon', title: '我的卡券', sub: '', icon: '/assets/icons/forest/mine-coupon.png' },
+      { key: 'ling', title: '长河令', sub: '', icon: '/assets/icons/forest/activity-token.png' },
+      { key: 'lingcode', title: '我的令码', sub: '', icon: '/assets/icons/forest/activity-scan.png' },
+      { key: 'order', title: '我的订单', sub: '', icon: '/assets/icons/forest/mine-orders.png' }
       // { key: 'booking', title: '我的预约', sub: '' } // 溪降预约暂不开放，后续恢复；导航逻辑(onGrid)保留
     ]
   },
@@ -63,11 +64,13 @@ Page({
   },
 
   goMember() {
+    haptic('light')
     const url = this.data.member ? '/pages/member/card/card' : '/pages/member/detail/detail'
     wx.navigateTo({ url })
   },
 
   onGrid(e) {
+    haptic('light')
     const key = e.currentTarget.dataset.key
     if (key === 'ling') {
       wx.switchTab({ url: '/pages/ling/ling' })

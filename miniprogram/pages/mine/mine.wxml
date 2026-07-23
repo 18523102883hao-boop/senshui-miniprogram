@@ -1,4 +1,4 @@
-<view class="sr-page">
+<view class="sr-page sr-enter">
   <!-- 用户信息 -->
   <view class="profile">
     <image class="profile__avatar" src="{{userInfo.avatarUrl}}" mode="aspectFill" />
@@ -14,8 +14,8 @@
     </view>
   </view>
 
-  <!-- 会员卡入口 -->
-  <view class="mcard" bindtap="goMember">
+  <!-- 会员卡（黑金 · 整卡可点） -->
+  <view class="mcard sr-goldcard sr-gold-hairline sr-touch" hover-class="sr-touch--press" hover-stay-time="60" bindtap="goMember">
     <view class="mcard__left">
       <text class="mcard__title">森水会员卡</text>
       <text class="mcard__desc">{{member ? '有效期至 ' + member.expireText : '9.9 元 · 1000 长河令 + 生日 85 折'}}</text>
@@ -23,24 +23,23 @@
     <text class="mcard__action">{{member ? '查看卡包' : '立即开卡'}}</text>
   </view>
 
-  <!-- 功能宫格 -->
-  <view class="grid">
-    <view
-      class="grid__item"
-      wx:for="{{grid}}"
-      wx:key="key"
-      data-key="{{item.key}}"
-      bindtap="onGrid"
-    >
-      <text class="grid__title">{{item.title}}</text>
-      <text class="grid__sub">{{item.sub}}</text>
+  <!-- 我的服务（整行可点） -->
+  <view class="svc-list">
+    <view class="svc sr-touch" hover-class="sr-touch--press" hover-stay-time="60"
+          wx:for="{{grid}}" wx:key="key" data-key="{{item.key}}" bindtap="onGrid">
+      <image class="svc__icon" src="{{item.icon}}" mode="aspectFit" />
+      <text class="svc__title">{{item.title}}</text>
+      <text class="svc__sub">{{item.sub}}</text>
+      <image class="svc__arrow" src="/assets/icons/forest/chevron-right.png" mode="aspectFit" />
     </view>
-  </view>
 
-  <!-- 客服 -->
-  <view class="sr-card contact" bindtap="callFront">
-    <text class="contact__text">联系前台 / 客服</text>
-    <text class="contact__phone">{{frontPhone}} ›</text>
+    <!-- 联系前台 -->
+    <view class="svc sr-touch" hover-class="sr-touch--press" hover-stay-time="60" bindtap="callFront">
+      <image class="svc__icon" src="/assets/icons/forest/customer-service.png" mode="aspectFit" />
+      <text class="svc__title">联系前台 / 客服</text>
+      <text class="svc__sub sr-num">{{frontPhone}}</text>
+      <image class="svc__arrow" src="/assets/icons/forest/chevron-right.png" mode="aspectFit" />
+    </view>
   </view>
 
   <!-- 员工模式（隐藏入口） -->
