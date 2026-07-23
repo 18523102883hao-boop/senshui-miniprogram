@@ -1,39 +1,47 @@
 /* ============================================================
-   森水长河 · 设计系统 Token（长河令江湖视觉）
-   配色：米白底 + 墨绿主 + 朱砂印章点缀 + 铜金辅助
-   在 page 上定义 CSS 变量，自定义组件可继承（变量穿透样式隔离）
+   森水长河 · 设计系统 Token（Vibe UI v1.0 · 依据交付包 STYLE.md）
+   浅色：自然米白 + 森林绿 + 珊瑚CTA + 山野金（金仅用于令/奖励/会员）
+   深色：长河令沉浸页专用（#121212 / #1C1C1E）
+   变量名沿用 --sr-*，全站类名不变，值按新规范统一。
    ============================================================ */
 page {
   /* 背景 */
-  --sr-bg: #F5F1E9;
-  --sr-bg-card: #FAF6EE;
-  --sr-bg-sunken: #EFE8DA;
-  /* 主色（墨绿） */
-  --sr-primary: #2A4D3A;
-  --sr-primary-light: #3A6B4F;
-  --sr-primary-weak: #E4ECE6;
-  /* 强调（朱砂印章） */
-  --sr-seal: #B23A2E;
-  --sr-seal-light: #C85A4C;
-  /* 辅助（铜金） */
-  --sr-gold: #B8860B;
-  --sr-gold-light: #C9A063;
+  --sr-bg: #F6F4F0;             /* bg-light */
+  --sr-bg-card: #FFFFFF;        /* surface-light */
+  --sr-bg-sunken: #E9EEE8;      /* mist */
+  /* 主色（森林绿） */
+  --sr-primary: #244B36;        /* forest */
+  --sr-primary-light: #3A6749;  /* moss */
+  --sr-primary-weak: #E9EEE8;   /* mist */
+  --sr-primary-deep: #173628;   /* forest-deep */
+  /* 强调（珊瑚 · 交易CTA/强提醒） */
+  --sr-seal: #F07055;           /* coral */
+  --sr-seal-light: #F08A73;
+  /* 辅助（山野金 · 仅令/奖励/会员） */
+  --sr-gold: #D5A43A;
+  --sr-gold-light: #E0B95C;
   /* 文字 */
-  --sr-text: #2B2B2B;
-  --sr-text-sub: #6B6B6B;
-  --sr-text-weak: #9A9384;
-  --sr-text-invert: #FDFBF6;
+  --sr-text: #172019;
+  --sr-text-sub: #7D867F;
+  --sr-text-weak: #8B938E;
+  --sr-text-invert: #F7F3EA;
   /* 描边 / 分隔 */
-  --sr-border: #E5DDD3;
-  --sr-line: #EAE3D7;
+  --sr-border: #E9EEE8;
+  --sr-line: #EFF2EE;
   /* 状态 */
-  --sr-success: #2A7D4F;
-  --sr-warning: #C77B18;
-  --sr-danger: #B23A2E;
-  /* 圆角 / 阴影 */
-  --sr-radius: 20rpx;
-  --sr-radius-sm: 12rpx;
-  --sr-shadow: 0 8rpx 32rpx rgba(42, 77, 58, 0.08);
+  --sr-success: #36B66A;
+  --sr-warning: #D5A43A;
+  --sr-danger: #F07055;
+  /* 深色主题（长河令页） */
+  --sr-dark-bg: #121212;
+  --sr-dark-card: #1C1C1E;
+  --sr-dark-muted: #969B98;
+  /* 圆角四档 / 阴影 */
+  --sr-radius-sm: 24rpx;
+  --sr-radius: 32rpx;
+  --sr-radius-lg: 40rpx;
+  --sr-radius-xl: 56rpx;
+  --sr-shadow: 0 12rpx 40rpx rgba(30, 55, 40, 0.06);
 
   background: var(--sr-bg);
   color: var(--sr-text);
@@ -57,12 +65,13 @@ page {
 .sr-fill { flex: 1; }
 
 /* ---------- 文字类 ---------- */
-.sr-title { font-size: 40rpx; font-weight: 700; color: var(--sr-primary); letter-spacing: 2rpx; }
-.sr-subtitle { font-size: 32rpx; font-weight: 600; color: var(--sr-text); }
+.sr-title { font-size: 48rpx; font-weight: 700; color: var(--sr-primary); letter-spacing: 2rpx; }
+.sr-subtitle { font-size: 32rpx; font-weight: 650; color: var(--sr-text); }
 .sr-text { font-size: 28rpx; color: var(--sr-text); }
 .sr-text-sub { font-size: 26rpx; color: var(--sr-text-sub); }
 .sr-text-weak { font-size: 24rpx; color: var(--sr-text-weak); }
 .sr-seal-text { color: var(--sr-seal); font-weight: 700; }
+.sr-num { font-variant-numeric: tabular-nums; }
 
 /* ---------- 按钮类 ---------- */
 .sr-btn {
@@ -70,32 +79,75 @@ page {
   height: 88rpx; border-radius: 44rpx; font-size: 30rpx; font-weight: 600;
   background: var(--sr-primary); color: var(--sr-text-invert);
   border: none;
+  transition: transform 0.12s ease-out, filter 0.12s ease-out;
 }
 .sr-btn::after { border: none; }
 .sr-btn--seal { background: var(--sr-seal); }
 .sr-btn--ghost { background: transparent; color: var(--sr-primary); border: 2rpx solid var(--sr-primary); }
 .sr-btn--disabled { background: var(--sr-bg-sunken); color: var(--sr-text-weak); }
 
-/* ---------- 徽章 / 印章 ---------- */
+/* ---------- 徽章 / 分隔 ---------- */
 .sr-badge {
   display: inline-flex; align-items: center; justify-content: center;
-  padding: 4rpx 16rpx; border-radius: 8rpx; font-size: 22rpx;
+  padding: 4rpx 16rpx; border-radius: 12rpx; font-size: 22rpx;
   background: var(--sr-seal); color: #fff;
 }
 .sr-divider { height: 1rpx; background: var(--sr-line); margin: 24rpx 0; }
 
-/* ---------- 黑金会员卡（可复用，含流光反光）---------- */
+/* ---------- 按压态（整卡可点击 · hover-class 方案）----------
+   用法：class="sr-card sr-touch" hover-class="sr-touch--press" hover-stay-time="60"
+   主 CTA：hover-class="sr-touch--cta" */
+.sr-touch { transition: transform 0.13s ease-out, filter 0.13s ease-out; }
+.sr-touch--press { transform: scale(0.96); }
+.sr-touch--cta { transform: scale(0.94); filter: brightness(0.94); }
+
+/* ---------- 图标 ---------- */
+.sr-icon { width: 44rpx; height: 44rpx; }
+.sr-icon--lg { width: 56rpx; height: 56rpx; }
+.sr-icon--sm { width: 32rpx; height: 32rpx; }
+
+/* ---------- 深色主题（长河令沉浸页）---------- */
+.sr-dark-card {
+  background: var(--sr-dark-card);
+  border-radius: var(--sr-radius);
+  padding: 32rpx;
+  margin-bottom: 24rpx;
+}
+/* 弥散光资产卡：两个绝对定位 radial-gradient 光层（不依赖伪元素） */
+.sr-glow-card {
+  background: var(--sr-dark-card);
+  border-radius: var(--sr-radius-xl);
+  position: relative; overflow: hidden;
+}
+.sr-glow-a {
+  position: absolute; width: 460rpx; height: 460rpx; right: -140rpx; top: -180rpx;
+  background: radial-gradient(circle, rgba(213, 164, 58, 0.20) 0%, rgba(213, 164, 58, 0) 65%);
+  pointer-events: none;
+}
+.sr-glow-b {
+  position: absolute; width: 520rpx; height: 520rpx; left: -180rpx; bottom: -240rpx;
+  background: radial-gradient(circle, rgba(58, 103, 73, 0.32) 0%, rgba(58, 103, 73, 0) 65%);
+  pointer-events: none;
+}
+
+/* ---------- 黑金会员卡（浅色区可复用，含流光反光）---------- */
 .sr-goldcard {
-  background: linear-gradient(135deg, #14231B 0%, #2A4D3A 55%, #1B3529 100%);
+  background: linear-gradient(135deg, #102016 0%, #244B36 55%, #173628 100%);
   position: relative; overflow: hidden;
 }
 .sr-goldcard::after {
   content: ''; position: absolute; top: 0; left: -120%;
   width: 55%; height: 100%; pointer-events: none;
-  background: linear-gradient(100deg, rgba(255,255,255,0) 0%, rgba(245,217,139,0.16) 50%, rgba(255,255,255,0) 100%);
+  background: linear-gradient(100deg, rgba(255,255,255,0) 0%, rgba(213,164,58,0.16) 50%, rgba(255,255,255,0) 100%);
   transform: skewX(-22deg); animation: sr-shine 5s ease-in-out infinite;
 }
 @keyframes sr-shine { 0% { left: -120%; } 30% { left: 220%; } 100% { left: 220%; } }
 .sr-goldcard > * { position: relative; z-index: 1; }
-/* 金色描边点缀 */
-.sr-gold-hairline { border: 1rpx solid rgba(245,217,139,0.28); }
+.sr-gold-hairline { border: 1rpx solid rgba(213, 164, 58, 0.30); }
+
+/* ---------- 页面进入动效（transform/opacity only）---------- */
+.sr-enter { animation: sr-enter 0.34s cubic-bezier(0.16, 1, 0.3, 1) both; }
+@keyframes sr-enter {
+  from { opacity: 0; transform: translateY(16rpx) scale(0.985); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
