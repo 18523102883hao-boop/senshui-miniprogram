@@ -1,6 +1,6 @@
 # T25 · Vibe UI/UX 重构 —— 现状审计与改造计划
 
-- 状态：📋 待老板确认（确认前不动代码）
+- 状态：🧪 批0~8 代码完成（vibe-ui 分支 7 个提交）· 待开发者工具/真机验收（批9）
 - 依据：`森水长河_Vibe_UI交付包_v1.0/`（STYLE.md / ICON_MANIFEST.md / icon-map.json / target-board）
 - 回滚机制：git 分支 `vibe-ui`，每批次一个 commit 即回滚点
 
