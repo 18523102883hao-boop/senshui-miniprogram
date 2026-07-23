@@ -1,0 +1,51 @@
+<!-- 溪降预约 - 场次列表 -->
+<view class="container">
+  <!-- 日期选择器 -->
+  <view class="date-picker">
+    <picker mode="date" value="{{selectedDate}}" start="{{today}}" bindchange="onDateChange">
+      <view class="date-display">
+        <text class="date-text">{{formatDate(selectedDate)}}</text>
+        <text class="date-arrow">▼</text>
+      </view>
+    </picker>
+  </view>
+
+  <!-- 场次列表 -->
+  <view class="session-list" wx:if="{{sessions.length > 0}}">
+    <view class="session-card" wx:for="{{sessions}}" wx:key="_id" bindtap="onSelectSession" data-id="{{item._id}}">
+      <view class="session-header">
+        <text class="session-time">{{item.startTime}}</text>
+        <text class="session-status {{item.status === 'closed' ? 'closed' : ''}}">
+          {{item.status === 'open' ? '开放中' : '已关闭'}}
+        </text>
+      </view>
+      <view class="session-body">
+        <view class="session-info">
+          <text class="info-label">剩余名额</text>
+          <text class="info-value {{item.remaining <= 5 ? 'warning' : ''}}">{{item.remaining}}</text>
+        </view>
+        <view class="session-info">
+          <text class="info-label">总容量</text>
+          <text class="info-value">{{item.capacity}}</text>
+        </view>
+        <view class="session-info">
+          <text class="info-label">已预约</text>
+          <text class="info-value">{{item.booked}}</text>
+        </view>
+      </view>
+      <view class="session-footer" wx:if="{{item.status === 'closed' && item.note}}">
+        <text class="session-note">{{item.note}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty-state" wx:else>
+    <text class="empty-text">当日暂无场次</text>
+  </view>
+
+  <!-- 我的预约入口 -->
+  <view class="my-bookings-btn" bindtap="goToMyBookings">
+    <text>我的预约</text>
+  </view>
+</view>

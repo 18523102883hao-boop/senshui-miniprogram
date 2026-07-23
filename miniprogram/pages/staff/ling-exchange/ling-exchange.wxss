@@ -1,0 +1,20 @@
+.tip { display: block; font-size: 24rpx; color: var(--sr-text-sub); line-height: 1.7; margin-top: 16rpx; }
+
+.cust-bal { margin-top: 16rpx; }
+.bal { font-size: 40rpx; font-weight: 700; color: var(--sr-primary); }
+
+.dirs { display: flex; gap: 16rpx; }
+.dir {
+  flex: 1; padding: 24rpx; border-radius: var(--sr-radius-sm);
+  background: var(--sr-bg-sunken); border: 2rpx solid transparent;
+  display: flex; flex-direction: column;
+}
+.dir--on { background: var(--sr-primary-weak); border-color: var(--sr-primary); }
+.dir__t { font-size: 28rpx; font-weight: 600; color: var(--sr-text); }
+.dir__d { font-size: 22rpx; color: var(--sr-text-sub); margin-top: 6rpx; }
+
+.field { display: flex; align-items: center; padding: 24rpx 0; border-bottom: 1rpx solid var(--sr-line); margin-top: 8rpx; }
+.field__label { width: 160rpx; font-size: 28rpx; color: var(--sr-text-sub); }
+.field__input { flex: 1; font-size: 28rpx; color: var(--sr-text); }
+
+.sr-btn { margin-top: 32rpx; }

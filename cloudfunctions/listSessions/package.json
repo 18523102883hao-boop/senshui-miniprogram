@@ -1,0 +1,9 @@
+{
+  "name": "listSessions",
+  "version": "1.0.0",
+  "description": "查询场次列表云函数 - 按日期查询余位",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3"
+  }
+}

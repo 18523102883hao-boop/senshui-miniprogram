@@ -1,0 +1,12 @@
+.tip { display: block; font-size: 24rpx; color: var(--sr-text-sub); margin-bottom: 24rpx; }
+.field { display: flex; align-items: center; padding: 20rpx 0; border-bottom: 1rpx solid var(--sr-line); }
+.field__label { width: 140rpx; font-size: 28rpx; color: var(--sr-text-sub); }
+.field__input { flex: 1; font-size: 28rpx; color: var(--sr-text); }
+.info { padding: 12rpx 0; }
+
+.actions { display: flex; flex-direction: column; gap: 16rpx; }
+.action { background: var(--sr-primary-weak); border-radius: var(--sr-radius-sm); padding: 28rpx; display: flex; flex-direction: column; }
+.action__title { font-size: 30rpx; font-weight: 600; color: var(--sr-primary); }
+.action__desc { font-size: 24rpx; color: var(--sr-text-sub); margin-top: 6rpx; }
+.action--soon { background: var(--sr-bg-sunken); }
+.action--soon .action__title { color: var(--sr-text-weak); }

@@ -1,0 +1,91 @@
+<view class="sr-page">
+  <!-- 无收款权限 -->
+  <view class="sr-card" wx:if="{{loaded && !canCharge}}">
+    <text class="sr-subtitle">补差价收款</text>
+    <view class="sr-divider"></view>
+    <text class="tip">当前账号无收款权限。收款仅限「前台 / 管理员」角色，请在员工模式完成绑定并由管理员审批。</text>
+  </view>
+
+  <block wx:if="{{loaded && canCharge}}">
+    <!-- 收款合计 -->
+    <view class="sr-card">
+      <view class="sr-row-between">
+        <view class="stat">
+          <text class="stat__num">¥{{today.totalYuan}}</text>
+          <text class="stat__label">今日收款 · {{today.count}} 笔</text>
+        </view>
+        <view class="stat stat--right">
+          <text class="stat__num stat__num--sub">¥{{all.totalYuan}}</text>
+          <text class="stat__label">累计 · {{all.count}} 笔</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 发起收款 -->
+    <view class="sr-card">
+      <text class="sr-subtitle">发起收款</text>
+      <view class="sr-divider"></view>
+
+      <text class="group-label">选择升级项目</text>
+      <view class="items">
+        <view wx:for="{{items}}" wx:key="id"
+              class="item {{selectedId === item.id ? 'item--on' : ''}}"
+              data-id="{{item.id}}" bindtap="selectItem">
+          <text class="item__label">{{item.label}}</text>
+          <text class="item__price">¥{{item.priceYuan}}</text>
+        </view>
+        <text wx:if="{{items.length === 0}}" class="tip">暂无预设价目，可直接手动输入金额。</text>
+      </view>
+
+      <text class="group-label">或手动输入金额</text>
+      <view class="field">
+        <text class="field__label">金额(元)</text>
+        <input class="field__input" type="digit" data-field="manualAmount"
+               value="{{manualAmount}}" bindinput="onManualAmount" placeholder="如 120" />
+      </view>
+      <view class="field">
+        <text class="field__label">备注</text>
+        <input class="field__input" data-field="manualLabel"
+               value="{{manualLabel}}" bindinput="onManualLabel" placeholder="如 单溪降升营地（选填）" />
+      </view>
+
+      <button class="sr-btn" bindtap="createCharge">生成收款码</button>
+    </view>
+
+    <!-- 我的收款明细 -->
+    <view class="sr-card">
+      <text class="sr-subtitle">我的收款</text>
+      <view class="sr-divider"></view>
+      <view wx:for="{{list}}" wx:key="outTradeNo" class="sr-row-between record">
+        <view class="record__left">
+          <text class="record__label">{{item.itemLabel}}</text>
+          <text class="record__time">{{item.timeText}}</text>
+        </view>
+        <text class="record__amount">+¥{{item.amountYuan}}</text>
+      </view>
+      <text wx:if="{{list.length === 0}}" class="tip">暂无收款记录。</text>
+    </view>
+
+    <!-- 管理员汇总入口 -->
+    <view class="sr-card actions" wx:if="{{isAdmin}}">
+      <view class="action" bindtap="goSummary">
+        <text class="action__title">全员收款汇总</text>
+        <text class="action__desc">按员工统计金额 · 导出算提成</text>
+      </view>
+    </view>
+  </block>
+
+  <!-- 收款码弹层 -->
+  <view class="mask" wx:if="{{qr}}">
+    <view class="qr-card">
+      <text class="qr-card__title">请客户微信扫码支付</text>
+      <image class="qr-card__img" src="{{qr.qrBase64}}" mode="widthFix" />
+      <text class="qr-card__amount">¥{{qr.amountYuan}}</text>
+      <text class="qr-card__label">{{qr.itemLabel}}</text>
+      <view class="qr-card__status" wx:if="{{waiting}}">
+        <text class="dot"></text><text class="qr-card__status-text">等待客户支付…到账后自动提示</text>
+      </view>
+      <button class="sr-btn sr-btn--ghost" bindtap="closeQr">完成 / 关闭</button>
+    </view>
+  </view>
+</view>

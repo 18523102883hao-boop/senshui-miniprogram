@@ -1,0 +1,42 @@
+<view class="sr-page">
+  <view class="sr-card" wx:if="{{loaded && denied}}">
+    <text class="sr-subtitle">收款汇总</text>
+    <view class="sr-divider"></view>
+    <text class="tip">需要管理员权限。请在员工绑定中将角色设为「管理员(admin)」。</text>
+  </view>
+
+  <block wx:if="{{loaded && !denied}}">
+    <!-- 时间筛选 -->
+    <view class="tabs">
+      <view wx:for="{{ranges}}" wx:key="key"
+            class="tab {{rangeKey === item.key ? 'tab--on' : ''}}"
+            data-key="{{item.key}}" bindtap="switchRange">{{item.label}}</view>
+    </view>
+
+    <!-- 总计 -->
+    <view class="sr-card total">
+      <text class="total__num">¥{{grandTotalYuan}}</text>
+      <text class="total__label">合计收款 · {{grandCount}} 笔</text>
+    </view>
+
+    <!-- 按员工 -->
+    <view class="sr-card">
+      <view class="sr-row-between th">
+        <text class="th__name">员工</text>
+        <text class="th__count">笔数</text>
+        <text class="th__amount">金额</text>
+      </view>
+      <view wx:for="{{byStaff}}" wx:key="staffNo" class="sr-row-between tr">
+        <view class="tr__name">
+          <text class="tr__staff">{{item.staffName}}</text>
+          <text class="tr__no" wx:if="{{item.staffNo}}">#{{item.staffNo}}</text>
+        </view>
+        <text class="tr__count">{{item.count}}</text>
+        <text class="tr__amount">¥{{item.totalYuan}}</text>
+      </view>
+      <text wx:if="{{byStaff.length === 0}}" class="tip">该时间段暂无收款。</text>
+    </view>
+
+    <button class="sr-btn sr-btn--ghost" bindtap="copyCsv">复制明细 CSV（粘贴到表格）</button>
+  </block>
+</view>

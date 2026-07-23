@@ -1,0 +1,9 @@
+{
+  "name": "verifyBooking",
+  "version": "1.0.0",
+  "description": "溪降检票核销",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3"
+  }
+}

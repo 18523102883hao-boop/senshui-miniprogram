@@ -1,0 +1,85 @@
+/* ============================================================
+   森水长河 · 设计系统 Token（长河令江湖视觉）
+   配色：米白底 + 墨绿主 + 朱砂印章点缀 + 铜金辅助
+   在 page 上定义 CSS 变量，自定义组件可继承（变量穿透样式隔离）
+   ============================================================ */
+page {
+  /* 背景 */
+  --sr-bg: #F5F1E9;
+  --sr-bg-card: #FAF6EE;
+  --sr-bg-sunken: #EFE8DA;
+  /* 主色（墨绿） */
+  --sr-primary: #2A4D3A;
+  --sr-primary-light: #3A6B4F;
+  --sr-primary-weak: #E4ECE6;
+  /* 强调（朱砂印章） */
+  --sr-seal: #B23A2E;
+  --sr-seal-light: #C85A4C;
+  /* 辅助（铜金） */
+  --sr-gold: #B8860B;
+  --sr-gold-light: #C9A063;
+  /* 文字 */
+  --sr-text: #2B2B2B;
+  --sr-text-sub: #6B6B6B;
+  --sr-text-weak: #9A9384;
+  --sr-text-invert: #FDFBF6;
+  /* 描边 / 分隔 */
+  --sr-border: #E5DDD3;
+  --sr-line: #EAE3D7;
+  /* 状态 */
+  --sr-success: #2A7D4F;
+  --sr-warning: #C77B18;
+  --sr-danger: #B23A2E;
+  /* 圆角 / 阴影 */
+  --sr-radius: 20rpx;
+  --sr-radius-sm: 12rpx;
+  --sr-shadow: 0 8rpx 32rpx rgba(42, 77, 58, 0.08);
+
+  background: var(--sr-bg);
+  color: var(--sr-text);
+  font-family: -apple-system, "PingFang SC", "Helvetica Neue", sans-serif;
+  font-size: 28rpx;
+  line-height: 1.6;
+}
+
+/* ---------- 通用布局类 ---------- */
+.sr-page { min-height: 100vh; padding: 24rpx 32rpx calc(48rpx + env(safe-area-inset-bottom)); box-sizing: border-box; }
+.sr-card {
+  background: var(--sr-bg-card);
+  border-radius: var(--sr-radius);
+  box-shadow: var(--sr-shadow);
+  padding: 32rpx;
+  margin-bottom: 24rpx;
+}
+.sr-row { display: flex; align-items: center; }
+.sr-row-between { display: flex; align-items: center; justify-content: space-between; }
+.sr-col { display: flex; flex-direction: column; }
+.sr-fill { flex: 1; }
+
+/* ---------- 文字类 ---------- */
+.sr-title { font-size: 40rpx; font-weight: 700; color: var(--sr-primary); letter-spacing: 2rpx; }
+.sr-subtitle { font-size: 32rpx; font-weight: 600; color: var(--sr-text); }
+.sr-text { font-size: 28rpx; color: var(--sr-text); }
+.sr-text-sub { font-size: 26rpx; color: var(--sr-text-sub); }
+.sr-text-weak { font-size: 24rpx; color: var(--sr-text-weak); }
+.sr-seal-text { color: var(--sr-seal); font-weight: 700; }
+
+/* ---------- 按钮类 ---------- */
+.sr-btn {
+  display: flex; align-items: center; justify-content: center;
+  height: 88rpx; border-radius: 44rpx; font-size: 30rpx; font-weight: 600;
+  background: var(--sr-primary); color: var(--sr-text-invert);
+  border: none;
+}
+.sr-btn::after { border: none; }
+.sr-btn--seal { background: var(--sr-seal); }
+.sr-btn--ghost { background: transparent; color: var(--sr-primary); border: 2rpx solid var(--sr-primary); }
+.sr-btn--disabled { background: var(--sr-bg-sunken); color: var(--sr-text-weak); }
+
+/* ---------- 徽章 / 印章 ---------- */
+.sr-badge {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 4rpx 16rpx; border-radius: 8rpx; font-size: 22rpx;
+  background: var(--sr-seal); color: #fff;
+}
+.sr-divider { height: 1rpx; background: var(--sr-line); margin: 24rpx 0; }

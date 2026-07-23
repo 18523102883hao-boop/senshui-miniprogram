@@ -1,0 +1,313 @@
+{
+  "$schema": "https://static.cloudbase.net/cli/cloudbaserc.schema.json",
+  "envId": "cloud1-d4gzkwy3w150d2fd2",
+  "functionRoot": "cloudfunctions",
+  "functions": [
+    {
+      "name": "bindPhone",
+      "runtime": "Nodejs16.13",
+      "handler": "index.main",
+      "timeout": 20,
+      "installDependency": true
+    },
+    {
+      "name": "bindStaff",
+      "runtime": "Nodejs16.13",
+      "handler": "index.main",
+      "timeout": 20,
+      "installDependency": true,
+      "envVariables": {
+        "STAFF_CODE_ADMIN": "",
+        "STAFF_CODE_FRONT": "",
+        "STAFF_CODE_CREEK": "",
+        "STAFF_CODE_BAR": ""
+      }
+    },
+    {
+      "name": "cancelBooking",
+      "runtime": "Nodejs16.13",
+      "handler": "index.main",
+      "timeout": 20,
+      "installDependency": true
+    },
+    {
+      "name": "changeBooking",
+      "runtime": "Nodejs16.13",
+      "handler": "index.main",
+      "timeout": 20,
+      "installDependency": true
+    },
+    {
+      "name": "checkStaff",
+      "runtime": "Nodejs16.13",
+      "handler": "index.main",
+      "timeout": 20,
+      "installDependency": true
+    },
+    {
+      "name": "closeSession",
+      "runtime": "Nodejs16.13",
+      "handler": "index.main",
+      "timeout": 20,
+      "installDependency": true
+    },
+    {
+      "name": "createBooking",
+      "runtime": "Nodejs16.13",
+      "handler": "index.main",
+      "timeout": 20,
+      "installDependency": true
+    },
+    {
+      "name": "createMemberOrder",
+      "runtime": "Nodejs16.13",
+      "handler": "index.main",
+      "timeout": 20,
+      "installDependency": true,
+      "envVariables": {
+        "SUB_MCH_ID": ""
+      }
+    },
+    {
+      "name": "createUpgradeCharge",
+      "runtime": "Nodejs16.13",
+      "handler": "index.main",
+      "timeout": 20,
+      "installDependency": true,
+      "envVariables": {
+        "QR_ENV_VERSION": "trial"
+      }
+    },
+    {
+      "name": "exchangeLing",
+      "runtime": "Nodejs16.13",
+      "handler": "index.main",
+      "timeout": 20,
+      "installDependency": true,
+      "envVariables": {
+        "MEMBER_QR_SECRET": ""
+      }
+    },
+    {
+      "name": "getChargeSummary",
+      "runtime": "Nodejs16.13",
+      "handler": "index.main",
+      "timeout": 20,
+      "installDependency": true
+    },
+    {
+      "name": "getHomeData",
+      "runtime": "Nodejs16.13",
+      "handler": "index.main",
+      "timeout": 20,
+      "installDependency": true
+    },
+    {
+      "name": "getLingBalance",
+      "runtime": "Nodejs16.13",
+      "handler": "index.main",
+      "timeout": 20,
+      "installDependency": true
+    },
+    {
+      "name": "getLingContent",
+      "runtime": "Nodejs16.13",
+      "handler": "index.main",
+      "timeout": 20,
+      "installDependency": true
+    },
+    {
+      "name": "getMemberCard",
+      "runtime": "Nodejs16.13",
+      "handler": "index.main",
+      "timeout": 20,
+      "installDependency": true
+    },
+    {
+      "name": "getMemberForVerify",
+      "runtime": "Nodejs16.13",
+      "handler": "index.main",
+      "timeout": 20,
+      "installDependency": true,
+      "envVariables": {
+        "MEMBER_QR_SECRET": ""
+      }
+    },
+    {
+      "name": "getMemberQr",
+      "runtime": "Nodejs16.13",
+      "handler": "index.main",
+      "timeout": 20,
+      "installDependency": true,
+      "envVariables": {
+        "MEMBER_QR_SECRET": ""
+      }
+    },
+    {
+      "name": "getMyBookings",
+      "runtime": "Nodejs16.13",
+      "handler": "index.main",
+      "timeout": 20,
+      "installDependency": true
+    },
+    {
+      "name": "getMyCoupons",
+      "runtime": "Nodejs16.13",
+      "handler": "index.main",
+      "timeout": 20,
+      "installDependency": true
+    },
+    {
+      "name": "getTicketConfig",
+      "runtime": "Nodejs16.13",
+      "handler": "index.main",
+      "timeout": 20,
+      "installDependency": true
+    },
+    {
+      "name": "getUpgradeCharge",
+      "runtime": "Nodejs16.13",
+      "handler": "index.main",
+      "timeout": 20,
+      "installDependency": true
+    },
+    {
+      "name": "getUpgradeItems",
+      "runtime": "Nodejs16.13",
+      "handler": "index.main",
+      "timeout": 20,
+      "installDependency": true
+    },
+    {
+      "name": "getUserQr",
+      "runtime": "Nodejs16.13",
+      "handler": "index.main",
+      "timeout": 20,
+      "installDependency": true,
+      "envVariables": {
+        "MEMBER_QR_SECRET": ""
+      }
+    },
+    {
+      "name": "holdSeat",
+      "runtime": "Nodejs16.13",
+      "handler": "index.main",
+      "timeout": 20,
+      "installDependency": true
+    },
+    {
+      "name": "initDb",
+      "runtime": "Nodejs16.13",
+      "handler": "index.main",
+      "timeout": 20,
+      "installDependency": true
+    },
+    {
+      "name": "listMyCharges",
+      "runtime": "Nodejs16.13",
+      "handler": "index.main",
+      "timeout": 20,
+      "installDependency": true
+    },
+    {
+      "name": "listSessions",
+      "runtime": "Nodejs16.13",
+      "handler": "index.main",
+      "timeout": 20,
+      "installDependency": true
+    },
+    {
+      "name": "login",
+      "runtime": "Nodejs16.13",
+      "handler": "index.main",
+      "timeout": 20,
+      "installDependency": true
+    },
+    {
+      "name": "payCallback",
+      "runtime": "Nodejs16.13",
+      "handler": "index.main",
+      "timeout": 20,
+      "installDependency": true
+    },
+    {
+      "name": "payUpgradeCharge",
+      "runtime": "Nodejs16.13",
+      "handler": "index.main",
+      "timeout": 20,
+      "installDependency": true,
+      "envVariables": {
+        "SUB_MCH_ID": ""
+      }
+    },
+    {
+      "name": "refundMember",
+      "runtime": "Nodejs16.13",
+      "handler": "index.main",
+      "timeout": 20,
+      "installDependency": true,
+      "envVariables": {
+        "SUB_MCH_ID": ""
+      }
+    },
+    {
+      "name": "releaseSeat",
+      "runtime": "Nodejs16.13",
+      "handler": "index.main",
+      "timeout": 20,
+      "installDependency": true
+    },
+    {
+      "name": "resolveUserForLing",
+      "runtime": "Nodejs16.13",
+      "handler": "index.main",
+      "timeout": 20,
+      "installDependency": true,
+      "envVariables": {
+        "MEMBER_QR_SECRET": ""
+      }
+    },
+    {
+      "name": "seedUpgradeItems",
+      "runtime": "Nodejs16.13",
+      "handler": "index.main",
+      "timeout": 20,
+      "installDependency": true
+    },
+    {
+      "name": "verifyBenefit",
+      "runtime": "Nodejs16.13",
+      "handler": "index.main",
+      "timeout": 20,
+      "installDependency": true
+    },
+    {
+      "name": "verifyBooking",
+      "runtime": "Nodejs16.13",
+      "handler": "index.main",
+      "timeout": 20,
+      "installDependency": true
+    },
+    {
+      "name": "getCatalog",
+      "runtime": "Nodejs16.13",
+      "handler": "index.main",
+      "timeout": 20,
+      "installDependency": true
+    },
+    {
+      "name": "seedCatalog",
+      "runtime": "Nodejs16.13",
+      "handler": "index.main",
+      "timeout": 20,
+      "installDependency": true
+    },
+    {
+      "name": "setMap",
+      "runtime": "Nodejs16.13",
+      "handler": "index.main",
+      "timeout": 20,
+      "installDependency": true
+    }
+  ]
+}

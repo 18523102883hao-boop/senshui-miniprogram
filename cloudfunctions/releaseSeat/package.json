@@ -1,0 +1,9 @@
+{
+  "name": "releaseSeat",
+  "version": "1.0.0",
+  "description": "释放名额云函数 - 回补库存",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3"
+  }
+}

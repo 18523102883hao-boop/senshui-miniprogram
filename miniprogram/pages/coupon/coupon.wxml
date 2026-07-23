@@ -1,0 +1,16 @@
+<view class="sr-page">
+  <block wx:if="{{list.length}}">
+    <view class="coupon coupon--{{item.status}}" wx:for="{{list}}" wx:key="id">
+      <view class="coupon__left">
+        <text class="coupon__discount">85</text>
+        <text class="coupon__unit">折</text>
+      </view>
+      <view class="coupon__body">
+        <text class="coupon__title">{{item.title}}</text>
+        <text class="coupon__expire">有效期至 {{item.expireText}}</text>
+      </view>
+      <text class="coupon__status">{{item.statusText}}</text>
+    </view>
+  </block>
+  <view wx:elif="{{loaded}}" class="empty">暂无卡券</view>
+</view>

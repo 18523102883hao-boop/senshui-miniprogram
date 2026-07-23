@@ -1,0 +1,9 @@
+{
+  "name": "setMap",
+  "version": "1.0.0",
+  "description": "管理员保存园区地图 fileID（T24）",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3"
+  }
+}

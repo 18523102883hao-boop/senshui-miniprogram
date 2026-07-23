@@ -1,0 +1,12 @@
+.chan { display: flex; align-items: center; justify-content: space-between; padding: 24rpx 0; border-bottom: 1rpx solid var(--sr-line); }
+.chan:last-child { border-bottom: none; }
+.chan__info { display: flex; flex-direction: column; }
+.chan__name { font-size: 30rpx; color: var(--sr-text); font-weight: 600; }
+.chan__desc { font-size: 24rpx; color: var(--sr-text-sub); margin-top: 4rpx; }
+.chan__action { font-size: 26rpx; color: var(--sr-primary); }
+
+.price { display: flex; align-items: center; justify-content: space-between; padding: 18rpx 0; }
+.price__name { font-size: 28rpx; color: var(--sr-text); }
+.price__val { font-size: 26rpx; color: var(--sr-seal); }
+
+.note { font-size: 26rpx; color: var(--sr-text-sub); line-height: 1.8; }

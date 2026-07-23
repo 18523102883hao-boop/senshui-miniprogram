@@ -1,0 +1,6 @@
+<view class="sr-page">
+  <view class="soon">
+    <text class="soon__title">营地点单 · 秋季开放</text>
+    <text class="soon__desc">小卖部租售、森水酒吧送营位，敬请期待</text>
+  </view>
+</view>

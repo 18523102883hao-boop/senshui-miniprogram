@@ -1,0 +1,33 @@
+<view class="sr-page pay-page">
+  <!-- 待支付 -->
+  <view class="pay-card" wx:if="{{loaded && status === 'pending'}}">
+    <text class="brand">森水长河</text>
+    <text class="pay-card__type">票种升级 · 补差价</text>
+    <view class="amount-box">
+      <text class="amount-cur">¥</text>
+      <text class="amount">{{amountYuan}}</text>
+    </view>
+    <view class="pay-card__row"><text class="k">升级项目</text><text class="v">{{itemLabel}}</text></view>
+    <view class="pay-card__row" wx:if="{{staffName}}"><text class="k">收款员工</text><text class="v">{{staffName}}</text></view>
+    <button class="sr-btn pay-btn" bindtap="pay" loading="{{paying}}" disabled="{{paying}}">确认支付</button>
+    <text class="safe-tip">支付将通过微信安全支付完成，款项进入森水长河官方账户。</text>
+  </view>
+
+  <!-- 支付成功 -->
+  <view class="pay-card result" wx:if="{{loaded && status === 'paid'}}">
+    <view class="result__icon result__icon--ok">✓</view>
+    <text class="result__title">支付成功</text>
+    <text class="result__amount">¥{{amountYuan}}</text>
+    <text class="result__label">{{itemLabel}}</text>
+    <text class="safe-tip">请向工作人员出示本页面完成升级。</text>
+  </view>
+
+  <!-- 过期 / 取消 / 不存在 -->
+  <view class="pay-card result" wx:if="{{loaded && (status === 'expired' || status === 'cancelled' || status === 'notfound')}}">
+    <view class="result__icon result__icon--warn">!</view>
+    <text class="result__title">
+      {{status === 'expired' ? '收款单已过期' : (status === 'cancelled' ? '收款单已取消' : '收款单不存在')}}
+    </text>
+    <text class="safe-tip">{{errorMsg || '请让工作人员重新生成收款码后再扫。'}}</text>
+  </view>
+</view>

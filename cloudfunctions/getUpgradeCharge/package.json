@@ -1,0 +1,9 @@
+{
+  "name": "getUpgradeCharge",
+  "version": "1.0.0",
+  "description": "客户扫码后拉取收款单详情（T20）",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3"
+  }
+}

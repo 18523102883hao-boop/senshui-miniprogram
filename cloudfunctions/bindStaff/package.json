@@ -1,0 +1,9 @@
+{
+  "name": "bindStaff",
+  "version": "1.0.0",
+  "description": "员工绑定申请",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "name": "closeSession",
+  "version": "1.0.0",
+  "description": "关闭场次云函数 - 天气/水位停运",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3"
+  }
+}

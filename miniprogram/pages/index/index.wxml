@@ -1,0 +1,70 @@
+<view class="sr-page">
+  <!-- 公告横幅 -->
+  <view class="notice" wx:if="{{notice}}">
+    <text class="notice__tag">公告</text>
+    <text class="notice__text">{{notice}}</text>
+  </view>
+
+  <!-- 会员卡（主推）-->
+  <view class="promo" bindtap="goMember">
+    <view class="promo__left">
+      <text class="promo__badge">SVIP</text>
+      <text class="promo__title">森水会员卡</text>
+      <text class="promo__desc">1000 长河令 · 生日 85 折 · 一年畅玩</text>
+    </view>
+    <view class="promo__right">
+      <text class="promo__price">¥9.9</text>
+      <text class="promo__cta">立即开卡 ›</text>
+    </view>
+  </view>
+
+  <!-- 园区指南 -->
+  <text class="sec-title">园区指南</text>
+  <view class="quick">
+    <view class="quick__item" wx:for="{{quickLinks}}" wx:key="key" data-key="{{item.key}}" bindtap="onTapQuick">
+      <text class="quick__title">{{item.title}}</text>
+      <text class="quick__desc">{{item.desc}}</text>
+    </view>
+  </view>
+
+  <!-- 今日活动 -->
+  <view class="sr-card">
+    <text class="sr-subtitle">今日活动</text>
+    <view class="sr-divider"></view>
+    <view class="act" wx:for="{{activities}}" wx:key="id">
+      <text class="act__time">{{item.time}}</text>
+      <view class="act__body">
+        <text class="act__name">{{item.name}}</text>
+        <text class="act__note">{{item.note}}</text>
+      </view>
+    </view>
+    <view wx:if="{{!activities.length}}" class="empty">今日暂无活动安排</view>
+    <view class="act-note">活动会根据季节、主题和实际情况调整，具体以现场通知为准。</view>
+  </view>
+
+  <!-- 园区地图 -->
+  <view class="sr-card">
+    <view class="sr-row-between">
+      <text class="sr-subtitle">园区地图</text>
+      <text class="sr-text-weak">点击查看大图</text>
+    </view>
+    <view class="maps">
+      <view class="mapc" data-key="camp" bindtap="openMap">
+        <image src="{{campMapUrl || '/images/map-camp.jpg'}}" mode="aspectFill" class="mapc__img" />
+        <text class="mapc__label">营地游览图</text>
+      </view>
+      <view class="mapc" data-key="creek" bindtap="openMap">
+        <image src="{{creekMapUrl || '/images/map-creek.jpg'}}" mode="aspectFill" class="mapc__img" />
+        <text class="mapc__label">溪降游览图</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 全屏地图查看 -->
+  <view class="map-viewer" wx:if="{{mapViewer}}" bindtap="closeMapViewer">
+    <scroll-view scroll-y class="map-viewer__scroll">
+      <image src="{{mapViewer}}" mode="widthFix" class="map-viewer__img" />
+    </scroll-view>
+    <view class="map-viewer__close">✕ 点击关闭</view>
+  </view>
+</view>

@@ -1,0 +1,9 @@
+{
+  "name": "getMemberQr",
+  "version": "1.0.0",
+  "description": "会员动态核销码（HMAC 短时效，防截图转让）（T20）",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3"
+  }
+}

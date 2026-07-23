@@ -1,0 +1,23 @@
+.coupon {
+  display: flex; align-items: center;
+  background: var(--sr-bg-card); border-radius: var(--sr-radius);
+  box-shadow: var(--sr-shadow); margin-bottom: 20rpx; overflow: hidden;
+  position: relative;
+}
+.coupon__left {
+  width: 160rpx; flex-shrink: 0; height: 140rpx;
+  background: linear-gradient(135deg, var(--sr-seal), var(--sr-seal-light));
+  display: flex; align-items: baseline; justify-content: center; color: #fff;
+}
+.coupon__discount { font-size: 56rpx; font-weight: 800; }
+.coupon__unit { font-size: 26rpx; margin-left: 4rpx; }
+.coupon__body { flex: 1; padding: 0 28rpx; display: flex; flex-direction: column; }
+.coupon__title { font-size: 30rpx; font-weight: 600; color: var(--sr-text); }
+.coupon__expire { font-size: 22rpx; color: var(--sr-text-weak); margin-top: 8rpx; }
+.coupon__status { font-size: 24rpx; color: var(--sr-primary); padding-right: 28rpx; }
+
+/* 已使用 / 已过期置灰 */
+.coupon--used .coupon__left, .coupon--expired .coupon__left { background: var(--sr-text-weak); }
+.coupon--used .coupon__status, .coupon--expired .coupon__status { color: var(--sr-text-weak); }
+
+.empty { text-align: center; color: var(--sr-text-weak); font-size: 26rpx; padding: 120rpx 60rpx; line-height: 1.8; }

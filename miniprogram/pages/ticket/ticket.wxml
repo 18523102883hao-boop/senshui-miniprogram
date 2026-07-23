@@ -1,0 +1,28 @@
+<view class="sr-page">
+  <view class="sr-card">
+    <text class="sr-subtitle">购票渠道</text>
+    <view class="sr-divider"></view>
+    <view class="chan" wx:for="{{channels}}" wx:key="name" data-url="{{item.url}}" bindtap="copyLink">
+      <view class="chan__info">
+        <text class="chan__name">{{item.name}}</text>
+        <text class="chan__desc">{{item.desc}}</text>
+      </view>
+      <text class="chan__action">复制链接 ›</text>
+    </view>
+  </view>
+
+  <view class="sr-card">
+    <text class="sr-subtitle">价目公示</text>
+    <view class="sr-divider"></view>
+    <view class="price" wx:for="{{priceList}}" wx:key="name">
+      <text class="price__name">{{item.name}}</text>
+      <text class="price__val">{{item.price}}</text>
+    </view>
+  </view>
+
+  <view class="sr-card">
+    <text class="sr-subtitle">升级补差说明</text>
+    <view class="sr-divider"></view>
+    <text class="note">{{upgradeNote}}</text>
+  </view>
+</view>

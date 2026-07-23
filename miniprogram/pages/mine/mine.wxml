@@ -1,0 +1,48 @@
+<view class="sr-page">
+  <!-- 用户信息 -->
+  <view class="profile">
+    <image class="profile__avatar" src="{{userInfo.avatarUrl}}" mode="aspectFill" />
+    <view class="profile__info">
+      <text class="profile__name">{{userInfo.nickName || '森水游客'}}</text>
+      <button
+        wx:if="{{!hasPhone}}"
+        class="profile__phone"
+        open-type="getPhoneNumber"
+        bindgetphonenumber="onGetPhone"
+      >绑定手机号</button>
+      <text wx:else class="profile__phone-done">{{phoneMask}}</text>
+    </view>
+  </view>
+
+  <!-- 会员卡入口 -->
+  <view class="mcard" bindtap="goMember">
+    <view class="mcard__left">
+      <text class="mcard__title">森水会员卡</text>
+      <text class="mcard__desc">{{member ? '有效期至 ' + member.expireText : '9.9 元 · 1000 长河令 + 生日 85 折'}}</text>
+    </view>
+    <text class="mcard__action">{{member ? '查看卡包' : '立即开卡'}}</text>
+  </view>
+
+  <!-- 功能宫格 -->
+  <view class="grid">
+    <view
+      class="grid__item"
+      wx:for="{{grid}}"
+      wx:key="key"
+      data-key="{{item.key}}"
+      bindtap="onGrid"
+    >
+      <text class="grid__title">{{item.title}}</text>
+      <text class="grid__sub">{{item.sub}}</text>
+    </view>
+  </view>
+
+  <!-- 客服 -->
+  <view class="sr-card contact" bindtap="callFront">
+    <text class="contact__text">联系前台 / 客服</text>
+    <text class="contact__phone">{{frontPhone}} ›</text>
+  </view>
+
+  <!-- 员工模式（隐藏入口） -->
+  <view class="staff-entry" bindtap="goStaff">员工模式</view>
+</view>

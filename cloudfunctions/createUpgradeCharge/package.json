@@ -1,0 +1,9 @@
+{
+  "name": "createUpgradeCharge",
+  "version": "1.0.0",
+  "description": "员工发起补差价收款单 + 生成小程序码（T20）",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3"
+  }
+}

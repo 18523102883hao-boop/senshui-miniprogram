@@ -1,0 +1,38 @@
+<view class="sr-page">
+  <!-- 有卡 -->
+  <block wx:if="{{member}}">
+    <view class="card">
+      <view class="card__head">
+        <text class="card__title">森水会员卡</text>
+        <text class="card__status">{{member.statusText}}</text>
+      </view>
+      <text class="card__expire">有效期至 {{member.expireText}}</text>
+
+      <view class="card__qr">
+        <canvas wx:if="{{!qrFallback}}" type="2d" id="qrcanvas" class="card__qr-canvas"></canvas>
+        <view wx:else class="card__qr-box">会员码</view>
+        <text class="card__qr-tip">动态会员码 · 每分钟自动刷新</text>
+        <text class="card__qr-sub">请向工作人员当面出示扫码，截图无效</text>
+      </view>
+    </view>
+
+    <view class="sr-card">
+      <text class="sr-subtitle">权益状态</text>
+      <view class="sr-divider"></view>
+      <view class="ben" wx:for="{{benefits}}" wx:key="type">
+        <text class="ben__name">{{item.name}}</text>
+        <text class="ben__state {{item.done ? 'is-done' : ''}}">{{item.stateText}}</text>
+      </view>
+    </view>
+
+    <view class="footer" wx:if="{{refundable}}">
+      <button class="sr-btn sr-btn--ghost" bindtap="onRefund">申请退款</button>
+    </view>
+  </block>
+
+  <!-- 无卡 -->
+  <view wx:elif="{{loaded}}" class="empty-card">
+    <text class="empty-card__text">你还没有会员卡</text>
+    <button class="sr-btn sr-btn--seal empty-card__btn" bindtap="goBuy">9.9 元 立即开卡</button>
+  </view>
+</view>

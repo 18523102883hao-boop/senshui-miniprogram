@@ -1,0 +1,9 @@
+{
+  "name": "listMyCharges",
+  "version": "1.0.0",
+  "description": "员工查询自己的收款记录与合计（T20）",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3"
+  }
+}

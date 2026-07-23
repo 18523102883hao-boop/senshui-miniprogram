@@ -1,0 +1,49 @@
+<view class="sr-page">
+  <!-- 分类 tab -->
+  <view class="tabs" wx:if="{{sections.length}}">
+    <view wx:for="{{sections}}" wx:key="key"
+          class="tab {{activeKey === item.key ? 'tab--on' : ''}}"
+          data-key="{{item.key}}" bindtap="switchTab">{{item.title}}</view>
+  </view>
+
+  <block wx:for="{{sections}}" wx:key="key">
+    <view wx:if="{{activeKey === item.key}}">
+      <!-- 价目分组 -->
+      <view wx:for="{{item.groups}}" wx:for-item="g" wx:key="name" class="sr-card">
+        <text class="sr-subtitle">{{g.name}}</text>
+        <view class="sr-divider"></view>
+        <view wx:for="{{g.items}}" wx:for-item="it" wx:key="n" class="row">
+          <text class="row__n">{{it.n}}</text>
+          <text class="row__p">¥{{it.p}}<text class="row__u" wx:if="{{g.unit}}"> /{{g.unit}}</text></text>
+        </view>
+      </view>
+
+      <!-- 租赁（租金 / 押金）-->
+      <view wx:if="{{item.rentals}}" class="sr-card">
+        <text class="sr-subtitle">租金 / 押金</text>
+        <view class="sr-divider"></view>
+        <view wx:for="{{item.rentals}}" wx:for-item="r" wx:key="n" class="row">
+          <text class="row__n">{{r.n}}</text>
+          <view class="rent">
+            <text class="rent__rent">租 ¥{{r.rent}}</text>
+            <text class="rent__dep">押 ¥{{r.deposit}}</text>
+          </view>
+        </view>
+        <text class="tip">押金在归还且设备完好后全额退还。</text>
+      </view>
+
+      <!-- 服务 -->
+      <view wx:if="{{item.services}}">
+        <view wx:for="{{item.services}}" wx:for-item="s" wx:key="n" class="sr-card svc">
+          <view class="svc__head">
+            <text class="svc__n">{{s.n}}</text>
+            <view class="svc__badge">押金 ¥{{s.deposit}}/台</view>
+          </view>
+          <text class="svc__desc">{{s.desc}}</text>
+        </view>
+      </view>
+    </view>
+  </block>
+
+  <view wx:if="{{loaded && !sections.length}}" class="empty">目录整备中，敬请期待。</view>
+</view>

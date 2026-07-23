@@ -1,0 +1,50 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/ling/ling",
+    "pages/mine/mine",
+    "pages/member/detail/detail",
+    "pages/member/card/card",
+    "pages/coupon/coupon",
+    "pages/ticket/ticket",
+    "pages/order/order",
+    "pages/staff/entry/entry",
+    "pages/staff/verify/verify",
+    "pages/booking/list/list",
+    "pages/booking/detail/detail",
+    "pages/booking/create/create",
+    "pages/staff/creek/creek",
+    "pages/staff/charge/charge",
+    "pages/staff/charge-summary/charge-summary",
+    "pages/pay/upgrade/upgrade",
+    "pages/ling/mycode/mycode",
+    "pages/staff/ling-exchange/ling-exchange",
+    "pages/catalog/catalog",
+    "pages/creek-notice/creek-notice",
+    "pages/upgrade-info/upgrade-info",
+    "pages/staff/maps/maps"
+  ],
+  "window": {
+    "backgroundTextStyle": "dark",
+    "navigationBarBackgroundColor": "#2A4D3A",
+    "navigationBarTitleText": "森水长河",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#F5F1E9",
+    "enablePullDownRefresh": false
+  },
+  "tabBar": {
+    "color": "#8A8072",
+    "selectedColor": "#2A4D3A",
+    "backgroundColor": "#FAF6EE",
+    "borderStyle": "white",
+    "list": [
+      { "pagePath": "pages/index/index", "text": "向导", "iconPath": "images/tab/guide.png", "selectedIconPath": "images/tab/guide-on.png" },
+      { "pagePath": "pages/ling/ling", "text": "长河令", "iconPath": "images/tab/ling.png", "selectedIconPath": "images/tab/ling-on.png" },
+      { "pagePath": "pages/mine/mine", "text": "我的", "iconPath": "images/tab/mine.png", "selectedIconPath": "images/tab/mine-on.png" }
+    ]
+  },
+  "usingComponents": {},
+  "sitemapLocation": "sitemap.json",
+  "style": "v2",
+  "lazyCodeLoading": "requiredComponents"
+}

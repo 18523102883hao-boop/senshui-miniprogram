@@ -1,0 +1,56 @@
+<view class="sr-page detail">
+  <!-- 卡头 -->
+  <view class="hero">
+    <text class="hero__badge">SVIP</text>
+    <text class="hero__title">森水会员卡</text>
+    <view class="hero__price">
+      <text class="hero__cur">¥</text>
+      <text class="hero__num">{{price}}</text>
+      <text class="hero__unit"> / 年</text>
+    </view>
+    <text class="hero__slogan">入园即入江湖 · 一年畅玩权益</text>
+  </view>
+
+  <!-- 权益 -->
+  <view class="sr-card">
+    <text class="sr-subtitle">会员权益</text>
+    <view class="sr-divider"></view>
+    <view class="benefit" wx:for="{{benefits}}" wx:key="title">
+      <view class="benefit__icon">{{item.icon}}</view>
+      <view class="benefit__body">
+        <text class="benefit__title">{{item.title}}</text>
+        <text class="benefit__desc">{{item.desc}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 生日登记（必填） -->
+  <view class="sr-card">
+    <text class="sr-subtitle">生日登记（开卡必填）</text>
+    <view class="sr-divider"></view>
+    <picker mode="date" fields="day" bindchange="onPickBirthday">
+      <view class="sr-row-between birth">
+        <text class="birth__label">我的生日</text>
+        <text class="birth__value {{birthday ? 'is-set' : ''}}">{{birthdayText}} ›</text>
+      </view>
+    </picker>
+    <text class="birth__tip">生日一经开卡不可修改，请如实填写；仅用于生日 85 折权益。</text>
+  </view>
+
+  <!-- 购买须知 -->
+  <view class="sr-card">
+    <text class="sr-subtitle">购买须知</text>
+    <view class="sr-divider"></view>
+    <text class="rules__text">· 每账号限购 1 张，仅限本人（绑定手机号），不支持转让、折现。</text>
+    <text class="rules__text">· 权益到店核销激活：长河令入园发放；生日当天到店消费享 85 折。</text>
+    <text class="rules__text">· 会员码为动态刷新码，仅本人当面出示有效，防止截图转让。</text>
+    <text class="rules__text">· 退款规则：未核销任一权益支持 7 天无理由；核销任一权益后不退。</text>
+  </view>
+
+  <!-- 底部购买 -->
+  <view class="footer">
+    <button class="sr-btn sr-btn--seal footer__btn" bindtap="onBuy" disabled="{{paying}}">
+      {{hasCard ? '已开卡 · 查看卡包' : '9.9 元 立即开卡'}}
+    </button>
+  </view>
+</view>

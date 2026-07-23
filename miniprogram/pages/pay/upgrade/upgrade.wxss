@@ -1,0 +1,35 @@
+.pay-page { display: flex; flex-direction: column; align-items: center; padding-top: 64rpx; }
+.pay-card {
+  width: 100%; background: var(--sr-bg-card); border-radius: var(--sr-radius);
+  box-shadow: var(--sr-shadow); padding: 56rpx 40rpx;
+  display: flex; flex-direction: column; align-items: center;
+}
+.brand { font-size: 34rpx; font-weight: 700; color: var(--sr-primary); letter-spacing: 4rpx; }
+.pay-card__type { font-size: 26rpx; color: var(--sr-text-sub); margin-top: 12rpx; }
+
+.amount-box { display: flex; align-items: flex-end; margin: 40rpx 0 48rpx; }
+.amount-cur { font-size: 40rpx; font-weight: 700; color: var(--sr-seal); margin-bottom: 12rpx; }
+.amount { font-size: 96rpx; font-weight: 700; color: var(--sr-seal); line-height: 1; }
+
+.pay-card__row {
+  width: 100%; display: flex; justify-content: space-between; align-items: center;
+  padding: 24rpx 0; border-top: 1rpx solid var(--sr-line);
+}
+.pay-card__row .k { font-size: 26rpx; color: var(--sr-text-sub); }
+.pay-card__row .v { font-size: 28rpx; color: var(--sr-text); max-width: 60%; text-align: right; }
+
+.pay-btn { width: 100%; margin-top: 48rpx; }
+.safe-tip { font-size: 22rpx; color: var(--sr-text-weak); margin-top: 28rpx; text-align: center; line-height: 1.7; }
+
+/* 结果页 */
+.result { padding-top: 72rpx; padding-bottom: 72rpx; }
+.result__icon {
+  width: 128rpx; height: 128rpx; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 72rpx; color: #fff; margin-bottom: 32rpx;
+}
+.result__icon--ok { background: var(--sr-success); }
+.result__icon--warn { background: var(--sr-warning); }
+.result__title { font-size: 34rpx; font-weight: 700; color: var(--sr-text); }
+.result__amount { font-size: 64rpx; font-weight: 700; color: var(--sr-seal); margin-top: 20rpx; }
+.result__label { font-size: 26rpx; color: var(--sr-text-sub); margin-top: 8rpx; }

@@ -1,0 +1,57 @@
+<view class="sr-page">
+  <!-- 我的令数 -->
+  <view class="ling-banner">
+    <view class="sr-col">
+      <text class="ling-banner__label">我的长河令</text>
+      <text class="ling-banner__num">{{myLing}}</text>
+    </view>
+    <text class="ling-banner__seal">令</text>
+  </view>
+
+  <!-- 江湖故事 -->
+  <view class="sr-card">
+    <text class="sr-subtitle">江湖故事</text>
+    <view class="sr-divider"></view>
+    <text class="story">{{story}}</text>
+  </view>
+
+  <!-- 怎么赚令 -->
+  <view class="sr-card">
+    <text class="sr-subtitle">怎么赚令</text>
+    <view class="sr-divider"></view>
+    <view class="earn" wx:for="{{earnList}}" wx:key="id">
+      <view class="earn__main">
+        <text class="earn__name">{{item.name}}</text>
+        <text class="earn__meta">{{item.time}} · {{item.location}}</text>
+      </view>
+      <view class="earn__ling">
+        <text class="earn__reward">奖励 {{item.reward}} 令</text>
+        <text wx:if="{{item.join}}" class="earn__join">参与 {{item.join}} 令</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 怎么用令 -->
+  <view class="sr-card">
+    <text class="sr-subtitle">怎么用令</text>
+    <view class="sr-divider"></view>
+    <view class="exchange">
+      <view class="exchange__item" wx:for="{{exchangeList}}" wx:key="id">
+        <text class="exchange__name">{{item.name}}</text>
+        <text class="exchange__cost">{{item.cost ? item.cost + ' 令' : '介绍'}}</text>
+      </view>
+    </view>
+    <text class="tip">※ 兑换与拍卖当前为预览展示，线上兑换将于秋季开放</text>
+  </view>
+
+  <!-- NPC 巡游 -->
+  <view class="sr-card">
+    <text class="sr-subtitle">NPC 巡游时刻</text>
+    <view class="sr-divider"></view>
+    <view class="npc" wx:for="{{npcSchedule}}" wx:key="id">
+      <text class="npc__name">{{item.name}}</text>
+      <text class="npc__time">{{item.time}}</text>
+      <text class="npc__route">{{item.route}}</text>
+    </view>
+  </view>
+</view>

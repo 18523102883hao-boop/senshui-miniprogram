@@ -1,0 +1,61 @@
+.tip { display: block; font-size: 24rpx; color: var(--sr-text-sub); line-height: 1.7; }
+
+/* 合计 */
+.stat { display: flex; flex-direction: column; }
+.stat--right { align-items: flex-end; }
+.stat__num { font-size: 52rpx; font-weight: 700; color: var(--sr-primary); }
+.stat__num--sub { font-size: 40rpx; color: var(--sr-text-sub); }
+.stat__label { font-size: 24rpx; color: var(--sr-text-sub); margin-top: 4rpx; }
+
+/* 发起收款 */
+.group-label { display: block; font-size: 24rpx; color: var(--sr-text-weak); margin: 20rpx 0 12rpx; }
+.items { display: flex; flex-direction: column; gap: 12rpx; }
+.item {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 24rpx; border-radius: var(--sr-radius-sm);
+  background: var(--sr-bg-sunken); border: 2rpx solid transparent;
+}
+.item--on { background: var(--sr-primary-weak); border-color: var(--sr-primary); }
+.item__label { font-size: 28rpx; color: var(--sr-text); }
+.item__price { font-size: 30rpx; font-weight: 700; color: var(--sr-seal); }
+
+.field { display: flex; align-items: center; padding: 20rpx 0; border-bottom: 1rpx solid var(--sr-line); }
+.field__label { width: 140rpx; font-size: 28rpx; color: var(--sr-text-sub); }
+.field__input { flex: 1; font-size: 28rpx; color: var(--sr-text); }
+
+.sr-btn { margin-top: 32rpx; }
+
+/* 我的收款明细 */
+.record { padding: 20rpx 0; border-bottom: 1rpx solid var(--sr-line); }
+.record__left { display: flex; flex-direction: column; }
+.record__label { font-size: 28rpx; color: var(--sr-text); }
+.record__time { font-size: 22rpx; color: var(--sr-text-weak); margin-top: 4rpx; }
+.record__amount { font-size: 30rpx; font-weight: 700; color: var(--sr-success); }
+
+/* 管理员入口 */
+.actions { display: flex; flex-direction: column; gap: 16rpx; }
+.action { background: var(--sr-primary-weak); border-radius: var(--sr-radius-sm); padding: 28rpx; display: flex; flex-direction: column; }
+.action__title { font-size: 30rpx; font-weight: 600; color: var(--sr-primary); }
+.action__desc { font-size: 24rpx; color: var(--sr-text-sub); margin-top: 6rpx; }
+
+/* 收款码弹层 */
+.mask {
+  position: fixed; inset: 0; background: rgba(0, 0, 0, 0.55);
+  display: flex; align-items: center; justify-content: center; z-index: 100;
+}
+.qr-card {
+  width: 560rpx; background: var(--sr-bg-card); border-radius: var(--sr-radius);
+  padding: 48rpx 40rpx; display: flex; flex-direction: column; align-items: center;
+}
+.qr-card__title { font-size: 30rpx; font-weight: 600; color: var(--sr-text); }
+.qr-card__img { width: 380rpx; height: 380rpx; margin: 32rpx 0 16rpx; }
+.qr-card__amount { font-size: 56rpx; font-weight: 700; color: var(--sr-seal); }
+.qr-card__label { font-size: 26rpx; color: var(--sr-text-sub); margin-top: 8rpx; }
+.qr-card__status { display: flex; align-items: center; gap: 12rpx; margin: 24rpx 0; }
+.dot {
+  width: 14rpx; height: 14rpx; border-radius: 50%; background: var(--sr-warning);
+  animation: blink 1s infinite;
+}
+@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+.qr-card__status-text { font-size: 24rpx; color: var(--sr-text-sub); }
+.qr-card .sr-btn { width: 100%; margin-top: 8rpx; }

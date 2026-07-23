@@ -1,0 +1,9 @@
+{
+  "name": "changeBooking",
+  "version": "1.0.0",
+  "description": "改签预约云函数 - 允许改签一次",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3"
+  }
+}

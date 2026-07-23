@@ -1,0 +1,54 @@
+<view class="sr-page">
+  <!-- 未登记 -->
+  <view class="sr-card" wx:if="{{loaded && !role}}">
+    <text class="sr-subtitle">员工登记</text>
+    <view class="sr-divider"></view>
+    <text class="tip">填写姓名、手机号和员工口令，口令正确即开通对应权限（口令向管理员索取）。</text>
+    <view class="field">
+      <text class="field__label">姓名</text>
+      <input class="field__input" data-field="name" bindinput="onInput" placeholder="请输入姓名" />
+    </view>
+    <view class="field">
+      <text class="field__label">手机号</text>
+      <input class="field__input" type="number" data-field="phone" bindinput="onInput" placeholder="请输入手机号" />
+    </view>
+    <view class="field">
+      <text class="field__label">员工口令</text>
+      <input class="field__input" data-field="inviteCode" bindinput="onInput" placeholder="请输入员工口令" />
+    </view>
+    <button class="sr-btn" bindtap="bind">登记并开通</button>
+  </view>
+
+  <!-- 已绑定 -->
+  <block wx:if="{{loaded && role}}">
+    <view class="sr-card">
+      <text class="sr-subtitle">已绑定</text>
+      <view class="sr-divider"></view>
+      <view class="sr-row-between info"><text class="sr-text-sub">姓名</text><text>{{staffName}}</text></view>
+      <view class="sr-row-between info"><text class="sr-text-sub">角色</text><text class="sr-seal-text">{{roleText}}</text></view>
+    </view>
+
+    <view class="sr-card actions">
+      <view class="action" wx:if="{{role === 'front' || role === 'admin'}}" bindtap="goCharge">
+        <text class="action__title">补差价收款</text>
+        <text class="action__desc">出示收款码 · 客户扫码升级补差价</text>
+      </view>
+      <view class="action" wx:if="{{role === 'admin'}}" bindtap="goMaps">
+        <text class="action__title">园区地图管理</text>
+        <text class="action__desc">上传 / 更换 营地·溪降 游览图</text>
+      </view>
+      <view class="action" wx:if="{{role === 'front' || role === 'admin'}}" bindtap="goLingExchange">
+        <text class="action__title">长河令兑换</text>
+        <text class="action__desc">实体 ↔ 电子长河令 互兑</text>
+      </view>
+      <view class="action" bindtap="goVerify">
+        <text class="action__title">会员核销台</text>
+        <text class="action__desc">扫码核销 令 / 酒 / 折扣券</text>
+      </view>
+      <view class="action" bindtap="goCreek">
+        <text class="action__title">溪降检票核销</text>
+        <text class="action__desc">扫预约码 · 当场人数台账</text>
+      </view>
+    </view>
+  </block>
+</view>

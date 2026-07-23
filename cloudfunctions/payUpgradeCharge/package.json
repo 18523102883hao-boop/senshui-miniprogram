@@ -1,0 +1,9 @@
+{
+  "name": "payUpgradeCharge",
+  "version": "1.0.0",
+  "description": "客户发起补差价支付（JSAPI 统一下单）（T20）",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3"
+  }
+}

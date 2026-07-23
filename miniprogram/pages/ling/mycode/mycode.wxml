@@ -1,0 +1,21 @@
+<view class="sr-page">
+  <view class="card">
+    <text class="card__title">我的令码</text>
+    <view class="card__balance"><text class="card__num">{{balance}}</text><text class="card__unit"> 电子令</text></view>
+
+    <view class="card__qr">
+      <canvas wx:if="{{!qrFallback}}" type="2d" id="lingqr" class="card__qr-canvas"></canvas>
+      <view wx:else class="card__qr-box">令码</view>
+      <text class="card__qr-tip">动态令码 · 每分钟自动刷新</text>
+      <text class="card__qr-sub">兑换实体/电子长河令时，向工作人员出示此码</text>
+    </view>
+  </view>
+
+  <view class="sr-card">
+    <text class="sr-subtitle">怎么用</text>
+    <view class="sr-divider"></view>
+    <text class="tip">· 实体令没用完：交给工作人员回收，扫此码把令数转成电子令，下次来直接用。</text>
+    <text class="tip">· 想换回实体令：出示此码，工作人员核减电子令后发放等量实体令。</text>
+    <text class="tip">· 令码每分钟刷新，仅本人当面出示有效，截图无效。</text>
+  </view>
+</view>

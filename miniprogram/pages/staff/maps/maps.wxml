@@ -1,0 +1,25 @@
+<view class="sr-page" wx:if="{{role === 'admin'}}">
+  <view class="sr-card">
+    <text class="sr-subtitle">园区地图管理</text>
+    <view class="sr-divider"></view>
+    <text class="tip">上传后客户在首页即可查看、点击放大。建议使用清晰的竖版图片。</text>
+
+    <view class="mb">
+      <text class="mb__title">营地游览图</text>
+      <image wx:if="{{campUrl}}" src="{{campUrl}}" mode="widthFix" class="mb__img" data-key="camp" bindtap="preview" />
+      <view wx:else class="mb__ph">未上传</view>
+      <button class="sr-btn sr-btn--ghost mb__btn" data-key="camp" bindtap="upload" loading="{{uploading === 'camp'}}">
+        {{campUrl ? '更换营地图' : '上传营地图'}}
+      </button>
+    </view>
+
+    <view class="mb">
+      <text class="mb__title">溪降游览图</text>
+      <image wx:if="{{creekUrl}}" src="{{creekUrl}}" mode="widthFix" class="mb__img" data-key="creek" bindtap="preview" />
+      <view wx:else class="mb__ph">未上传</view>
+      <button class="sr-btn sr-btn--ghost mb__btn" data-key="creek" bindtap="upload" loading="{{uploading === 'creek'}}">
+        {{creekUrl ? '更换溪降图' : '上传溪降图'}}
+      </button>
+    </view>
+  </view>
+</view>

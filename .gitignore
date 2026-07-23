@@ -1,0 +1,32 @@
+# ===== 敏感 / 私密（切勿提交到远程）=====
+# 含 MEMBER_QR_SECRET、员工口令 STAFF_CODE_*、微信支付商户号等密钥
+cloudbaserc.json
+# 微信开发者工具私有配置
+project.private.config.json
+
+# ===== 依赖（可由 package.json 还原）=====
+**/node_modules/
+miniprogram/miniprogram_npm/
+
+# ===== macOS / iCloud 同步产物 =====
+.DS_Store
+._*
+.AppleDouble
+.LSOverride
+Icon?
+*.icloud
+.iCloud/
+.Trashes
+.Spotlight-V100
+.fseventsd
+
+# ===== 编辑器 / IDE =====
+.qoder/
+.vscode/
+.idea/
+*.swp
+
+# ===== 临时 / 草稿 / 日志 =====
+.scratch/
+tmp/
+*.log

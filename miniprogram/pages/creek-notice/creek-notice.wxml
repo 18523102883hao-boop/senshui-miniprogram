@@ -1,0 +1,20 @@
+<view class="sr-page">
+  <!-- 开放时间 -->
+  <view class="hero">
+    <text class="hero__label">溪降开放时间</text>
+    <text class="hero__time">{{openTime}}</text>
+    <text class="hero__tip">{{openTip}}</text>
+  </view>
+
+  <!-- 各须知分区 -->
+  <view class="sr-card" wx:for="{{sections}}" wx:key="title">
+    <text class="sr-subtitle">{{item.title}}</text>
+    <view class="sr-divider"></view>
+    <view class="note" wx:for="{{item.items}}" wx:for-item="line" wx:key="*this">
+      <text class="note__dot">·</text>
+      <text class="note__text">{{line}}</text>
+    </view>
+  </view>
+
+  <view class="foot">水上项目存在风险，请做好安全防护，量力而行。</view>
+</view>

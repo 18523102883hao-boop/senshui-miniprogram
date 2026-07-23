@@ -1,0 +1,9 @@
+{
+  "name": "getUpgradeItems",
+  "version": "1.0.0",
+  "description": "拉取补差价升级价目表（T20）",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3"
+  }
+}

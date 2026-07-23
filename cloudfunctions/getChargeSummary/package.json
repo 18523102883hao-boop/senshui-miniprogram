@@ -1,0 +1,9 @@
+{
+  "name": "getChargeSummary",
+  "version": "1.0.0",
+  "description": "管理员按员工汇总补差价收款（T20）",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3"
+  }
+}

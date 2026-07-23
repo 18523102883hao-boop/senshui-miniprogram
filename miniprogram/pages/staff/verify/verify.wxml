@@ -1,0 +1,33 @@
+<view class="sr-page">
+  <button class="sr-btn scan-btn" bindtap="scan">扫描会员码</button>
+
+  <block wx:if="{{member}}">
+    <view class="sr-card">
+      <view class="sr-row-between">
+        <text class="sr-subtitle">{{member.nickName || '会员'}}</text>
+        <text class="sr-text-sub">有效期至 {{member.expireText}}</text>
+      </view>
+    </view>
+
+    <view class="sr-card">
+      <text class="sr-subtitle">权益核销</text>
+      <view class="sr-divider"></view>
+      <view class="vrow" wx:for="{{benefits}}" wx:key="type">
+        <view class="vrow__info">
+          <text class="vrow__name">{{item.name}}</text>
+          <text class="vrow__state">{{item.stateText}}</text>
+        </view>
+        <button
+          wx:if="{{item.canVerify}}"
+          class="vrow__btn"
+          data-type="{{item.type}}"
+          bindtap="doVerify"
+          disabled="{{busy}}"
+        >核销</button>
+        <text wx:else class="vrow__done">已完成</text>
+      </view>
+    </view>
+  </block>
+
+  <view wx:else class="hint">扫描游客出示的会员码，核销其会员权益</view>
+</view>

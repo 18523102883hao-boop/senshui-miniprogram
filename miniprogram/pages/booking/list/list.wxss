@@ -1,0 +1,136 @@
+/* 溪降预约 - 场次列表 */
+.container {
+  padding: 20rpx;
+  background-color: #F5F1E9;
+  min-height: 100vh;
+}
+
+/* 日期选择器 */
+.date-picker {
+  background: #FAF6EE;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
+}
+
+.date-display {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.date-text {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #2A4D3A;
+}
+
+.date-arrow {
+  font-size: 24rpx;
+  color: #8A8072;
+}
+
+/* 场次卡片 */
+.session-list {
+  margin-bottom: 100rpx;
+}
+
+.session-card {
+  background: #FAF6EE;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
+}
+
+.session-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
+  padding-bottom: 20rpx;
+  border-bottom: 1rpx solid #E8E3D8;
+}
+
+.session-time {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #2A4D3A;
+}
+
+.session-status {
+  font-size: 24rpx;
+  color: #3A6B4F;
+  background: #E8F5E9;
+  padding: 8rpx 16rpx;
+  border-radius: 8rpx;
+}
+
+.session-status.closed {
+  color: #B23A2E;
+  background: #FFEBEE;
+}
+
+.session-body {
+  display: flex;
+  justify-content: space-around;
+}
+
+.session-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.info-label {
+  font-size: 24rpx;
+  color: #8A8072;
+  margin-bottom: 8rpx;
+}
+
+.info-value {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #2B2B2B;
+}
+
+.info-value.warning {
+  color: #B23A2E;
+}
+
+.session-footer {
+  margin-top: 20rpx;
+  padding-top: 20rpx;
+  border-top: 1rpx solid #E8E3D8;
+}
+
+.session-note {
+  font-size: 24rpx;
+  color: #B23A2E;
+}
+
+/* 空状态 */
+.empty-state {
+  padding: 100rpx 0;
+  text-align: center;
+}
+
+.empty-text {
+  font-size: 28rpx;
+  color: #8A8072;
+}
+
+/* 我的预约按钮 */
+.my-bookings-btn {
+  position: fixed;
+  bottom: 40rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #2A4D3A;
+  color: white;
+  padding: 20rpx 60rpx;
+  border-radius: 50rpx;
+  font-size: 28rpx;
+  box-shadow: 0 4rpx 12rpx rgba(42, 77, 58, 0.3);
+}

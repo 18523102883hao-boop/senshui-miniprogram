@@ -1,0 +1,43 @@
+.detail { padding-bottom: 180rpx; }
+
+.hero {
+  background: linear-gradient(135deg, #2A4D3A, #1F3A2C);
+  border-radius: var(--sr-radius); padding: 48rpx 40rpx; margin-bottom: 24rpx;
+  display: flex; flex-direction: column; position: relative; overflow: hidden;
+}
+.hero__badge {
+  align-self: flex-start; font-size: 22rpx; font-weight: 700; color: #1F3A2C;
+  background: #F5D98B; border-radius: 6rpx; padding: 2rpx 14rpx;
+}
+.hero__title { font-size: 44rpx; font-weight: 800; color: #F5D98B; margin-top: 20rpx; }
+.hero__price { display: flex; align-items: baseline; margin-top: 12rpx; color: #fff; }
+.hero__cur { font-size: 32rpx; }
+.hero__num { font-size: 72rpx; font-weight: 800; margin-left: 4rpx; }
+.hero__unit { font-size: 26rpx; color: rgba(255,255,255,0.7); }
+.hero__slogan { font-size: 24rpx; color: rgba(255,255,255,0.75); margin-top: 8rpx; }
+
+.benefit { display: flex; align-items: center; padding: 20rpx 0; border-bottom: 1rpx solid var(--sr-line); }
+.benefit:last-child { border-bottom: none; }
+.benefit__icon {
+  width: 72rpx; height: 72rpx; border-radius: 12rpx; flex-shrink: 0;
+  background: var(--sr-seal); color: #fff; font-size: 34rpx; font-weight: 800;
+  display: flex; align-items: center; justify-content: center; transform: rotate(-4deg);
+}
+.benefit__body { margin-left: 24rpx; display: flex; flex-direction: column; }
+.benefit__title { font-size: 30rpx; font-weight: 600; color: var(--sr-text); }
+.benefit__desc { font-size: 24rpx; color: var(--sr-text-sub); margin-top: 4rpx; }
+
+.rules__text { display: block; font-size: 24rpx; color: var(--sr-text-sub); line-height: 1.9; }
+
+.birth { padding: 20rpx 0; }
+.birth__label { font-size: 28rpx; color: var(--sr-text); }
+.birth__value { font-size: 28rpx; color: var(--sr-text-weak); }
+.birth__value.is-set { color: var(--sr-primary); font-weight: 600; }
+.birth__tip { display: block; font-size: 22rpx; color: var(--sr-text-weak); margin-top: 12rpx; line-height: 1.6; }
+
+.footer {
+  position: fixed; left: 0; right: 0; bottom: 0;
+  padding: 20rpx 32rpx calc(20rpx + env(safe-area-inset-bottom));
+  background: var(--sr-bg-card); box-shadow: 0 -4rpx 24rpx rgba(0,0,0,0.05);
+}
+.footer__btn { width: 100%; }

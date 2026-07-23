@@ -1,0 +1,9 @@
+{
+  "name": "getMemberForVerify",
+  "version": "1.0.0",
+  "description": "员工端拉取会员权益状态",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3"
+  }
+}

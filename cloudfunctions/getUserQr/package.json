@@ -1,0 +1,9 @@
+{
+  "name": "getUserQr",
+  "version": "1.0.0",
+  "description": "长河令兑换（T21）",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3"
+  }
+}

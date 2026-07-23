@@ -1,0 +1,12 @@
+.tip { display: block; font-size: 24rpx; color: var(--sr-text-sub); line-height: 1.7; margin-bottom: 8rpx; }
+
+.mb { padding: 28rpx 0; border-bottom: 1rpx solid var(--sr-line); }
+.mb:last-child { border-bottom: none; }
+.mb__title { display: block; font-size: 28rpx; font-weight: 600; color: var(--sr-text); margin-bottom: 16rpx; }
+.mb__img { width: 100%; border-radius: var(--sr-radius-sm); display: block; }
+.mb__ph {
+  height: 240rpx; display: flex; align-items: center; justify-content: center;
+  background: var(--sr-bg-sunken); color: var(--sr-text-weak); font-size: 26rpx;
+  border-radius: var(--sr-radius-sm);
+}
+.mb__btn { margin-top: 20rpx; }

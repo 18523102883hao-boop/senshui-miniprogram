@@ -1,0 +1,49 @@
+<view class="sr-page">
+  <view class="sr-card" wx:if="{{loaded && !canDo}}">
+    <text class="sr-subtitle">长河令兑换</text>
+    <view class="sr-divider"></view>
+    <text class="tip">当前账号无兑换权限。仅限「前台 / 管理员」角色。</text>
+  </view>
+
+  <block wx:if="{{loaded && canDo}}">
+    <!-- 扫码 -->
+    <view class="sr-card">
+      <button class="sr-btn" bindtap="scan">扫客户令码 / 会员码</button>
+      <text class="tip" wx:if="{{!customer}}">让客户在「长河令 → 我的令码」出示动态码，扫码后定位其电子令账户。</text>
+    </view>
+
+    <!-- 客户 + 兑换 -->
+    <block wx:if="{{customer}}">
+      <view class="sr-card">
+        <view class="sr-row-between">
+          <text class="sr-text-sub">客户</text><text>{{customer.userLabel}}</text>
+        </view>
+        <view class="sr-row-between cust-bal">
+          <text class="sr-text-sub">当前电子令</text><text class="bal">{{customer.balance}}</text>
+        </view>
+      </view>
+
+      <view class="sr-card">
+        <text class="sr-subtitle">兑换</text>
+        <view class="sr-divider"></view>
+        <view class="dirs">
+          <view class="dir {{direction === 'p2d' ? 'dir--on' : ''}}" data-dir="p2d" bindtap="setDir">
+            <text class="dir__t">实体 → 电子</text>
+            <text class="dir__d">回收实体令，电子令增加</text>
+          </view>
+          <view class="dir {{direction === 'd2p' ? 'dir--on' : ''}}" data-dir="d2p" bindtap="setDir">
+            <text class="dir__t">电子 → 实体</text>
+            <text class="dir__d">核减电子令，发放实体令</text>
+          </view>
+        </view>
+
+        <view class="field">
+          <text class="field__label">数量(令)</text>
+          <input class="field__input" type="number" value="{{amount}}" bindinput="onAmount" placeholder="输入兑换令数" />
+        </view>
+
+        <button class="sr-btn sr-btn--seal" bindtap="submit" loading="{{busy}}" disabled="{{busy}}">确认兑换</button>
+      </view>
+    </block>
+  </block>
+</view>
