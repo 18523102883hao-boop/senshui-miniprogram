@@ -1,19 +1,19 @@
-<view class="sr-page">
-  <!-- 公告横幅 -->
+<view class="sr-page sr-enter">
+  <!-- 公告横幅（高对比 · 户外强光可读） -->
   <view class="notice" wx:if="{{notice}}">
-    <text class="notice__tag">公告</text>
+    <view class="notice__tag">公告</view>
     <text class="notice__text">{{notice}}</text>
   </view>
 
-  <!-- 会员卡（主推）-->
-  <view class="promo" bindtap="goMember">
+  <!-- 会员卡（黑金主推 · 整卡可点） -->
+  <view class="promo sr-goldcard sr-gold-hairline sr-touch" hover-class="sr-touch--press" hover-stay-time="60" bindtap="goMember">
     <view class="promo__left">
       <text class="promo__badge">SVIP</text>
       <text class="promo__title">森水会员卡</text>
       <text class="promo__desc">1000 长河令 · 生日 85 折 · 一年畅玩</text>
     </view>
     <view class="promo__right">
-      <text class="promo__price">¥9.9</text>
+      <text class="promo__price sr-num">¥9.9</text>
       <text class="promo__cta">立即开卡 ›</text>
     </view>
   </view>
@@ -21,21 +21,33 @@
   <!-- 园区指南 -->
   <text class="sec-title">园区指南</text>
   <view class="quick">
-    <view class="quick__item" wx:for="{{quickLinks}}" wx:key="key" data-key="{{item.key}}" bindtap="onTapQuick">
+    <view class="quick__item sr-touch" hover-class="sr-touch--press" hover-stay-time="60"
+          wx:for="{{quickLinks}}" wx:key="key" data-key="{{item.key}}" bindtap="onTapQuick">
+      <view class="quick__iconbox">
+        <image class="quick__icon" src="{{item.icon}}" mode="aspectFit" />
+      </view>
       <text class="quick__title">{{item.title}}</text>
       <text class="quick__desc">{{item.desc}}</text>
     </view>
   </view>
 
-  <!-- 今日活动 -->
+  <!-- 今日江湖事（时间线） -->
   <view class="sr-card">
-    <text class="sr-subtitle">今日活动</text>
-    <view class="sr-divider"></view>
-    <view class="act" wx:for="{{activities}}" wx:key="id">
-      <text class="act__time">{{item.time}}</text>
-      <view class="act__body">
-        <text class="act__name">{{item.name}}</text>
-        <text class="act__note">{{item.note}}</text>
+    <view class="sr-row-between">
+      <view class="sec-head">
+        <view class="sec-head__bar"></view>
+        <text class="sr-subtitle">今日江湖事</text>
+      </view>
+      <image class="sr-icon--sm sec-head__icon" src="/assets/icons/forest/activity-schedule.png" mode="aspectFit" />
+    </view>
+    <view class="tl">
+      <view class="tl__item" wx:for="{{activities}}" wx:key="id">
+        <view class="tl__dot"></view>
+        <view class="tl__body">
+          <text class="tl__time sr-num">{{item.time}}</text>
+          <text class="tl__name">{{item.name}}</text>
+          <text class="tl__note">{{item.note}}</text>
+        </view>
       </view>
     </view>
     <view wx:if="{{!activities.length}}" class="empty">今日暂无活动安排</view>
@@ -45,15 +57,18 @@
   <!-- 园区地图 -->
   <view class="sr-card">
     <view class="sr-row-between">
-      <text class="sr-subtitle">园区地图</text>
+      <view class="sec-head">
+        <view class="sec-head__bar"></view>
+        <text class="sr-subtitle">园区地图</text>
+      </view>
       <text class="sr-text-weak">点击查看大图</text>
     </view>
     <view class="maps">
-      <view class="mapc" data-key="camp" bindtap="openMap">
+      <view class="mapc sr-touch" hover-class="sr-touch--press" hover-stay-time="60" data-key="camp" bindtap="openMap">
         <image src="{{campMapUrl || '/images/map-camp.jpg'}}" mode="aspectFill" class="mapc__img" />
         <text class="mapc__label">营地游览图</text>
       </view>
-      <view class="mapc" data-key="creek" bindtap="openMap">
+      <view class="mapc sr-touch" hover-class="sr-touch--press" hover-stay-time="60" data-key="creek" bindtap="openMap">
         <image src="{{creekMapUrl || '/images/map-creek.jpg'}}" mode="aspectFill" class="mapc__img" />
         <text class="mapc__label">溪降游览图</text>
       </view>

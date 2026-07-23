@@ -1,6 +1,7 @@
-// 首页 · 向导（T05）
-// 数据来源：activities / notices 集合（后台可配）。骨架先用占位数据，联调见 specs/T05。
+// 首页 · 向导（T05 / T25 Vibe UI）
+// 数据来源：notices 集合（公告/地图）；今日活动为前端固定日程。
 const request = require('../../utils/request.js')
+const { haptic } = require('../../utils/haptics.js')
 
 Page({
   data: {
@@ -17,9 +18,9 @@ Page({
     mapViewer: '', // 全屏查看的地图 src（空=关闭）
     // 园区指南入口（会员卡在上方独立卡片，见 wxml）
     quickLinks: [
-      { key: 'catalog', title: '商品与服务', desc: '酒水·小卖部·租赁' },
-      { key: 'upgrade', title: '补差价升级', desc: '单项票升套票' },
-      { key: 'notice', title: '溪降须知', desc: '开放·安全须知' }
+      { key: 'catalog', title: '商品与服务', desc: '酒水·小卖部·租赁', icon: '/assets/icons/forest/home-store.png' },
+      { key: 'upgrade', title: '补差价升级', desc: '单项票升套票', icon: '/assets/icons/forest/home-upgrade.png' },
+      { key: 'notice', title: '溪降须知', desc: '开放·安全须知', icon: '/assets/icons/forest/booking-safety.png' }
     ]
   },
 
@@ -72,10 +73,14 @@ Page({
       // 溪降预约 / 买门票暂不开放，后续恢复：
       // creek: '/pages/booking/list/list', ticket: '/pages/ticket/ticket'
     }
-    if (routes[key]) wx.navigateTo({ url: routes[key] })
+    if (routes[key]) {
+      haptic('light')
+      wx.navigateTo({ url: routes[key] })
+    }
   },
 
   goMember() {
+    haptic('light')
     wx.navigateTo({ url: '/pages/member/detail/detail' })
   },
 
