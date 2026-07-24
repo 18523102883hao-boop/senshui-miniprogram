@@ -38,9 +38,10 @@ exports.main = async () => {
     return { code: 500, msg: '退款发起失败：' + (e.errMsg || e.message || '') }
   }
 
+  // 退款为异步到账，此处乐观置 refunded：会员卡立即失效、权益不再展示（如需严格终态可另配退款回调）
   const now = new Date()
-  await db.collection('members').doc(m._id).update({ data: { status: 'refunding', updatedAt: now } })
-  await db.collection('orders').doc(order._id).update({ data: { status: 'refunding', updatedAt: now } })
+  await db.collection('members').doc(m._id).update({ data: { status: 'refunded', refundedAt: now, updatedAt: now } })
+  await db.collection('orders').doc(order._id).update({ data: { status: 'refunded', updatedAt: now } })
 
-  return { code: 0, msg: 'ok', data: { status: 'refunding' } }
+  return { code: 0, msg: 'ok', data: { status: 'refunded' } }
 }

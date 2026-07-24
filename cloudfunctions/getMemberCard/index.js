@@ -13,7 +13,8 @@ function fmt(d) {
 
 exports.main = async () => {
   const { OPENID } = cloud.getWXContext()
-  const r = await db.collection('members').where({ _openid: OPENID }).orderBy('createdAt', 'desc').limit(1).get()
+  // 只认 active 卡：退款(refunded)/退款中的卡不再作为"我的会员卡"展示，权益随之消失
+  const r = await db.collection('members').where({ _openid: OPENID, status: 'active' }).orderBy('createdAt', 'desc').limit(1).get()
   if (r.data.length === 0) return { code: 0, msg: 'ok', data: { member: null } }
 
   const m = r.data[0]
