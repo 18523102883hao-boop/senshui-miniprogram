@@ -281,3 +281,34 @@ API Key 永不过期，权限是 system admin。**绝不能提交进仓库**，�
 **新增集合**：`subscribe_grants`（订阅授权次数，首次调用自动创建）。
 
 **修复的老 bug**：预约列表跳创建页时没传日期，创建页又只查当天场次 —— 预约次日及以后的场次必然报"场次不存在"。
+
+## 14. 特色服务线索与员工跟进（Task 11-12）
+
+**新增云函数**：`createServiceLead`、`getMyServiceLeads`、`listAssignedLeads`、`updateServiceLead`
+
+**权限规则**：
+- 线索处理权限：`front` / `admin`（检票、酒吧角色无权）
+- 普通员工只能看到**分配给自己的 + 尚未分配的**线索；管理员看全部
+- 非负责人看到的手机号自动脱敏，内部备注不下发
+- 首次跟进会自动认领线索，避免无人负责
+
+**状态机**（不允许跳跃或回退，终态不可改）：
+
+```
+new → contacted → qualified → proposal → won
+ ↓        ↓            ↓           ↓
+ └────────┴────────────┴───────────┴──→ closed / lost
+```
+
+每次变更都往 `history` 追加一条 `{ from, to, note, byOpenid, byName, at }`。
+
+**建议索引**：
+
+| 集合 | 字段 | 唯一 |
+|---|---|---|
+| service_leads | _openid, createdAt | 否 |
+| service_leads | status, nextFollowAt | 否 |
+| service_leads | assigneeOpenid, status | 否 |
+
+> 表单字段白名单由 `createServiceLead/lead-core.js` 的 SCHEMAS 定义；
+> 客户端提交的未声明字段（含 `status`）一律丢弃，状态只能由服务端流转。

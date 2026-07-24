@@ -76,6 +76,11 @@ Page({
     wx.navigateTo({ url: '/pages/staff/ticket-verify/ticket-verify' })
   },
 
+  // 服务线索跟进（前台/管理员）
+  goLeads() {
+    wx.navigateTo({ url: '/pages/staff/leads/leads' })
+  },
+
   goCreek() {
     wx.navigateTo({ url: '/pages/staff/creek/creek' })
   }

@@ -50,6 +50,11 @@
         <text class="action__title">门票核销</text>
         <text class="action__desc">扫入园码 · 先预览再确认</text>
       </view>
+      <view class="action sr-touch" hover-class="sr-touch--press" hover-stay-time="60"
+            wx:if="{{role === 'front' || role === 'admin'}}" bindtap="goLeads">
+        <text class="action__title">线索跟进</text>
+        <text class="action__desc">生日 / 团建 / 品牌合作咨询</text>
+      </view>
       <view class="action sr-touch" hover-class="sr-touch--press" hover-stay-time="60" bindtap="goCreek">
         <text class="action__title">溪降检票核销</text>
         <text class="action__desc">扫预约码 · 当场人数台账</text>
