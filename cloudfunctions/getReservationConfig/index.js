@@ -10,7 +10,7 @@ const DEFAULT_CONFIG = {
   minPartySize: 10,
   maxPartySize: 200,
   advanceDays: 30,
-  dailyCapacity: 0, // 0 = 不限制；确认容量后填实际值
+  dailyCapacity: 500, // 0 = 不限制；确认容量后填实际值
   blockedDates: [],
   weekdayPolicy: 'self', // self | blocked | manual
   weekendPolicy: 'manual', // 周末默认转人工，避免自助预约冲掉散客

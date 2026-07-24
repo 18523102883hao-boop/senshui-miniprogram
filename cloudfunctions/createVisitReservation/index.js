@@ -7,7 +7,7 @@ const _ = db.command
 const core = require('./reservation-core.js')
 
 const DEFAULT_CONFIG = {
-  minPartySize: 10, maxPartySize: 200, advanceDays: 30, dailyCapacity: 0,
+  minPartySize: 10, maxPartySize: 200, advanceDays: 30, dailyCapacity: 500,
   blockedDates: [], weekdayPolicy: 'self', weekendPolicy: 'manual'
 }
 

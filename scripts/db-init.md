@@ -312,3 +312,25 @@ new → contacted → qualified → proposal → won
 
 > 表单字段白名单由 `createServiceLead/lead-core.js` 的 SCHEMAS 定义；
 > 客户端提交的未声明字段（含 `status`）一律丢弃，状态只能由服务端流转。
+
+## 15. 溪降预约功能下线（2026-07-25）
+
+业主决定：**溪降不再走场次预约**。业务上本就是「无需预约、凭券码直接入园」（见 docs/业务参数.md §3），
+小程序里的场次预约与实际经营方式不符，故下线。
+
+**已从小程序移除**：
+- 用户端：`pages/booking/{list,create,detail}`
+- 员工端：`pages/staff/creek`（场次台账 / 前台插单）
+- 预约中心的「溪降场次预约」入口、员工端「溪降检票核销」入口
+- 首页「立即预约」副标题改为「团队到园 · 研学 · 亲友聚会」
+
+**保留不变**（溪降本身仍在正常经营）：
+- 溪降票销售：`creek_single` / `creek_double` / `creek_child` / `combo_single`
+- 溪降须知页、入园攻略里的溪降安全条款
+- 门票核销（`verifyTicket`）覆盖溪降票入园核销
+
+**云函数**：`listSessions`、`createBooking`、`changeBooking`、`cancelBooking`、`holdSeat`、`releaseSeat`、
+`closeSession`、`verifyBooking`、`frontInsertBooking`、`getSessionLedger`、`getMyBookings` 代码保留但**不再被调用**。
+云端已部署的函数不必删除（留着不影响，删了反而丢历史数据）。
+
+**如需恢复**：`git revert` 本次提交即可，页面与测试都在 git 历史里。

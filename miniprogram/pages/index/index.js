@@ -15,7 +15,7 @@ const LOCAL_SECTIONS = [
   { key: 'quick_guide', type: 'quick_entry', title: '入园攻略', subtitle: '交通 · 装备 · 注意事项', route: '/pages/guide/guide', params: {}, visible: true, sort: 40 },
   { key: 'quick_concierge', type: 'quick_entry', title: '管家服务', subtitle: '到园前后有人对接', route: '/pages/concierge/concierge', params: {}, visible: true, sort: 50 },
   { key: 'ticket_entry', type: 'primary_action', title: '门票购买', subtitle: '在线选票 · 入园扫码', route: '/pages/ticket/ticket', params: {}, visible: true, sort: 60 },
-  { key: 'reservation_entry', type: 'primary_action', title: '立即预约', subtitle: '溪降场次 / 团队到园', route: '/pages/reservation/entry/entry', params: {}, visible: true, sort: 70 },
+  { key: 'reservation_entry', type: 'primary_action', title: '立即预约', subtitle: '团队到园 · 研学 · 亲友聚会', route: '/pages/reservation/entry/entry', params: {}, visible: true, sort: 70 },
   { key: 'user_status', type: 'user_status', title: '我的行程', subtitle: '未使用门票与即将到来的预约', route: '', params: {}, visible: true, sort: 80 },
   { key: 'service_birthday', type: 'service_card', title: '生日宴请', subtitle: '在山水间过一个生日', route: '/pages/service/detail/detail', params: { type: 'birthday' }, visible: true, sort: 90 },
   { key: 'service_teambuilding', type: 'service_card', title: '公司团建', subtitle: '定制行程与场地', route: '/pages/service/detail/detail', params: { type: 'teambuilding' }, visible: true, sort: 100 },

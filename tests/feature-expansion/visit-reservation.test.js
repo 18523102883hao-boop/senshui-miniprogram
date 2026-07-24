@@ -240,16 +240,18 @@ test('可取消状态判断：待确认/已确认可取消，已完成不可', (
 
 // ============ 预约入口页 ============
 
-test('预约入口聚合团队预约与溪降预约两条路径', (t) => {
+test('预约入口提供团队预约与我的预约，不再有溪降场次预约', (t) => {
   const { page } = mountPage(t, entryPath)
   const keys = page.data.entries.map((e) => e.key)
   assert.ok(keys.includes('team'))
-  assert.ok(keys.includes('creek'))
+  assert.ok(keys.includes('mine'))
+  // 溪降改为「无需预约、凭券码直接入园」，预约中心不再提供该入口
+  assert.equal(keys.includes('creek'), false)
 })
 
 test('入口点击跳到对应页面，未上线时给提示', (t) => {
   const { page, calls } = mountPage(t, entryPath, { navigateFail: true })
-  page.onEntryTap({ currentTarget: { dataset: { key: 'creek' } } })
+  page.onEntryTap({ currentTarget: { dataset: { key: 'mine' } } })
   assert.ok(calls.navigate.length === 1)
   assert.equal(calls.toast.length, 1)
 })

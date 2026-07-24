@@ -69,7 +69,7 @@ const DEFAULT_SECTIONS = [
     key: 'reservation_entry',
     type: 'primary_action',
     title: '立即预约',
-    subtitle: '溪降场次 / 团队到园',
+    subtitle: '团队到园 · 研学 · 亲友聚会',
     route: '/pages/reservation/entry/entry',
     params: {},
     visible: true,

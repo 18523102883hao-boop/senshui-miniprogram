@@ -11,13 +11,6 @@ const ENTRIES = [
     route: '/pages/reservation/create/create'
   },
   {
-    key: 'creek',
-    title: '溪降场次预约',
-    desc: '按场次预约，含安全须知确认',
-    icon: '/assets/icons/forest/home-reservation.png',
-    route: '/pages/booking/list/list'
-  },
-  {
     key: 'mine',
     title: '我的预约',
     desc: '查看、分享或取消已提交的预约',

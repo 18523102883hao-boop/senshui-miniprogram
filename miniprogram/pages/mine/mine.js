@@ -18,7 +18,6 @@ Page({
       { key: 'ling', title: '长河令', sub: '', icon: '/assets/icons/forest/activity-token.png' },
       { key: 'lingcode', title: '我的令码', sub: '', icon: '/assets/icons/forest/activity-scan.png' },
       { key: 'order', title: '我的订单', sub: '', icon: '/assets/icons/forest/mine-orders.png' }
-      // { key: 'booking', title: '我的预约', sub: '' } // 溪降预约暂不开放，后续恢复；导航逻辑(onGrid)保留
     ]
   },
 
@@ -109,8 +108,6 @@ Page({
       wx.navigateTo({ url: '/pages/coupon/coupon' })
     } else if (key === 'order') {
       wx.navigateTo({ url: '/pages/order/order' })
-    } else if (key === 'booking') {
-      wx.navigateTo({ url: '/pages/booking/list/list?tab=mine' })
     }
   },
 
