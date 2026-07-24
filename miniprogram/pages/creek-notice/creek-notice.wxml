@@ -8,8 +8,10 @@
 
   <!-- 各须知分区 -->
   <view class="sr-card" wx:for="{{sections}}" wx:key="title">
-    <text class="sr-subtitle">{{item.title}}</text>
-    <view class="sr-divider"></view>
+    <view class="grp-head">
+      <image class="grp-head__icon" src="{{item.icon}}" mode="aspectFit" />
+      <text class="grp-head__title">{{item.title}}</text>
+    </view>
     <view class="note" wx:for="{{item.items}}" wx:for-item="line" wx:key="*this">
       <text class="note__dot">·</text>
       <text class="note__text">{{line}}</text>

@@ -16,7 +16,7 @@
     <text class="sr-subtitle">会员权益</text>
     <view class="sr-divider"></view>
     <view class="benefit" wx:for="{{benefits}}" wx:key="title">
-      <view class="benefit__icon">{{item.icon}}</view>
+      <view class="benefit__icon"><image class="benefit__img" src="{{item.icon}}" mode="aspectFit" /></view>
       <view class="benefit__body">
         <text class="benefit__title">{{item.title}}</text>
         <text class="benefit__desc">{{item.desc}}</text>

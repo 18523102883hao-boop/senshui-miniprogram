@@ -6,6 +6,7 @@ Page({
     sections: [
       {
         title: '费用 · 装备',
+        icon: '/assets/icons/forest/booking-safety.png',
         items: [
           '溪降全程约 2 公里，游玩约 1.5 小时，玻璃水质。',
           '核销后需在前台单独购买溪降保险 4 元/人。',
@@ -17,6 +18,7 @@ Page({
       },
       {
         title: '安全须知',
+        icon: '/assets/icons/forest/booking-warning.png',
         items: [
           '严禁 1.2 米以下儿童、老人、孕妇、残疾人，以及高血压、心脏病、癫痫、哮喘、心血管病、严重冠心病等不适合剧烈运动者参加。',
           '严禁酒后游玩；游玩中身体不适请及时上岸休息。',
@@ -27,6 +29,7 @@ Page({
       },
       {
         title: '退票说明',
+        icon: '/assets/icons/forest/shop-refund.png',
         items: [
           '因个人原因导致行程中止，不予退票。',
           '因暴雨、山洪等不可抗力导致项目暂停运营，不予退票。',

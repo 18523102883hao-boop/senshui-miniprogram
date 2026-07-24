@@ -10,9 +10,9 @@ Page({
   data: {
     price: fen2yuan(MEMBER_CARD.price),
     benefits: [
-      { icon: '令', title: '1000 长河令', desc: '入园核销时发放' },
-      { icon: '寿', title: '生日 85 折', desc: '生日当天到店消费享 85 折' },
-      { icon: '期', title: '有效期 1 年', desc: '自开卡日起 365 天' }
+      { icon: '/assets/icons/forest/activity-token.png', title: '1000 长河令', desc: '入园核销时发放' },
+      { icon: '/assets/icons/forest/mine-membership.png', title: '生日 85 折', desc: '生日当天到店消费享 85 折' },
+      { icon: '/assets/icons/forest/home-calendar.png', title: '有效期 1 年', desc: '自开卡日起 365 天' }
     ],
     birthday: '',            // MM-DD，购卡必填
     birthdayText: '请选择生日',
