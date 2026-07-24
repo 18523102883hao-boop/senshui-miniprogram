@@ -32,7 +32,9 @@
     "pages/ticket/detail/detail",
     "pages/ticket/checkout/checkout",
     "pages/ticket/result/result",
-    "pages/ticket/wallet/wallet"
+    "pages/ticket/wallet/wallet",
+    "pages/staff/ticket-verify/ticket-verify",
+    "pages/refund/detail/detail"
   ],
   "window": {
     "backgroundTextStyle": "dark",

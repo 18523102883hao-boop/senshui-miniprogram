@@ -136,3 +136,25 @@
 | orders | _openid, idempotencyKey | 否 |
 
 > ⚠️ 部署 `payCallback` 后请复测一次**会员卡购买**与**补差价收款**，确认既有链路正常。
+
+## 10. 门票核销与退款（本轮功能扩展 Task 8）
+
+**新增云函数**：`verifyTicket`、`requestTicketRefund`
+
+**环境变量**：
+
+| 云函数 | 变量 | 说明 |
+|---|---|---|
+| verifyTicket | `TICKET_QR_SECRET` | **必须与 getTicketCode 完全一致**，否则入园码验签必失败 |
+| requestTicketRefund | `SUB_MCH_ID` | 同其他支付函数 |
+| requestTicketRefund | `PAY_REFUND_ENABLED` | 设 `false` 时所有退款转人工售后单（不会伪造成功） |
+
+**新增集合**：`refund_requests`（人工售后单）。`initDb` 未包含，首次调用会自动创建；也可在控制台手动建。
+
+**核销流程**：员工模式 → 门票核销 → 扫游客入园码（或手输票号）→ **先预览票券信息 → 再点确认核销**。
+并发/重复扫码由条件更新拦截（status 必须仍是 unused/reserved），第二次会提示"该票券已核销"。
+
+**退款分支**：
+- 未使用票 + 退款能力可用 → 自动原路退款，退款单号由「订单号 + 票号集合」推导，重试不会退两次。
+- 已核销票 → 按购买须知不可退，转人工售后单。
+- 退款发起失败 → 票券状态回滚为 unused，用户可重试。

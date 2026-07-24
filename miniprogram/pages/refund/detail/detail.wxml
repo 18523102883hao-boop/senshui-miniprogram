@@ -1,0 +1,62 @@
+<view class="sr-page sr-enter">
+  <view class="skeleton" wx:if="{{loading}}">
+    <view class="skeleton__line" wx:for="{{[1,2]}}" wx:key="*this"></view>
+  </view>
+
+  <block wx:if="{{!loading && !hasError}}">
+    <!-- 结果 -->
+    <view class="res" wx:if="{{resultMode}}">
+      <image class="res__icon" src="/assets/icons/status/status-success.png" mode="aspectFit" />
+      <text class="res__title">{{resultMode === 'auto' ? '退款已发起' : '已提交人工审核'}}</text>
+      <text class="res__msg">{{resultMsg}}</text>
+      <view class="res__btn" wx:if="{{resultMode === 'manual'}}" bindtap="goConcierge">联系管家</view>
+    </view>
+
+    <!-- 可退票券 -->
+    <view class="sr-card" wx:if="{{refundable.length}}">
+      <text class="sr-subtitle">可退票券（{{refundable.length}} 张）</text>
+      <view class="sr-divider"></view>
+      <view class="t" wx:for="{{refundable}}" wx:key="ticketNo">
+        <text class="t__name">{{item.productName}}</text>
+        <text class="t__no sr-num">{{item.ticketNo}}</text>
+      </view>
+    </view>
+
+    <!-- 不可退票券：讲清楚原因 -->
+    <view class="sr-card" wx:if="{{blocked.length}}">
+      <text class="sr-subtitle">不可退票券（{{blocked.length}} 张）</text>
+      <view class="sr-divider"></view>
+      <view class="t" wx:for="{{blocked}}" wx:key="ticketNo">
+        <text class="t__name">{{item.productName}}</text>
+        <text class="t__status">{{item.status === 'used' ? '已核销' : (item.status === 'refunded' ? '已退款' : item.status)}}</text>
+      </view>
+      <view class="rule">按购买须知：任一项目核销后，未使用项目金额不可申请退款。如有疑问请联系客服。</view>
+    </view>
+
+    <!-- 退款原因 -->
+    <view class="sr-card" wx:if="{{canSubmit}}">
+      <text class="sr-subtitle">退款原因（选填）</text>
+      <view class="sr-divider"></view>
+      <textarea class="reason" placeholder="填写原因有助于我们改进" value="{{reason}}" bindinput="onReasonInput" maxlength="100" />
+    </view>
+
+    <view class="empty" wx:if="{{!refundable.length && !blocked.length}}">该订单没有可退票券</view>
+  </block>
+
+  <view class="state" wx:if="{{hasError}}">
+    <image class="state__icon" src="/assets/icons/status/status-warning.png" mode="aspectFit" />
+    <text class="state__text">加载失败</text>
+    <view class="state__btn" bindtap="onRetry">重新加载</view>
+  </view>
+
+  <view class="bar" wx:if="{{canSubmit && !resultMode}}">
+    <view class="bar__total">
+      <text class="bar__label">预计退款</text>
+      <text class="bar__cur">¥</text>
+      <text class="bar__num sr-num">{{refundText}}</text>
+    </view>
+    <view class="bar__cta {{submitting ? 'bar__cta--off' : ''}}" bindtap="onSubmit">
+      {{submitting ? '提交中…' : '申请退款'}}
+    </view>
+  </view>
+</view>

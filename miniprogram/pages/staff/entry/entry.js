@@ -71,6 +71,11 @@ Page({
     wx.navigateTo({ url: '/pages/staff/verify/verify' })
   },
 
+  // 门票核销（前台 / 溪降 / 管理员）
+  goTicketVerify() {
+    wx.navigateTo({ url: '/pages/staff/ticket-verify/ticket-verify' })
+  },
+
   goCreek() {
     wx.navigateTo({ url: '/pages/staff/creek/creek' })
   }
