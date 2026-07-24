@@ -1,4 +1,4 @@
-/* 长河令 · 深色沉浸主题（#121212）*/
+/* 长河令 · 深森林墨绿沉浸主题（与品牌绿同色系）*/
 page { background: var(--sr-dark-bg); }
 .dk-page { min-height: 100vh; padding: 24rpx 32rpx calc(160rpx + env(safe-area-inset-bottom)); box-sizing: border-box; }
 
