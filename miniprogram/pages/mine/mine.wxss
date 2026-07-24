@@ -53,4 +53,8 @@
 .svc__sub { font-size: 24rpx; color: var(--sr-gold); font-weight: 600; margin-right: 12rpx; }
 .svc__arrow { width: 28rpx; height: 28rpx; opacity: 0.4; }
 
-.staff-entry { text-align: center; font-size: 24rpx; color: var(--sr-text-weak); padding: 40rpx 0; opacity: 0.6; }
+.legal-links { display: flex; align-items: center; justify-content: center; padding: 32rpx 0 8rpx; }
+.legal-links__item { font-size: 24rpx; color: var(--sr-text-sub); }
+.legal-links__sep { font-size: 24rpx; color: var(--sr-text-weak); margin: 0 16rpx; }
+
+.staff-entry { text-align: center; font-size: 24rpx; color: var(--sr-text-weak); padding: 24rpx 0 40rpx; opacity: 0.6; }

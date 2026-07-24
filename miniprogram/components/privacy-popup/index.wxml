@@ -1,0 +1,18 @@
+<view class="mask" wx:if="{{visible}}" catchtap="noop">
+  <view class="card">
+    <text class="card__title">用户隐私保护提示</text>
+    <view class="card__body">
+      <text class="card__text">在你使用森水长河小程序前，请阅读并同意</text>
+      <text class="card__link" bindtap="openContract">{{contractName}}</text>
+      <text class="card__text">。我们仅在开通会员、预约、设置头像等必要环节收集手机号与头像信息，用于身份识别与业务联系，不作其他用途。</text>
+    </view>
+    <text class="card__more" bindtap="openFullPolicy">查看完整隐私政策 ›</text>
+
+    <view class="card__actions">
+      <view class="btn btn--ghost" bindtap="onDisagree">暂不同意</view>
+      <button class="btn btn--primary" id="agree-btn"
+              open-type="agreePrivacyAuthorization"
+              bindagreeprivacyauthorization="onAgree">同意并继续</button>
+    </view>
+  </view>
+</view>

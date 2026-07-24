@@ -1,0 +1,24 @@
+.mask {
+  position: fixed; inset: 0; z-index: 500;
+  background: rgba(14, 26, 19, 0.55);
+  display: flex; align-items: center; justify-content: center;
+}
+.card {
+  width: 580rpx; box-sizing: border-box;
+  background: #FFFFFF; border-radius: 40rpx; padding: 48rpx 40rpx 36rpx;
+  display: flex; flex-direction: column;
+}
+.card__title { font-size: 34rpx; font-weight: 800; color: #172019; text-align: center; }
+.card__body { margin-top: 28rpx; }
+.card__text { font-size: 26rpx; color: #5F6B63; line-height: 1.8; }
+.card__link { font-size: 26rpx; color: #244B36; font-weight: 700; line-height: 1.8; }
+.card__more { margin-top: 20rpx; font-size: 24rpx; color: #244B36; }
+
+.card__actions { display: flex; gap: 20rpx; margin-top: 40rpx; }
+.btn {
+  flex: 1; height: 88rpx; line-height: 88rpx; text-align: center;
+  border-radius: 44rpx; font-size: 29rpx; font-weight: 600; margin: 0; padding: 0;
+}
+.btn::after { border: none; }
+.btn--ghost { color: #5F6B63; background: #E9EEE8; }
+.btn--primary { color: #FFFFFF; background: #244B36; }

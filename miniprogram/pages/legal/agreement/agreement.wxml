@@ -1,0 +1,20 @@
+<view class="sr-page legal sr-enter">
+  <view class="legal__head">
+    <text class="legal__title">用户服务协议</text>
+    <text class="legal__meta">更新日期：{{updatedAt}} · 运营主体：重庆嘿行行旅游开发有限公司</text>
+  </view>
+
+  <view class="legal__lead">
+    本协议说明你使用森水长河小程序时的服务内容、会员规则、退款规则与双方权利义务，请在使用前仔细阅读。
+  </view>
+
+  <view class="sr-card legal__section" wx:for="{{sections}}" wx:key="title">
+    <text class="legal__section-title">{{item.title}}</text>
+    <view class="legal__item" wx:for="{{item.items}}" wx:for-item="line" wx:key="*this">
+      <text class="legal__dot">·</text>
+      <text class="legal__text">{{line}}</text>
+    </view>
+  </view>
+
+  <view class="legal__foot">继续使用本小程序，即表示你已阅读并同意本服务协议。</view>
+</view>

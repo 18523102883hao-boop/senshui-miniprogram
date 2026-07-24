@@ -1,0 +1,20 @@
+<view class="sr-page legal sr-enter">
+  <view class="legal__head">
+    <text class="legal__title">隐私政策</text>
+    <text class="legal__meta">更新日期：{{updatedAt}} · 运营主体：重庆嘿行行旅游开发有限公司</text>
+  </view>
+
+  <view class="legal__lead">
+    我们非常重视你的个人信息保护。本政策说明森水长河小程序会收集哪些信息、如何使用与保护，以及你享有的权利。
+  </view>
+
+  <view class="sr-card legal__section" wx:for="{{sections}}" wx:key="title">
+    <text class="legal__section-title">{{item.title}}</text>
+    <view class="legal__item" wx:for="{{item.items}}" wx:for-item="line" wx:key="*this">
+      <text class="legal__dot">·</text>
+      <text class="legal__text">{{line}}</text>
+    </view>
+  </view>
+
+  <view class="legal__foot">继续使用本小程序，即表示你已阅读并同意本隐私政策。</view>
+</view>

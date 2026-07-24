@@ -118,6 +118,14 @@ Page({
     makePhoneCall(this.data.frontPhone)
   },
 
+  goAgreement() {
+    wx.navigateTo({ url: '/pages/legal/agreement/agreement' })
+  },
+
+  goPrivacy() {
+    wx.navigateTo({ url: '/pages/legal/privacy/privacy' })
+  },
+
   goStaff() {
     wx.navigateTo({ url: '/pages/staff/entry/entry' })
   }

@@ -22,7 +22,9 @@
     "pages/catalog/catalog",
     "pages/creek-notice/creek-notice",
     "pages/upgrade-info/upgrade-info",
-    "pages/staff/maps/maps"
+    "pages/staff/maps/maps",
+    "pages/legal/privacy/privacy",
+    "pages/legal/agreement/agreement"
   ],
   "window": {
     "backgroundTextStyle": "dark",
@@ -38,13 +40,23 @@
     "selectedColor": "#244B36",
     "backgroundColor": "#F6F4F0",
     "list": [
-      { "pagePath": "pages/index/index", "text": "向导" },
-      { "pagePath": "pages/ling/ling", "text": "长河令" },
-      { "pagePath": "pages/mine/mine", "text": "我的" }
+      {
+        "pagePath": "pages/index/index",
+        "text": "向导"
+      },
+      {
+        "pagePath": "pages/ling/ling",
+        "text": "长河令"
+      },
+      {
+        "pagePath": "pages/mine/mine",
+        "text": "我的"
+      }
     ]
   },
   "usingComponents": {},
   "sitemapLocation": "sitemap.json",
   "style": "v2",
-  "lazyCodeLoading": "requiredComponents"
+  "lazyCodeLoading": "requiredComponents",
+  "__usePrivacyCheck__": true
 }
