@@ -19,7 +19,7 @@
 
   <!-- 列表 -->
   <view class="list" wx:if="{{!loading && list.length}}">
-    <view class="item sr-touch" hover-class="sr-touch--press" hover-stay-time="60"
+    <view class="item sr-touch" hover-class="sr-touch--card" hover-stay-time="60"
           wx:for="{{list}}" wx:key="id" data-slug="{{item.slug}}" bindtap="onItemTap">
       <image class="item__cover" wx:if="{{item.coverFileId}}" src="{{item.coverFileId}}" mode="aspectFill" />
       <view class="item__body">

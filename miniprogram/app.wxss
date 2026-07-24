@@ -1,54 +1,73 @@
 /* ============================================================
-   森水长河 · 设计系统 Token（Vibe UI v1.0 · 依据交付包 STYLE.md）
+   森水长河 · 设计系统 Token（Vibe UI v2.0 · 严格对齐根目录 STYLE.md）
    浅色：自然米白 + 森林绿 + 珊瑚CTA + 山野金（金仅用于令/奖励/会员）
-   深色：长河令沉浸页专用（深森林墨绿，与品牌绿同色系）
-   变量名沿用 --sr-*，全站类名不变，值按新规范统一。
+   深色：长河令沉浸页专用
+   ⚠️ 不得在页面 wxss 里新增色值/圆角/阴影，一律引用这里的变量。
    ============================================================ */
 page {
-  /* 背景 */
-  --sr-bg: #F6F4F0;             /* bg-light */
-  --sr-bg-card: #FFFFFF;        /* surface-light */
-  --sr-bg-sunken: #E9EEE8;      /* mist */
-  /* 主色（森林绿） */
-  --sr-primary: #244B36;        /* forest */
-  --sr-primary-light: #3A6749;  /* moss */
-  --sr-primary-weak: #E9EEE8;   /* mist */
-  --sr-primary-deep: #173628;   /* forest-deep */
-  /* 强调（珊瑚 · 交易CTA/强提醒） */
-  --sr-seal: #F07055;           /* coral */
+  /* ---- 浅色主题（STYLE.md §4）---- */
+  --sr-bg: #F6F4F0;             /* 页面背景 */
+  --sr-bg-card: #FFFFFF;        /* 主要表面 */
+  --sr-bg-sunken: #EEEDE7;      /* 柔和表面 */
+  /* 主色 */
+  --sr-primary: #244B36;        /* 品牌绿 */
+  --sr-primary-deep: #173628;   /* 深森林绿 */
+  --sr-primary-light: #4F7963;  /* 河川绿 */
+  --sr-primary-weak: #E9EEE8;   /* 品牌绿弱背景（标签/图标底） */
+  /* 强调：珊瑚仅用于交易 CTA / 错误 / 强提醒 */
+  --sr-seal: #F07055;
   --sr-seal-light: #F08A73;
-  /* 辅助（山野金 · 仅令/奖励/会员） */
+  /* 辅助：山野金仅用于长河令 / 奖励 / 会员 / 关键资产 */
   --sr-gold: #D5A43A;
   --sr-gold-light: #E0B95C;
   /* 文字 */
-  --sr-text: #172019;
-  --sr-text-sub: #7D867F;
-  --sr-text-weak: #8B938E;
+  --sr-text: #172019;           /* 主文字 */
+  --sr-text-sub: #667069;       /* 次文字（v2.0 提高对比度） */
+  --sr-text-weak: #8B938E;      /* 三级文字 */
   --sr-text-invert: #F7F3EA;
   /* 描边 / 分隔 */
   --sr-border: #E9EEE8;
-  --sr-line: #EFF2EE;
+  --sr-line: rgba(36, 75, 54, 0.10);
   /* 状态 */
   --sr-success: #36B66A;
   --sr-warning: #D5A43A;
   --sr-danger: #F07055;
-  /* 深色主题（长河令页 · 深森林墨绿，与 forest 同色系） */
-  --sr-dark-bg: #0E1A13;      /* 极深墨绿背景 */
-  --sr-dark-card: #17281D;    /* 墨绿卡片（比背景亮一档，建立层次） */
-  --sr-dark-muted: #8FA396;   /* 次级文字（带绿调灰） */
-  /* 圆角四档 / 阴影 */
-  --sr-radius-sm: 24rpx;
-  --sr-radius: 32rpx;
-  --sr-radius-lg: 40rpx;
-  --sr-radius-xl: 56rpx;
+
+  /* ---- 长河令深色主题（STYLE.md §4）---- */
+  --sr-dark-bg: #101512;        /* 页面背景 */
+  --sr-dark-card: #18201B;      /* 卡片背景 */
+  --sr-dark-card-2: #202A23;    /* 次级卡片 */
+  --sr-dark-text: #F7F3EA;      /* 主文字 */
+  --sr-dark-muted: rgba(247, 243, 234, 0.62); /* 次文字 */
+  --sr-dark-line: rgba(255, 255, 255, 0.08);
+
+  /* ---- 圆角（STYLE.md §6）---- */
+  --sr-radius-xs: 20rpx;        /* 小控件 */
+  --sr-radius-sm: 24rpx;        /* 状态标签 */
+  --sr-radius: 32rpx;           /* 普通卡片 */
+  --sr-radius-lg: 48rpx;        /* 主要卡片 */
+  --sr-radius-xl: 64rpx;        /* 沉浸资产卡 */
+  /* ---- 间距（8rpx 网格）---- */
+  --sr-gap-1: 8rpx;  --sr-gap-2: 16rpx; --sr-gap-3: 24rpx;
+  --sr-gap-4: 32rpx; --sr-gap-5: 40rpx; --sr-gap-6: 48rpx; --sr-gap-8: 64rpx;
+  /* ---- 动效时长（STYLE.md §7）---- */
+  --sr-dur-fast: 140ms;         /* 快速反馈 120-160 */
+  --sr-dur-switch: 220ms;       /* 普通切换 200-240 */
+  --sr-dur-enter: 300ms;        /* 页面进入 280-340 */
+  --sr-dur-sheet: 330ms;        /* 底部弹层 300-360 */
+  --sr-ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+
   --sr-shadow: 0 12rpx 40rpx rgba(30, 55, 40, 0.06);
 
   background: var(--sr-bg);
   color: var(--sr-text);
-  font-family: -apple-system, "PingFang SC", "Helvetica Neue", sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "PingFang SC", "Helvetica Neue", Arial, sans-serif;
   font-size: 28rpx;
   line-height: 1.6;
 }
+
+/* 数字统一等宽，避免跳动（STYLE.md §5） */
+.sr-num { font-variant-numeric: tabular-nums; font-feature-settings: "tnum"; }
 
 /* ---------- 通用布局类 ---------- */
 .sr-page { min-height: 100vh; padding: 24rpx 32rpx calc(48rpx + env(safe-area-inset-bottom)); box-sizing: border-box; }
@@ -73,7 +92,6 @@ page {
 .sr-text-sub { font-size: 26rpx; color: var(--sr-text-sub); }
 .sr-text-weak { font-size: 24rpx; color: var(--sr-text-weak); }
 .sr-seal-text { color: var(--sr-seal); font-weight: 700; }
-.sr-num { font-variant-numeric: tabular-nums; }
 
 /* ---------- 按钮类 ---------- */
 .sr-btn {
@@ -97,11 +115,15 @@ page {
 .sr-divider { height: 1rpx; background: var(--sr-line); margin: 24rpx 0; }
 
 /* ---------- 按压态（整卡可点击 · hover-class 方案）----------
-   用法：class="sr-card sr-touch" hover-class="sr-touch--press" hover-stay-time="60"
-   主 CTA：hover-class="sr-touch--cta" */
-.sr-touch { transition: transform 0.13s ease-out, filter 0.13s ease-out; }
-.sr-touch--press { transform: scale(0.96); }
-.sr-touch--cta { transform: scale(0.94); filter: brightness(0.94); }
+   STYLE.md §7 三档，按元素面积区分，大卡不得用重档否则页面抖动：
+     大卡片   hover-class="sr-touch--card"  scale(.985)
+     普通入口 hover-class="sr-touch--press" scale(.97)
+     主 CTA   hover-class="sr-touch--cta"   scale(.96)
+   用法：class="sr-card sr-touch" hover-class="sr-touch--card" hover-stay-time="60" */
+.sr-touch { transition: transform var(--sr-dur-fast) var(--sr-ease), filter var(--sr-dur-fast) var(--sr-ease); }
+.sr-touch--card { transform: scale(0.985); }
+.sr-touch--press { transform: scale(0.97); }
+.sr-touch--cta { transform: scale(0.96); filter: brightness(0.96); }
 
 /* ---------- 图标 ---------- */
 .sr-icon { width: 44rpx; height: 44rpx; }

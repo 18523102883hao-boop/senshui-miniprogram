@@ -26,7 +26,7 @@
   </view>
 
   <!-- 会员卡（黑金 · 整卡可点） -->
-  <view class="mcard sr-goldcard sr-gold-hairline sr-touch" hover-class="sr-touch--press" hover-stay-time="60" bindtap="goMember">
+  <view class="mcard sr-goldcard sr-gold-hairline sr-touch" hover-class="sr-touch--card" hover-stay-time="60" bindtap="goMember">
     <view class="mcard__left">
       <text class="mcard__title">森水会员卡</text>
       <text class="mcard__desc">{{member ? '有效期至 ' + member.expireText : '9.9 元 · 1000 长河令 + 生日 85 折'}}</text>

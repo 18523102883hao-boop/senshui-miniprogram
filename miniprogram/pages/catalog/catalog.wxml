@@ -4,7 +4,7 @@
     <view class="tabs">
       <view wx:for="{{sections}}" wx:key="key"
             class="tab sr-touch {{activeKey === item.key ? 'tab--on' : ''}}"
-            hover-class="sr-touch--press" hover-stay-time="60"
+            hover-class="sr-touch--card" hover-stay-time="60"
             data-key="{{item.key}}" bindtap="switchTab">
         <image class="tab__icon" src="{{item.iconPath}}" mode="aspectFit" />
         <text class="tab__text">{{item.title}}</text>

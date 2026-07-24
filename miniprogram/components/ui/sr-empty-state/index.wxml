@@ -1,0 +1,7 @@
+<view class="es es--{{theme}}">
+  <sr-icon name="{{icon}}" theme="{{theme}}" size="xl" />
+  <text class="es__title">{{title}}</text>
+  <text class="es__desc" wx:if="{{desc}}">{{desc}}</text>
+  <view class="es__btn sr-touch" wx:if="{{actionText}}"
+        hover-class="sr-touch--cta" hover-stay-time="60" bindtap="onAction">{{actionText}}</view>
+</view>

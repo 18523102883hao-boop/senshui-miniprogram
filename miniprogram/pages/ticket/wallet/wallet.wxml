@@ -11,7 +11,7 @@
   </view>
 
   <view class="tlist" wx:if="{{!loading && visibleList.length}}">
-    <view class="tcard sr-touch" hover-class="sr-touch--press" hover-stay-time="60"
+    <view class="tcard sr-touch" hover-class="sr-touch--card" hover-stay-time="60"
           wx:for="{{visibleList}}" wx:key="ticketNo" data-no="{{item.ticketNo}}" bindtap="onTicketTap">
       <view class="tcard__head">
         <text class="tcard__name">{{item.productName}}</text>

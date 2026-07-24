@@ -4,7 +4,7 @@
     <text class="head__sub">团队到访请提前预约，散客购票后可直接入园</text>
   </view>
 
-  <view class="ent sr-touch" hover-class="sr-touch--press" hover-stay-time="60"
+  <view class="ent sr-touch" hover-class="sr-touch--card" hover-stay-time="60"
         wx:for="{{entries}}" wx:key="key" data-key="{{item.key}}" bindtap="onEntryTap">
     <image class="ent__icon" src="{{item.icon}}" mode="aspectFit" />
     <view class="ent__body">

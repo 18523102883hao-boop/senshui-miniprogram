@@ -49,7 +49,7 @@
   </block>
 
   <!-- 兜底：拿不准的都找管家 -->
-  <view class="ask-card sr-touch" hover-class="sr-touch--press" hover-stay-time="60" bindtap="goConcierge">
+  <view class="ask-card sr-touch" hover-class="sr-touch--card" hover-stay-time="60" bindtap="goConcierge">
     <view class="ask-card__body">
       <text class="ask-card__title">还有问题？找管家</text>
       <text class="ask-card__sub">标注「请咨询管家」的项目以现场为准</text>

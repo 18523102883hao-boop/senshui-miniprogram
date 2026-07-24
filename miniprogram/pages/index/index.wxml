@@ -74,7 +74,7 @@
   <block wx:if="{{serviceCards.length}}">
     <text class="sec-title">特色服务</text>
     <scroll-view class="svc-scroll" scroll-x enable-flex show-scrollbar="{{false}}">
-      <view class="svc-card sr-touch" hover-class="sr-touch--press" hover-stay-time="60"
+      <view class="svc-card sr-touch" hover-class="sr-touch--card" hover-stay-time="60"
             wx:for="{{serviceCards}}" wx:key="key" data-key="{{item.key}}" bindtap="onSectionTap">
         <image class="svc-card__icon" src="{{item.icon}}" mode="aspectFit" />
         <text class="svc-card__title">{{item.title}}</text>
@@ -86,7 +86,7 @@
 
   <!-- 7. 会员卡（黑金主推 · 整卡可点） -->
   <view class="promo sr-goldcard sr-gold-hairline sr-touch" wx:if="{{memberSection}}"
-        hover-class="sr-touch--press" hover-stay-time="60" data-key="{{memberSection.key}}" bindtap="onSectionTap">
+        hover-class="sr-touch--card" hover-stay-time="60" data-key="{{memberSection.key}}" bindtap="onSectionTap">
     <view class="promo__left">
       <text class="promo__badge">SVIP</text>
       <text class="promo__title">森水会员卡</text>

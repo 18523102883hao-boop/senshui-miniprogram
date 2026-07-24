@@ -1,0 +1,3 @@
+.sr-ico { display: block; flex-shrink: 0; }
+/* 深色底上的浅色化处理（资源包已提供 ivory 版本，此为兜底） */
+.sr-ico--invert { filter: brightness(0) invert(1); }

@@ -1,0 +1,7 @@
+.es { display: flex; flex-direction: column; align-items: center; padding: 120rpx 40rpx; }
+.es__title { font-size: 30rpx; font-weight: 650; color: var(--sr-text); margin-top: 24rpx; }
+.es__desc { font-size: 24rpx; color: var(--sr-text-weak); margin-top: 12rpx; text-align: center; line-height: 1.6; }
+.es__btn { margin-top: 40rpx; padding: 20rpx 60rpx; border-radius: 44rpx;
+  background: var(--sr-primary); color: var(--sr-text-invert); font-size: 28rpx; font-weight: 600; }
+.es--dark .es__title { color: var(--sr-dark-text); }
+.es--dark .es__desc { color: var(--sr-dark-muted); }

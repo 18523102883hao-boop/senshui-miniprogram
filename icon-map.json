@@ -1,0 +1,1248 @@
+{
+  "version": "2.0",
+  "colors": {
+    "forest": "#244B36",
+    "forest_deep": "#173628",
+    "moss": "#3A6749",
+    "gold": "#D5A43A",
+    "coral": "#F07055",
+    "ivory": "#F7F3EA",
+    "mist": "#E9EEE8",
+    "dark": "#101512",
+    "card_dark": "#18201B",
+    "text": "#172019",
+    "muted": "#7D867F",
+    "dark_muted": "#9AA39D",
+    "success": "#36B66A",
+    "warning": "#D5A43A",
+    "error": "#F07055",
+    "pending": "#8B938E",
+    "disabled": "#B8BDB9"
+  },
+  "icons": [
+    {
+      "category": "global",
+      "name": "chevron-down",
+      "purpose_zh": "展开内容",
+      "forest_path": "assets/icons/forest/chevron-down.png",
+      "ivory_path": "assets/icons/ivory/chevron-down.png",
+      "source": "chevron-down"
+    },
+    {
+      "category": "global",
+      "name": "chevron-right",
+      "purpose_zh": "列表进入详情",
+      "forest_path": "assets/icons/forest/chevron-right.png",
+      "ivory_path": "assets/icons/ivory/chevron-right.png",
+      "source": "chevron-right"
+    },
+    {
+      "category": "global",
+      "name": "close",
+      "purpose_zh": "关闭弹层",
+      "forest_path": "assets/icons/forest/close.png",
+      "ivory_path": "assets/icons/ivory/close.png",
+      "source": "times"
+    },
+    {
+      "category": "global",
+      "name": "customer-service",
+      "purpose_zh": "联系客服",
+      "forest_path": "assets/icons/forest/customer-service.png",
+      "ivory_path": "assets/icons/ivory/customer-service.png",
+      "source": "headset"
+    },
+    {
+      "category": "global",
+      "name": "delete",
+      "purpose_zh": "删除",
+      "forest_path": "assets/icons/forest/delete.png",
+      "ivory_path": "assets/icons/ivory/delete.png",
+      "source": "trash"
+    },
+    {
+      "category": "global",
+      "name": "edit",
+      "purpose_zh": "编辑",
+      "forest_path": "assets/icons/forest/edit.png",
+      "ivory_path": "assets/icons/ivory/edit.png",
+      "source": "edit"
+    },
+    {
+      "category": "global",
+      "name": "help",
+      "purpose_zh": "帮助说明",
+      "forest_path": "assets/icons/forest/help.png",
+      "ivory_path": "assets/icons/ivory/help.png",
+      "source": "question-circle"
+    },
+    {
+      "category": "global",
+      "name": "history",
+      "purpose_zh": "历史记录",
+      "forest_path": "assets/icons/forest/history.png",
+      "ivory_path": "assets/icons/ivory/history.png",
+      "source": "history"
+    },
+    {
+      "category": "global",
+      "name": "more",
+      "purpose_zh": "更多操作",
+      "forest_path": "assets/icons/forest/more.png",
+      "ivory_path": "assets/icons/ivory/more.png",
+      "source": "ellipsis-h"
+    },
+    {
+      "category": "global",
+      "name": "nav-back",
+      "purpose_zh": "返回上一页",
+      "forest_path": "assets/icons/forest/nav-back.png",
+      "ivory_path": "assets/icons/ivory/nav-back.png",
+      "source": "arrow-left"
+    },
+    {
+      "category": "global",
+      "name": "nav-forward",
+      "purpose_zh": "进入下一层",
+      "forest_path": "assets/icons/forest/nav-forward.png",
+      "ivory_path": "assets/icons/ivory/nav-forward.png",
+      "source": "arrow-right"
+    },
+    {
+      "category": "global",
+      "name": "notice",
+      "purpose_zh": "通知提醒",
+      "forest_path": "assets/icons/forest/notice.png",
+      "ivory_path": "assets/icons/ivory/notice.png",
+      "source": "bell"
+    },
+    {
+      "category": "global",
+      "name": "refresh",
+      "purpose_zh": "刷新状态",
+      "forest_path": "assets/icons/forest/refresh.png",
+      "ivory_path": "assets/icons/ivory/refresh.png",
+      "source": "sync"
+    },
+    {
+      "category": "global",
+      "name": "search",
+      "purpose_zh": "搜索",
+      "forest_path": "assets/icons/forest/search.png",
+      "ivory_path": "assets/icons/ivory/search.png",
+      "source": "search"
+    },
+    {
+      "category": "global",
+      "name": "settings",
+      "purpose_zh": "设置",
+      "forest_path": "assets/icons/forest/settings.png",
+      "ivory_path": "assets/icons/ivory/settings.png",
+      "source": "cog"
+    },
+    {
+      "category": "global",
+      "name": "share",
+      "purpose_zh": "分享",
+      "forest_path": "assets/icons/forest/share.png",
+      "ivory_path": "assets/icons/ivory/share.png",
+      "source": "share"
+    },
+    {
+      "category": "home",
+      "name": "home-activity",
+      "purpose_zh": "今日活动",
+      "forest_path": "assets/icons/forest/home-activity.png",
+      "ivory_path": "assets/icons/ivory/home-activity.png",
+      "source": "flag-checkered"
+    },
+    {
+      "category": "home",
+      "name": "home-announcement",
+      "purpose_zh": "园区公告",
+      "forest_path": "assets/icons/forest/home-announcement.png",
+      "ivory_path": "assets/icons/ivory/home-announcement.png",
+      "source": "bullhorn"
+    },
+    {
+      "category": "home",
+      "name": "home-bar",
+      "purpose_zh": "森水酒吧",
+      "forest_path": "assets/icons/forest/home-bar.png",
+      "ivory_path": "assets/icons/ivory/home-bar.png",
+      "source": "glass-cheers"
+    },
+    {
+      "category": "home",
+      "name": "home-calendar",
+      "purpose_zh": "今日日期",
+      "forest_path": "assets/icons/forest/home-calendar.png",
+      "ivory_path": "assets/icons/ivory/home-calendar.png",
+      "source": "calendar-day"
+    },
+    {
+      "category": "home",
+      "name": "home-current-location",
+      "purpose_zh": "当前位置",
+      "forest_path": "assets/icons/forest/home-current-location.png",
+      "ivory_path": "assets/icons/ivory/home-current-location.png",
+      "source": "location-arrow"
+    },
+    {
+      "category": "home",
+      "name": "home-map",
+      "purpose_zh": "园区地图",
+      "forest_path": "assets/icons/forest/home-map.png",
+      "ivory_path": "assets/icons/ivory/home-map.png",
+      "source": "map-marked"
+    },
+    {
+      "category": "home",
+      "name": "home-member",
+      "purpose_zh": "会员中心",
+      "forest_path": "assets/icons/forest/home-member.png",
+      "ivory_path": "assets/icons/ivory/home-member.png",
+      "source": "crown"
+    },
+    {
+      "category": "home",
+      "name": "home-open-status",
+      "purpose_zh": "营业状态",
+      "forest_path": "assets/icons/forest/home-open-status.png",
+      "ivory_path": "assets/icons/ivory/home-open-status.png",
+      "source": "store"
+    },
+    {
+      "category": "home",
+      "name": "home-reservation",
+      "purpose_zh": "溪降预约",
+      "forest_path": "assets/icons/forest/home-reservation.png",
+      "ivory_path": "assets/icons/ivory/home-reservation.png",
+      "source": "calendar-check"
+    },
+    {
+      "category": "home",
+      "name": "home-store",
+      "purpose_zh": "营地小卖部",
+      "forest_path": "assets/icons/forest/home-store.png",
+      "ivory_path": "assets/icons/ivory/home-store.png",
+      "source": "store"
+    },
+    {
+      "category": "home",
+      "name": "home-ticket",
+      "purpose_zh": "在线购票",
+      "forest_path": "assets/icons/forest/home-ticket.png",
+      "ivory_path": "assets/icons/ivory/home-ticket.png",
+      "source": "ticket-alt"
+    },
+    {
+      "category": "home",
+      "name": "home-upgrade",
+      "purpose_zh": "补差价升级",
+      "forest_path": "assets/icons/forest/home-upgrade.png",
+      "ivory_path": "assets/icons/ivory/home-upgrade.png",
+      "source": "arrow-alt-circle-up"
+    },
+    {
+      "category": "home",
+      "name": "home-water-level",
+      "purpose_zh": "水位状态",
+      "forest_path": "assets/icons/forest/home-water-level.png",
+      "ivory_path": "assets/icons/ivory/home-water-level.png",
+      "source": "water"
+    },
+    {
+      "category": "home",
+      "name": "home-water-quality",
+      "purpose_zh": "水质状态",
+      "forest_path": "assets/icons/forest/home-water-quality.png",
+      "ivory_path": "assets/icons/ivory/home-water-quality.png",
+      "source": "tint"
+    },
+    {
+      "category": "home",
+      "name": "home-weather",
+      "purpose_zh": "天气",
+      "forest_path": "assets/icons/forest/home-weather.png",
+      "ivory_path": "assets/icons/ivory/home-weather.png",
+      "source": "cloud-sun"
+    },
+    {
+      "category": "map",
+      "name": "map-activity-zone",
+      "purpose_zh": "活动区域",
+      "forest_path": "assets/icons/forest/map-activity-zone.png",
+      "ivory_path": "assets/icons/ivory/map-activity-zone.png",
+      "source": "flag"
+    },
+    {
+      "category": "map",
+      "name": "map-campsite",
+      "purpose_zh": "营地区域",
+      "forest_path": "assets/icons/forest/map-campsite.png",
+      "ivory_path": "assets/icons/ivory/map-campsite.png",
+      "source": "campground"
+    },
+    {
+      "category": "map",
+      "name": "map-compass",
+      "purpose_zh": "地图方向",
+      "forest_path": "assets/icons/forest/map-compass.png",
+      "ivory_path": "assets/icons/ivory/map-compass.png",
+      "source": "compass"
+    },
+    {
+      "category": "map",
+      "name": "map-dining",
+      "purpose_zh": "餐饮取餐区",
+      "forest_path": "assets/icons/forest/map-dining.png",
+      "ivory_path": "assets/icons/ivory/map-dining.png",
+      "source": "utensils"
+    },
+    {
+      "category": "map",
+      "name": "map-exit",
+      "purpose_zh": "景区出口",
+      "forest_path": "assets/icons/forest/map-exit.png",
+      "ivory_path": "assets/icons/ivory/map-exit.png",
+      "source": "sign-out-alt"
+    },
+    {
+      "category": "map",
+      "name": "map-first-aid",
+      "purpose_zh": "医疗急救点",
+      "forest_path": "assets/icons/forest/map-first-aid.png",
+      "ivory_path": "assets/icons/ivory/map-first-aid.png",
+      "source": "first-aid"
+    },
+    {
+      "category": "map",
+      "name": "map-info",
+      "purpose_zh": "景点详情",
+      "forest_path": "assets/icons/forest/map-info.png",
+      "ivory_path": "assets/icons/ivory/map-info.png",
+      "source": "info-circle"
+    },
+    {
+      "category": "map",
+      "name": "map-layers",
+      "purpose_zh": "地图图层",
+      "forest_path": "assets/icons/forest/map-layers.png",
+      "ivory_path": "assets/icons/ivory/map-layers.png",
+      "source": "layer-group"
+    },
+    {
+      "category": "map",
+      "name": "map-navigation",
+      "purpose_zh": "导航到目标",
+      "forest_path": "assets/icons/forest/map-navigation.png",
+      "ivory_path": "assets/icons/ivory/map-navigation.png",
+      "source": "location-arrow"
+    },
+    {
+      "category": "map",
+      "name": "map-parking",
+      "purpose_zh": "停车场",
+      "forest_path": "assets/icons/forest/map-parking.png",
+      "ivory_path": "assets/icons/ivory/map-parking.png",
+      "source": "parking"
+    },
+    {
+      "category": "map",
+      "name": "map-photo-spot",
+      "purpose_zh": "打卡拍照点",
+      "forest_path": "assets/icons/forest/map-photo-spot.png",
+      "ivory_path": "assets/icons/ivory/map-photo-spot.png",
+      "source": "camera"
+    },
+    {
+      "category": "map",
+      "name": "map-restroom",
+      "purpose_zh": "卫生间",
+      "forest_path": "assets/icons/forest/map-restroom.png",
+      "ivory_path": "assets/icons/ivory/map-restroom.png",
+      "source": "restroom"
+    },
+    {
+      "category": "map",
+      "name": "map-route",
+      "purpose_zh": "推荐路线",
+      "forest_path": "assets/icons/forest/map-route.png",
+      "ivory_path": "assets/icons/ivory/map-route.png",
+      "source": "route"
+    },
+    {
+      "category": "map",
+      "name": "map-service-center",
+      "purpose_zh": "游客中心",
+      "forest_path": "assets/icons/forest/map-service-center.png",
+      "ivory_path": "assets/icons/ivory/map-service-center.png",
+      "source": "concierge-bell"
+    },
+    {
+      "category": "map",
+      "name": "map-stream-descent",
+      "purpose_zh": "溪降区域",
+      "forest_path": "assets/icons/forest/map-stream-descent.png",
+      "ivory_path": "assets/icons/ivory/map-stream-descent.png",
+      "source": "swimmer"
+    },
+    {
+      "category": "activity",
+      "name": "activity-auction",
+      "purpose_zh": "海鲜拍卖",
+      "forest_path": "assets/icons/forest/activity-auction.png",
+      "ivory_path": "assets/icons/ivory/activity-auction.png",
+      "source": "gavel"
+    },
+    {
+      "category": "activity",
+      "name": "activity-badge",
+      "purpose_zh": "侠客身份/称号",
+      "forest_path": "assets/icons/forest/activity-badge.png",
+      "ivory_path": "assets/icons/ivory/activity-badge.png",
+      "source": "certificate"
+    },
+    {
+      "category": "activity",
+      "name": "activity-basketball",
+      "purpose_zh": "投篮球",
+      "forest_path": "assets/icons/forest/activity-basketball.png",
+      "ivory_path": "assets/icons/ivory/activity-basketball.png",
+      "source": "basketball-ball"
+    },
+    {
+      "category": "activity",
+      "name": "activity-completed",
+      "purpose_zh": "任务完成",
+      "forest_path": "assets/icons/forest/activity-completed.png",
+      "ivory_path": "assets/icons/ivory/activity-completed.png",
+      "source": "check-circle"
+    },
+    {
+      "category": "activity",
+      "name": "activity-crab",
+      "purpose_zh": "抓螃蟹",
+      "forest_path": "assets/icons/forest/activity-crab.png",
+      "ivory_path": "assets/icons/ivory/activity-crab.png",
+      "source": "custom:crab"
+    },
+    {
+      "category": "activity",
+      "name": "activity-crayfish",
+      "purpose_zh": "钓小龙虾",
+      "forest_path": "assets/icons/forest/activity-crayfish.png",
+      "ivory_path": "assets/icons/ivory/activity-crayfish.png",
+      "source": "custom:crayfish"
+    },
+    {
+      "category": "activity",
+      "name": "activity-dice",
+      "purpose_zh": "骰子游戏",
+      "forest_path": "assets/icons/forest/activity-dice.png",
+      "ivory_path": "assets/icons/ivory/activity-dice.png",
+      "source": "dice-five"
+    },
+    {
+      "category": "activity",
+      "name": "activity-duck",
+      "purpose_zh": "套鸭子",
+      "forest_path": "assets/icons/forest/activity-duck.png",
+      "ivory_path": "assets/icons/ivory/activity-duck.png",
+      "source": "custom:duck"
+    },
+    {
+      "category": "activity",
+      "name": "activity-fish",
+      "purpose_zh": "摸鱼抓鱼",
+      "forest_path": "assets/icons/forest/activity-fish.png",
+      "ivory_path": "assets/icons/ivory/activity-fish.png",
+      "source": "fish"
+    },
+    {
+      "category": "activity",
+      "name": "activity-medal",
+      "purpose_zh": "成就勋章",
+      "forest_path": "assets/icons/forest/activity-medal.png",
+      "ivory_path": "assets/icons/ivory/activity-medal.png",
+      "source": "medal"
+    },
+    {
+      "category": "activity",
+      "name": "activity-ranking",
+      "purpose_zh": "榜单",
+      "forest_path": "assets/icons/forest/activity-ranking.png",
+      "ivory_path": "assets/icons/ivory/activity-ranking.png",
+      "source": "list-ol"
+    },
+    {
+      "category": "activity",
+      "name": "activity-reward",
+      "purpose_zh": "奖励兑换",
+      "forest_path": "assets/icons/forest/activity-reward.png",
+      "ivory_path": "assets/icons/ivory/activity-reward.png",
+      "source": "gift"
+    },
+    {
+      "category": "activity",
+      "name": "activity-scan",
+      "purpose_zh": "扫码领令/核销",
+      "forest_path": "assets/icons/forest/activity-scan.png",
+      "ivory_path": "assets/icons/ivory/activity-scan.png",
+      "source": "qrcode"
+    },
+    {
+      "category": "activity",
+      "name": "activity-schedule",
+      "purpose_zh": "活动时间",
+      "forest_path": "assets/icons/forest/activity-schedule.png",
+      "ivory_path": "assets/icons/ivory/activity-schedule.png",
+      "source": "clock"
+    },
+    {
+      "category": "activity",
+      "name": "activity-slingshot",
+      "purpose_zh": "愤怒的小鸟/弹弓",
+      "forest_path": "assets/icons/forest/activity-slingshot.png",
+      "ivory_path": "assets/icons/ivory/activity-slingshot.png",
+      "source": "custom:slingshot"
+    },
+    {
+      "category": "activity",
+      "name": "activity-task",
+      "purpose_zh": "悬赏任务",
+      "forest_path": "assets/icons/forest/activity-task.png",
+      "ivory_path": "assets/icons/ivory/activity-task.png",
+      "source": "clipboard-list"
+    },
+    {
+      "category": "activity",
+      "name": "activity-token",
+      "purpose_zh": "长河令",
+      "forest_path": "assets/icons/forest/activity-token.png",
+      "ivory_path": "assets/icons/ivory/activity-token.png",
+      "source": "coins"
+    },
+    {
+      "category": "activity",
+      "name": "activity-trophy",
+      "purpose_zh": "活动排行",
+      "forest_path": "assets/icons/forest/activity-trophy.png",
+      "ivory_path": "assets/icons/ivory/activity-trophy.png",
+      "source": "trophy"
+    },
+    {
+      "category": "activity",
+      "name": "activity-wishlist",
+      "purpose_zh": "想体验/收藏",
+      "forest_path": "assets/icons/forest/activity-wishlist.png",
+      "ivory_path": "assets/icons/ivory/activity-wishlist.png",
+      "source": "heart"
+    },
+    {
+      "category": "booking",
+      "name": "booking-bus",
+      "purpose_zh": "接驳车",
+      "forest_path": "assets/icons/forest/booking-bus.png",
+      "ivory_path": "assets/icons/ivory/booking-bus.png",
+      "source": "bus"
+    },
+    {
+      "category": "booking",
+      "name": "booking-cancel",
+      "purpose_zh": "取消预约",
+      "forest_path": "assets/icons/forest/booking-cancel.png",
+      "ivory_path": "assets/icons/ivory/booking-cancel.png",
+      "source": "times-circle"
+    },
+    {
+      "category": "booking",
+      "name": "booking-confirm",
+      "purpose_zh": "确认预约",
+      "forest_path": "assets/icons/forest/booking-confirm.png",
+      "ivory_path": "assets/icons/ivory/booking-confirm.png",
+      "source": "check"
+    },
+    {
+      "category": "booking",
+      "name": "booking-helmet",
+      "purpose_zh": "安全头盔",
+      "forest_path": "assets/icons/forest/booking-helmet.png",
+      "ivory_path": "assets/icons/ivory/booking-helmet.png",
+      "source": "hard-hat"
+    },
+    {
+      "category": "booking",
+      "name": "booking-life-jacket",
+      "purpose_zh": "救生衣",
+      "forest_path": "assets/icons/forest/booking-life-jacket.png",
+      "ivory_path": "assets/icons/ivory/booking-life-jacket.png",
+      "source": "life-ring"
+    },
+    {
+      "category": "booking",
+      "name": "booking-number",
+      "purpose_zh": "上车号码",
+      "forest_path": "assets/icons/forest/booking-number.png",
+      "ivory_path": "assets/icons/ivory/booking-number.png",
+      "source": "hashtag"
+    },
+    {
+      "category": "booking",
+      "name": "booking-people",
+      "purpose_zh": "参与人数",
+      "forest_path": "assets/icons/forest/booking-people.png",
+      "ivory_path": "assets/icons/ivory/booking-people.png",
+      "source": "users"
+    },
+    {
+      "category": "booking",
+      "name": "booking-phone",
+      "purpose_zh": "联系电话",
+      "forest_path": "assets/icons/forest/booking-phone.png",
+      "ivory_path": "assets/icons/ivory/booking-phone.png",
+      "source": "phone"
+    },
+    {
+      "category": "booking",
+      "name": "booking-quota",
+      "purpose_zh": "剩余名额",
+      "forest_path": "assets/icons/forest/booking-quota.png",
+      "ivory_path": "assets/icons/ivory/booking-quota.png",
+      "source": "user-check"
+    },
+    {
+      "category": "booking",
+      "name": "booking-safety",
+      "purpose_zh": "安全须知",
+      "forest_path": "assets/icons/forest/booking-safety.png",
+      "ivory_path": "assets/icons/ivory/booking-safety.png",
+      "source": "shield-alt"
+    },
+    {
+      "category": "booking",
+      "name": "booking-time",
+      "purpose_zh": "预约时间",
+      "forest_path": "assets/icons/forest/booking-time.png",
+      "ivory_path": "assets/icons/ivory/booking-time.png",
+      "source": "clock"
+    },
+    {
+      "category": "booking",
+      "name": "booking-warning",
+      "purpose_zh": "风险提示",
+      "forest_path": "assets/icons/forest/booking-warning.png",
+      "ivory_path": "assets/icons/ivory/booking-warning.png",
+      "source": "exclamation-triangle"
+    },
+    {
+      "category": "booking",
+      "name": "booking-weather-pause",
+      "purpose_zh": "天气暂停",
+      "forest_path": "assets/icons/forest/booking-weather-pause.png",
+      "ivory_path": "assets/icons/ivory/booking-weather-pause.png",
+      "source": "cloud-rain"
+    },
+    {
+      "category": "trip",
+      "name": "trip-calendar",
+      "purpose_zh": "出行日期",
+      "forest_path": "assets/icons/forest/trip-calendar.png",
+      "ivory_path": "assets/icons/ivory/trip-calendar.png",
+      "source": "senshui-semantic-alias"
+    },
+    {
+      "category": "trip",
+      "name": "trip-campsite",
+      "purpose_zh": "营位信息",
+      "forest_path": "assets/icons/forest/trip-campsite.png",
+      "ivory_path": "assets/icons/ivory/trip-campsite.png",
+      "source": "senshui-semantic-alias"
+    },
+    {
+      "category": "trip",
+      "name": "trip-contact",
+      "purpose_zh": "联系前台或领队",
+      "forest_path": "assets/icons/forest/trip-contact.png",
+      "ivory_path": "assets/icons/ivory/trip-contact.png",
+      "source": "senshui-semantic-alias"
+    },
+    {
+      "category": "trip",
+      "name": "trip-delivery",
+      "purpose_zh": "酒水/商品配送",
+      "forest_path": "assets/icons/forest/trip-delivery.png",
+      "ivory_path": "assets/icons/ivory/trip-delivery.png",
+      "source": "senshui-semantic-alias"
+    },
+    {
+      "category": "trip",
+      "name": "trip-history",
+      "purpose_zh": "历史行程",
+      "forest_path": "assets/icons/forest/trip-history.png",
+      "ivory_path": "assets/icons/ivory/trip-history.png",
+      "source": "senshui-semantic-alias"
+    },
+    {
+      "category": "trip",
+      "name": "trip-location",
+      "purpose_zh": "集合点/目的地",
+      "forest_path": "assets/icons/forest/trip-location.png",
+      "ivory_path": "assets/icons/ivory/trip-location.png",
+      "source": "senshui-semantic-alias"
+    },
+    {
+      "category": "trip",
+      "name": "trip-qrcode",
+      "purpose_zh": "行程二维码/核销码",
+      "forest_path": "assets/icons/forest/trip-qrcode.png",
+      "ivory_path": "assets/icons/ivory/trip-qrcode.png",
+      "source": "senshui-semantic-alias"
+    },
+    {
+      "category": "trip",
+      "name": "trip-refund",
+      "purpose_zh": "退款与售后",
+      "forest_path": "assets/icons/forest/trip-refund.png",
+      "ivory_path": "assets/icons/ivory/trip-refund.png",
+      "source": "senshui-semantic-alias"
+    },
+    {
+      "category": "trip",
+      "name": "trip-rental",
+      "purpose_zh": "租赁订单",
+      "forest_path": "assets/icons/forest/trip-rental.png",
+      "ivory_path": "assets/icons/ivory/trip-rental.png",
+      "source": "senshui-semantic-alias"
+    },
+    {
+      "category": "trip",
+      "name": "trip-reservation",
+      "purpose_zh": "预约记录",
+      "forest_path": "assets/icons/forest/trip-reservation.png",
+      "ivory_path": "assets/icons/ivory/trip-reservation.png",
+      "source": "senshui-semantic-alias"
+    },
+    {
+      "category": "trip",
+      "name": "trip-share",
+      "purpose_zh": "分享同行人",
+      "forest_path": "assets/icons/forest/trip-share.png",
+      "ivory_path": "assets/icons/ivory/trip-share.png",
+      "source": "senshui-semantic-alias"
+    },
+    {
+      "category": "trip",
+      "name": "trip-shuttle",
+      "purpose_zh": "接驳与上车安排",
+      "forest_path": "assets/icons/forest/trip-shuttle.png",
+      "ivory_path": "assets/icons/ivory/trip-shuttle.png",
+      "source": "senshui-semantic-alias"
+    },
+    {
+      "category": "trip",
+      "name": "trip-status",
+      "purpose_zh": "行程状态",
+      "forest_path": "assets/icons/forest/trip-status.png",
+      "ivory_path": "assets/icons/ivory/trip-status.png",
+      "source": "senshui-semantic-alias"
+    },
+    {
+      "category": "trip",
+      "name": "trip-ticket",
+      "purpose_zh": "门票与票码",
+      "forest_path": "assets/icons/forest/trip-ticket.png",
+      "ivory_path": "assets/icons/ivory/trip-ticket.png",
+      "source": "senshui-semantic-alias"
+    },
+    {
+      "category": "shop",
+      "name": "shop-add",
+      "purpose_zh": "增加数量",
+      "forest_path": "assets/icons/forest/shop-add.png",
+      "ivory_path": "assets/icons/ivory/shop-add.png",
+      "source": "plus-circle"
+    },
+    {
+      "category": "shop",
+      "name": "shop-beer",
+      "purpose_zh": "啤酒",
+      "forest_path": "assets/icons/forest/shop-beer.png",
+      "ivory_path": "assets/icons/ivory/shop-beer.png",
+      "source": "beer"
+    },
+    {
+      "category": "shop",
+      "name": "shop-bottle",
+      "purpose_zh": "瓶装酒水",
+      "forest_path": "assets/icons/forest/shop-bottle.png",
+      "ivory_path": "assets/icons/ivory/shop-bottle.png",
+      "source": "wine-bottle"
+    },
+    {
+      "category": "shop",
+      "name": "shop-campsite-delivery",
+      "purpose_zh": "营位配送",
+      "forest_path": "assets/icons/forest/shop-campsite-delivery.png",
+      "ivory_path": "assets/icons/ivory/shop-campsite-delivery.png",
+      "source": "map-marker-alt"
+    },
+    {
+      "category": "shop",
+      "name": "shop-cart",
+      "purpose_zh": "购物车",
+      "forest_path": "assets/icons/forest/shop-cart.png",
+      "ivory_path": "assets/icons/ivory/shop-cart.png",
+      "source": "shopping-cart"
+    },
+    {
+      "category": "shop",
+      "name": "shop-delivery",
+      "purpose_zh": "配送",
+      "forest_path": "assets/icons/forest/shop-delivery.png",
+      "ivory_path": "assets/icons/ivory/shop-delivery.png",
+      "source": "shipping-fast"
+    },
+    {
+      "category": "shop",
+      "name": "shop-drink",
+      "purpose_zh": "特调饮品",
+      "forest_path": "assets/icons/forest/shop-drink.png",
+      "ivory_path": "assets/icons/ivory/shop-drink.png",
+      "source": "glass-martini"
+    },
+    {
+      "category": "shop",
+      "name": "shop-hammock",
+      "purpose_zh": "吊床",
+      "forest_path": "assets/icons/forest/shop-hammock.png",
+      "ivory_path": "assets/icons/ivory/shop-hammock.png",
+      "source": "custom:hammock"
+    },
+    {
+      "category": "shop",
+      "name": "shop-ice",
+      "purpose_zh": "冰块/冰桶",
+      "forest_path": "assets/icons/forest/shop-ice.png",
+      "ivory_path": "assets/icons/ivory/shop-ice.png",
+      "source": "cube"
+    },
+    {
+      "category": "shop",
+      "name": "shop-mahjong",
+      "purpose_zh": "麻将",
+      "forest_path": "assets/icons/forest/shop-mahjong.png",
+      "ivory_path": "assets/icons/ivory/shop-mahjong.png",
+      "source": "custom:mahjong"
+    },
+    {
+      "category": "shop",
+      "name": "shop-minus",
+      "purpose_zh": "减少数量",
+      "forest_path": "assets/icons/forest/shop-minus.png",
+      "ivory_path": "assets/icons/ivory/shop-minus.png",
+      "source": "minus-circle"
+    },
+    {
+      "category": "shop",
+      "name": "shop-order",
+      "purpose_zh": "订单",
+      "forest_path": "assets/icons/forest/shop-order.png",
+      "ivory_path": "assets/icons/ivory/shop-order.png",
+      "source": "receipt"
+    },
+    {
+      "category": "shop",
+      "name": "shop-package",
+      "purpose_zh": "商品包裹",
+      "forest_path": "assets/icons/forest/shop-package.png",
+      "ivory_path": "assets/icons/ivory/shop-package.png",
+      "source": "box-open"
+    },
+    {
+      "category": "shop",
+      "name": "shop-payment",
+      "purpose_zh": "支付",
+      "forest_path": "assets/icons/forest/shop-payment.png",
+      "ivory_path": "assets/icons/ivory/shop-payment.png",
+      "source": "credit-card"
+    },
+    {
+      "category": "shop",
+      "name": "shop-playing-cards",
+      "purpose_zh": "扑克牌",
+      "forest_path": "assets/icons/forest/shop-playing-cards.png",
+      "ivory_path": "assets/icons/ivory/shop-playing-cards.png",
+      "source": "custom:playing-cards"
+    },
+    {
+      "category": "shop",
+      "name": "shop-refund",
+      "purpose_zh": "退款售后",
+      "forest_path": "assets/icons/forest/shop-refund.png",
+      "ivory_path": "assets/icons/ivory/shop-refund.png",
+      "source": "undo-alt"
+    },
+    {
+      "category": "shop",
+      "name": "shop-rental",
+      "purpose_zh": "租赁商品",
+      "forest_path": "assets/icons/forest/shop-rental.png",
+      "ivory_path": "assets/icons/ivory/shop-rental.png",
+      "source": "hand-holding"
+    },
+    {
+      "category": "shop",
+      "name": "shop-tent",
+      "purpose_zh": "帐篷/天幕",
+      "forest_path": "assets/icons/forest/shop-tent.png",
+      "ivory_path": "assets/icons/ivory/shop-tent.png",
+      "source": "campground"
+    },
+    {
+      "category": "mine",
+      "name": "mine-address",
+      "purpose_zh": "常用联系人/地址",
+      "forest_path": "assets/icons/forest/mine-address.png",
+      "ivory_path": "assets/icons/ivory/mine-address.png",
+      "source": "address-card"
+    },
+    {
+      "category": "mine",
+      "name": "mine-coupon",
+      "purpose_zh": "优惠券",
+      "forest_path": "assets/icons/forest/mine-coupon.png",
+      "ivory_path": "assets/icons/ivory/mine-coupon.png",
+      "source": "ticket-alt"
+    },
+    {
+      "category": "mine",
+      "name": "mine-customer-service",
+      "purpose_zh": "客服与帮助",
+      "forest_path": "assets/icons/forest/mine-customer-service.png",
+      "ivory_path": "assets/icons/ivory/mine-customer-service.png",
+      "source": "headset"
+    },
+    {
+      "category": "mine",
+      "name": "mine-favorite",
+      "purpose_zh": "我的收藏",
+      "forest_path": "assets/icons/forest/mine-favorite.png",
+      "ivory_path": "assets/icons/ivory/mine-favorite.png",
+      "source": "heart"
+    },
+    {
+      "category": "mine",
+      "name": "mine-footprint",
+      "purpose_zh": "我的足迹",
+      "forest_path": "assets/icons/forest/mine-footprint.png",
+      "ivory_path": "assets/icons/ivory/mine-footprint.png",
+      "source": "shoe-prints"
+    },
+    {
+      "category": "mine",
+      "name": "mine-info",
+      "purpose_zh": "常用信息",
+      "forest_path": "assets/icons/forest/mine-info.png",
+      "ivory_path": "assets/icons/ivory/mine-info.png",
+      "source": "info-circle"
+    },
+    {
+      "category": "mine",
+      "name": "mine-logout",
+      "purpose_zh": "退出登录",
+      "forest_path": "assets/icons/forest/mine-logout.png",
+      "ivory_path": "assets/icons/ivory/mine-logout.png",
+      "source": "sign-out-alt"
+    },
+    {
+      "category": "mine",
+      "name": "mine-membership",
+      "purpose_zh": "森水会员",
+      "forest_path": "assets/icons/forest/mine-membership.png",
+      "ivory_path": "assets/icons/ivory/mine-membership.png",
+      "source": "crown"
+    },
+    {
+      "category": "mine",
+      "name": "mine-orders",
+      "purpose_zh": "我的订单",
+      "forest_path": "assets/icons/forest/mine-orders.png",
+      "ivory_path": "assets/icons/ivory/mine-orders.png",
+      "source": "clipboard-list"
+    },
+    {
+      "category": "mine",
+      "name": "mine-phone",
+      "purpose_zh": "手机号",
+      "forest_path": "assets/icons/forest/mine-phone.png",
+      "ivory_path": "assets/icons/ivory/mine-phone.png",
+      "source": "phone"
+    },
+    {
+      "category": "mine",
+      "name": "mine-privacy",
+      "purpose_zh": "隐私与授权",
+      "forest_path": "assets/icons/forest/mine-privacy.png",
+      "ivory_path": "assets/icons/ivory/mine-privacy.png",
+      "source": "user-shield"
+    },
+    {
+      "category": "mine",
+      "name": "mine-profile",
+      "purpose_zh": "个人资料",
+      "forest_path": "assets/icons/forest/mine-profile.png",
+      "ivory_path": "assets/icons/ivory/mine-profile.png",
+      "source": "user-circle"
+    },
+    {
+      "category": "mine",
+      "name": "mine-settings",
+      "purpose_zh": "设置中心",
+      "forest_path": "assets/icons/forest/mine-settings.png",
+      "ivory_path": "assets/icons/ivory/mine-settings.png",
+      "source": "cog"
+    },
+    {
+      "category": "mine",
+      "name": "mine-wallet",
+      "purpose_zh": "我的钱包",
+      "forest_path": "assets/icons/forest/mine-wallet.png",
+      "ivory_path": "assets/icons/ivory/mine-wallet.png",
+      "source": "wallet"
+    },
+    {
+      "category": "settings",
+      "name": "setting-agreement",
+      "purpose_zh": "用户服务协议",
+      "forest_path": "assets/icons/forest/setting-agreement.png",
+      "ivory_path": "assets/icons/ivory/setting-agreement.png",
+      "source": "senshui-semantic-alias"
+    },
+    {
+      "category": "settings",
+      "name": "setting-font-size",
+      "purpose_zh": "字体大小设置",
+      "forest_path": "assets/icons/forest/setting-font-size.png",
+      "ivory_path": "assets/icons/ivory/setting-font-size.png",
+      "source": "senshui-custom"
+    },
+    {
+      "category": "settings",
+      "name": "setting-haptic",
+      "purpose_zh": "振动反馈设置",
+      "forest_path": "assets/icons/forest/setting-haptic.png",
+      "ivory_path": "assets/icons/ivory/setting-haptic.png",
+      "source": "senshui-custom"
+    },
+    {
+      "category": "settings",
+      "name": "setting-motion",
+      "purpose_zh": "动态效果设置",
+      "forest_path": "assets/icons/forest/setting-motion.png",
+      "ivory_path": "assets/icons/ivory/setting-motion.png",
+      "source": "senshui-custom"
+    },
+    {
+      "category": "settings",
+      "name": "setting-privacy",
+      "purpose_zh": "隐私与授权",
+      "forest_path": "assets/icons/forest/setting-privacy.png",
+      "ivory_path": "assets/icons/ivory/setting-privacy.png",
+      "source": "senshui-semantic-alias"
+    },
+    {
+      "category": "settings",
+      "name": "setting-theme-dark",
+      "purpose_zh": "长河夜色主题",
+      "forest_path": "assets/icons/forest/setting-theme-dark.png",
+      "ivory_path": "assets/icons/ivory/setting-theme-dark.png",
+      "source": "senshui-custom"
+    },
+    {
+      "category": "settings",
+      "name": "setting-theme-light",
+      "purpose_zh": "森野浅色主题",
+      "forest_path": "assets/icons/forest/setting-theme-light.png",
+      "ivory_path": "assets/icons/ivory/setting-theme-light.png",
+      "source": "senshui-custom"
+    },
+    {
+      "category": "tabbar",
+      "name": "tab-guide-active",
+      "purpose_zh": "guide 选中",
+      "forest_path": "assets/icons/tabbar/tab-guide-active.png",
+      "ivory_path": "",
+      "source": "approved-custom"
+    },
+    {
+      "category": "tabbar",
+      "name": "tab-guide-dark-active",
+      "purpose_zh": "深色导航：向导选中",
+      "forest_path": "assets/icons/tabbar/tab-guide-dark-active.png",
+      "ivory_path": "—",
+      "source": "senshui-custom"
+    },
+    {
+      "category": "tabbar",
+      "name": "tab-guide-dark-default",
+      "purpose_zh": "深色导航：向导未选中",
+      "forest_path": "assets/icons/tabbar/tab-guide-dark-default.png",
+      "ivory_path": "—",
+      "source": "senshui-custom"
+    },
+    {
+      "category": "tabbar",
+      "name": "tab-guide-default",
+      "purpose_zh": "guide 未选中",
+      "forest_path": "assets/icons/tabbar/tab-guide-default.png",
+      "ivory_path": "",
+      "source": "approved-custom"
+    },
+    {
+      "category": "tabbar",
+      "name": "tab-mine-active",
+      "purpose_zh": "mine 选中",
+      "forest_path": "assets/icons/tabbar/tab-mine-active.png",
+      "ivory_path": "",
+      "source": "approved-custom"
+    },
+    {
+      "category": "tabbar",
+      "name": "tab-mine-dark-active",
+      "purpose_zh": "深色导航：我的选中",
+      "forest_path": "assets/icons/tabbar/tab-mine-dark-active.png",
+      "ivory_path": "—",
+      "source": "senshui-custom"
+    },
+    {
+      "category": "tabbar",
+      "name": "tab-mine-dark-default",
+      "purpose_zh": "深色导航：我的未选中",
+      "forest_path": "assets/icons/tabbar/tab-mine-dark-default.png",
+      "ivory_path": "—",
+      "source": "senshui-custom"
+    },
+    {
+      "category": "tabbar",
+      "name": "tab-mine-default",
+      "purpose_zh": "mine 未选中",
+      "forest_path": "assets/icons/tabbar/tab-mine-default.png",
+      "ivory_path": "",
+      "source": "approved-custom"
+    },
+    {
+      "category": "tabbar",
+      "name": "tab-token-active",
+      "purpose_zh": "token 选中",
+      "forest_path": "assets/icons/tabbar/tab-token-active.png",
+      "ivory_path": "",
+      "source": "approved-custom"
+    },
+    {
+      "category": "tabbar",
+      "name": "tab-token-dark-active",
+      "purpose_zh": "深色导航：长河令选中",
+      "forest_path": "assets/icons/tabbar/tab-token-dark-active.png",
+      "ivory_path": "—",
+      "source": "senshui-custom"
+    },
+    {
+      "category": "tabbar",
+      "name": "tab-token-dark-default",
+      "purpose_zh": "深色导航：长河令未选中",
+      "forest_path": "assets/icons/tabbar/tab-token-dark-default.png",
+      "ivory_path": "—",
+      "source": "senshui-custom"
+    },
+    {
+      "category": "tabbar",
+      "name": "tab-token-default",
+      "purpose_zh": "token 未选中",
+      "forest_path": "assets/icons/tabbar/tab-token-default.png",
+      "ivory_path": "",
+      "source": "approved-custom"
+    },
+    {
+      "category": "tabbar",
+      "name": "tab-trip-active",
+      "purpose_zh": "行程 Tab 选中",
+      "forest_path": "assets/icons/tabbar/tab-trip-active.png",
+      "ivory_path": "—",
+      "source": "senshui-custom"
+    },
+    {
+      "category": "tabbar",
+      "name": "tab-trip-dark-active",
+      "purpose_zh": "深色导航：行程选中",
+      "forest_path": "assets/icons/tabbar/tab-trip-dark-active.png",
+      "ivory_path": "—",
+      "source": "senshui-custom"
+    },
+    {
+      "category": "tabbar",
+      "name": "tab-trip-dark-default",
+      "purpose_zh": "深色导航：行程未选中",
+      "forest_path": "assets/icons/tabbar/tab-trip-dark-default.png",
+      "ivory_path": "—",
+      "source": "senshui-custom"
+    },
+    {
+      "category": "tabbar",
+      "name": "tab-trip-default",
+      "purpose_zh": "行程 Tab 未选中",
+      "forest_path": "assets/icons/tabbar/tab-trip-default.png",
+      "ivory_path": "—",
+      "source": "senshui-custom"
+    },
+    {
+      "category": "status",
+      "name": "status-disabled",
+      "purpose_zh": "不可用/暂停",
+      "forest_path": "assets/icons/status/status-disabled.png",
+      "ivory_path": "",
+      "source": "ban"
+    },
+    {
+      "category": "status",
+      "name": "status-error",
+      "purpose_zh": "错误/失败",
+      "forest_path": "assets/icons/status/status-error.png",
+      "ivory_path": "",
+      "source": "times-circle"
+    },
+    {
+      "category": "status",
+      "name": "status-pending",
+      "purpose_zh": "处理中/待确认",
+      "forest_path": "assets/icons/status/status-pending.png",
+      "ivory_path": "",
+      "source": "clock"
+    },
+    {
+      "category": "status",
+      "name": "status-sold-out",
+      "purpose_zh": "售罄/无库存",
+      "forest_path": "assets/icons/status/status-sold-out.png",
+      "ivory_path": "",
+      "source": "box-open"
+    },
+    {
+      "category": "status",
+      "name": "status-success",
+      "purpose_zh": "成功/已完成",
+      "forest_path": "assets/icons/status/status-success.png",
+      "ivory_path": "",
+      "source": "check-circle"
+    },
+    {
+      "category": "status",
+      "name": "status-warning",
+      "purpose_zh": "提醒/风险",
+      "forest_path": "assets/icons/status/status-warning.png",
+      "ivory_path": "",
+      "source": "exclamation-triangle"
+    }
+  ]
+}

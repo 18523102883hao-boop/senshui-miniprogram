@@ -13,7 +13,7 @@
 
   <!-- 商品卡 -->
   <view class="plist" wx:if="{{!loading && products.length}}">
-    <view class="pcard sr-touch" hover-class="sr-touch--press" hover-stay-time="60"
+    <view class="pcard sr-touch" hover-class="sr-touch--card" hover-stay-time="60"
           wx:for="{{products}}" wx:key="productId" data-id="{{item.productId}}" bindtap="onProductTap">
       <image class="pcard__cover" wx:if="{{item.coverFileId}}" src="{{item.coverFileId}}" mode="aspectFill" />
       <view class="pcard__body">
