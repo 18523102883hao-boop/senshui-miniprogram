@@ -34,7 +34,10 @@
     "pages/ticket/result/result",
     "pages/ticket/wallet/wallet",
     "pages/staff/ticket-verify/ticket-verify",
-    "pages/refund/detail/detail"
+    "pages/refund/detail/detail",
+    "pages/reservation/entry/entry",
+    "pages/reservation/create/create",
+    "pages/reservation/detail/detail"
   ],
   "window": {
     "backgroundTextStyle": "dark",

@@ -1,0 +1,40 @@
+<view class="sr-page sr-enter">
+  <view class="skeleton" wx:if="{{loading}}">
+    <view class="skeleton__line" wx:for="{{[1,2,3]}}" wx:key="*this"></view>
+  </view>
+
+  <block wx:if="{{reservation && !loading}}">
+    <view class="hero hero--{{reservation.status}}">
+      <text class="hero__status">{{statusText}}</text>
+      <text class="hero__hint" wx:if="{{reservation.status === 'pending'}}">
+        {{reservation.needsManual ? '管家将主动联系你确认安排' : '我们会尽快确认，确认后可见到园说明'}}
+      </text>
+      <text class="hero__hint" wx:elif="{{reservation.status === 'confirmed'}}">请按预约日期到园，到园后出示本页面</text>
+    </view>
+
+    <view class="sr-card">
+      <view class="kv"><text class="kv__k">到访日期</text><text class="kv__v sr-num">{{reservation.visitDate}}</text></view>
+      <view class="kv"><text class="kv__k">团队名称</text><text class="kv__v">{{reservation.teamName}}</text></view>
+      <view class="kv"><text class="kv__k">到园人数</text><text class="kv__v sr-num">{{reservation.partySize}} 人</text></view>
+      <view class="kv"><text class="kv__k">联系人</text><text class="kv__v">{{reservation.contactName}}</text></view>
+      <view class="kv" wx:if="{{reservation.contactPhone}}"><text class="kv__k">联系手机</text><text class="kv__v sr-num">{{reservation.contactPhone}}</text></view>
+      <view class="kv" wx:if="{{reservation.remark}}"><text class="kv__k">备注</text><text class="kv__v">{{reservation.remark}}</text></view>
+    </view>
+
+    <view class="acts">
+      <view class="acts__btn" bindtap="copyShare" wx:if="{{!readonly}}">分享给同行人</view>
+      <view class="acts__btn acts__btn--ghost" bindtap="goConcierge">联系管家</view>
+      <view class="acts__btn acts__btn--danger" wx:if="{{canCancel}}" bindtap="onCancel">
+        {{cancelling ? '处理中…' : '取消预约'}}
+      </view>
+    </view>
+
+    <view class="tail" wx:if="{{readonly}}">你正在查看同行人分享的预约摘要，联系人信息已隐藏。</view>
+  </block>
+
+  <view class="state" wx:if="{{hasError && !loading}}">
+    <image class="state__icon" src="/assets/icons/status/status-warning.png" mode="aspectFit" />
+    <text class="state__text">预约加载失败</text>
+    <view class="state__btn" bindtap="onRetry">重新加载</view>
+  </view>
+</view>

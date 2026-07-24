@@ -1,0 +1,16 @@
+.head { margin-bottom: 28rpx; }
+.head__title { display: block; font-size: 38rpx; font-weight: 800; color: var(--sr-text); }
+.head__sub { display: block; font-size: 24rpx; color: var(--sr-text-sub); margin-top: 12rpx; line-height: 1.6; }
+
+.ent {
+  display: flex; align-items: center;
+  background: var(--sr-bg-card); border-radius: var(--sr-radius);
+  box-shadow: var(--sr-shadow); padding: 32rpx; margin-bottom: 20rpx;
+}
+.ent__icon { width: 60rpx; height: 60rpx; flex-shrink: 0; }
+.ent__body { flex: 1; display: flex; flex-direction: column; margin-left: 24rpx; min-width: 0; }
+.ent__title { font-size: 30rpx; font-weight: 700; color: var(--sr-text); }
+.ent__desc { font-size: 23rpx; color: var(--sr-text-sub); margin-top: 8rpx; }
+.ent__arrow { font-size: 40rpx; color: var(--sr-text-weak); }
+
+.tail { font-size: 21rpx; color: var(--sr-text-weak); text-align: center; padding: 32rpx 0; line-height: 1.6; }

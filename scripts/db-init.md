@@ -158,3 +158,40 @@
 - 未使用票 + 退款能力可用 → 自动原路退款，退款单号由「订单号 + 票号集合」推导，重试不会退两次。
 - 已核销票 → 按购买须知不可退，转人工售后单。
 - 退款发起失败 → 票券状态回滚为 unused，用户可重试。
+
+## 11. 团队预约（本轮功能扩展 Task 9）
+
+**新增云函数**：`getReservationConfig`、`createVisitReservation`、`getMyReservations`、`getVisitReservation`、`cancelVisitReservation`
+
+**预约规则配置**：在 `notices` 集合手动加一条（不加则用云函数内的保守默认值）：
+
+```json
+{
+  "type": "config",
+  "key": "visitReservation",
+  "value": {
+    "minPartySize": 10,
+    "maxPartySize": 200,
+    "advanceDays": 30,
+    "dailyCapacity": 0,
+    "blockedDates": [],
+    "weekdayPolicy": "self",
+    "weekendPolicy": "manual",
+    "notice": "团队预约提交后由管家确认，确认前请勿安排车辆与行程。"
+  }
+}
+```
+
+- `weekdayPolicy` / `weekendPolicy`：`self`（自助预约）/ `manual`（转人工，仍会落库保住意向）/ `blocked`（不可约）
+- `dailyCapacity`：0 表示不限制。**上线前请填实际每日团队接待上限。**
+- `blockedDates`：如 `["2026-08-15"]`
+
+**建议索引**：
+
+| 集合 | 字段 | 唯一 |
+|---|---|---|
+| visit_reservations | shareToken | 是 |
+| visit_reservations | _openid, status | 否 |
+| visit_reservations | visitDate, status | 否 |
+
+> 分享给同行人只带 `shareToken`，非本人访问一律降级为脱敏摘要（无手机号、无 openid）。

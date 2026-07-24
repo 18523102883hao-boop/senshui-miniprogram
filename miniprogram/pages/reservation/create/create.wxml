@@ -1,0 +1,67 @@
+<view class="sr-page cr-page sr-enter">
+  <view class="notice" wx:if="{{notice}}">{{notice}}</view>
+
+  <block wx:if="{{!loading && !hasError}}">
+    <view class="sr-card">
+      <picker mode="date" value="{{form.visitDate}}" start="{{minDate}}" end="{{maxDate}}" bindchange="onDateChange">
+        <view class="row">
+          <text class="row__label">到访日期 <text class="req">*</text></text>
+          <text class="row__value">{{form.visitDate || '请选择'}} ›</text>
+        </view>
+      </picker>
+    </view>
+
+    <view class="sr-card">
+      <text class="row__label">团队类型 <text class="req">*</text></text>
+      <view class="types">
+        <view class="type {{form.teamType === item.key ? 'type--on' : ''}}"
+              wx:for="{{teamTypes}}" wx:key="key" data-key="{{item.key}}" bindtap="onTeamTypeTap">
+          {{item.title}}
+        </view>
+      </view>
+    </view>
+
+    <view class="sr-card">
+      <view class="row">
+        <text class="row__label">团队名称 <text class="req">*</text></text>
+        <input class="row__input" placeholder="如：某某公司" data-field="teamName" value="{{form.teamName}}" bindinput="onFieldInput" maxlength="40" />
+      </view>
+      <view class="row">
+        <text class="row__label">到园人数 <text class="req">*</text></text>
+        <input class="row__input" type="number" placeholder="{{config.minPartySize}}-{{config.maxPartySize}} 人" data-field="partySize" value="{{form.partySize}}" bindinput="onFieldInput" maxlength="4" />
+      </view>
+      <view class="row">
+        <text class="row__label">联系人 <text class="req">*</text></text>
+        <input class="row__input" placeholder="姓名" data-field="contactName" value="{{form.contactName}}" bindinput="onFieldInput" maxlength="20" />
+      </view>
+      <view class="row">
+        <text class="row__label">联系手机 <text class="req">*</text></text>
+        <input class="row__input" type="number" placeholder="用于管家联系" data-field="contactPhone" value="{{form.contactPhone}}" bindinput="onFieldInput" maxlength="11" />
+      </view>
+    </view>
+
+    <view class="sr-card">
+      <text class="row__label">备注</text>
+      <textarea class="remark" placeholder="用餐、活动、到达时间等特殊需求" data-field="remark" value="{{form.remark}}" bindinput="onFieldInput" maxlength="200" />
+    </view>
+
+    <view class="agree">
+      <view class="agree__box {{form.privacyAgreed ? 'agree__box--on' : ''}}" bindtap="onPrivacyToggle">
+        <text wx:if="{{form.privacyAgreed}}">✓</text>
+      </view>
+      <text class="agree__text" bindtap="onPrivacyToggle">我已阅读并同意</text>
+      <text class="agree__link" bindtap="goPrivacy">《隐私政策》</text>
+    </view>
+  </block>
+
+  <view class="state" wx:if="{{hasError}}">
+    <text class="state__text">配置加载失败</text>
+    <view class="state__btn" bindtap="onRetry">重新加载</view>
+  </view>
+
+  <view class="bar" wx:if="{{!loading && !hasError}}">
+    <view class="bar__cta {{submitting ? 'bar__cta--off' : ''}}" bindtap="onSubmit">
+      {{submitting ? '提交中…' : '提交预约'}}
+    </view>
+  </view>
+</view>

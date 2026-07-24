@@ -1,0 +1,18 @@
+<view class="sr-page sr-enter">
+  <view class="head">
+    <text class="head__title">预约到园</text>
+    <text class="head__sub">团队到访请提前预约，散客购票后可直接入园</text>
+  </view>
+
+  <view class="ent sr-touch" hover-class="sr-touch--press" hover-stay-time="60"
+        wx:for="{{entries}}" wx:key="key" data-key="{{item.key}}" bindtap="onEntryTap">
+    <image class="ent__icon" src="{{item.icon}}" mode="aspectFit" />
+    <view class="ent__body">
+      <text class="ent__title">{{item.title}}</text>
+      <text class="ent__desc">{{item.desc}}</text>
+    </view>
+    <text class="ent__arrow">›</text>
+  </view>
+
+  <view class="tail">预约结果以管家确认为准，确认前请勿安排车辆与行程。</view>
+</view>
