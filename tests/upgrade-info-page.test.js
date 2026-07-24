@@ -228,12 +228,20 @@ test('页面包含选填员工归属说明和结构化支付成功状态', () =>
   assert.match(wxml, /\{\{success\.amountYuan\}\}/)
 })
 
+test('固定确认层位于无 transform 的页面根节点下', () => {
+  const wxml = fs.readFileSync(wxmlPath, 'utf8')
+
+  assert.match(wxml, /<view class="upgrade-page sr-page">\s*<view class="upgrade-stage sr-enter">/)
+  assert.doesNotMatch(wxml, /<view class="upgrade-page sr-page sr-enter">/)
+})
+
 test('关键操作满足最小触控尺寸，底部面板兼顾安全区和玻璃回退', () => {
   const wxss = fs.readFileSync(wxssPath, 'utf8')
 
   assert.match(wxss, /\.direction\s*\{[^}]*min-height:\s*88rpx/s)
   assert.match(wxss, /\.upgrade-row\s*\{[^}]*min-height:\s*88rpx/s)
   assert.match(wxss, /\.sheet__close\s*\{[^}]*width:\s*88rpx[^}]*height:\s*88rpx/s)
+  assert.match(wxss, /\.sheet-mask\s*\{[^}]*top:\s*0[^}]*right:\s*0[^}]*bottom:\s*0[^}]*left:\s*0/s)
   assert.match(wxss, /env\(safe-area-inset-bottom\)/)
   assert.match(wxss, /backdrop-filter:\s*blur\(/)
   assert.match(wxss, /background:\s*rgba\(255,\s*255,\s*255,\s*0\.96\)/)

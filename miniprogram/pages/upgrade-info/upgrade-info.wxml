@@ -1,4 +1,5 @@
-<view class="upgrade-page sr-page sr-enter">
+<view class="upgrade-page sr-page">
+  <view class="upgrade-stage sr-enter">
   <!-- 支付完成：使用云端返回的项目与金额，不伪造订单号 -->
   <view class="result-state" wx:if="{{success}}">
     <view class="result-state__mark">
@@ -142,6 +143,7 @@
       <text>也可以前往游客中心或前台，由工作人员协助办理。</text>
     </view>
   </block>
+  </view>
 
   <!-- 底部购买面板 -->
   <view class="sheet-mask" wx:if="{{buy}}" bindtap="closeBuy">
