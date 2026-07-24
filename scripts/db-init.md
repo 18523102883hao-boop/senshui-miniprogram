@@ -52,3 +52,38 @@
 - **动态会员码**：会员码升级为 90 秒时效的动态 token（防截图转让）。需给 `getMemberQr` 与 `getMemberForVerify` 配置**相同**的环境变量 `MEMBER_QR_SECRET`（一段随机长字符串，如 `openssl rand -hex 32` 生成）。两者密钥必须一致，否则核销验签失败。
 - **部署**：新增 `getMemberQr`，重新部署 `createMemberOrder`、`payCallback`、`getMemberForVerify`、`verifyBenefit`、`getMemberCard`、`refundMember`。
 - **二维码库**：会员卡页动态码依赖 `weapp-qrcode-canvas-2d`，需在开发者工具「构建 npm」；未构建则降级为占位（无法扫码）。
+
+## 7. 首页门户与内容中心（本轮功能扩展 Task 2）
+
+新增集合：`home_configs` `articles` `ticket_products` `tickets` `visit_reservations` `service_leads` `feedback` `itineraries`
+（`initDb` 已包含，重新部署后再执行一次即可，已存在的集合会跳过。）
+
+**新增云函数（需在开发者工具逐个上传部署）**：
+
+| 云函数 | 作用 |
+|---|---|
+| `seedPortalContent` | 写入首页模块配置 + 3 篇种子文章 |
+| `getHomePortal` | 首页门户数据（模块 / 公告 / 今日活动 / 地图 / 用户摘要） |
+| `listArticles` | 内容列表（按分类分页） |
+| `getArticle` | 内容详情（按 slug 或 id，仅 published 可读） |
+
+**灌内容**：部署后在「云函数 → seedPortalContent → 云端测试」执行一次：
+
+```json
+{}
+```
+
+- 不带参数：已有首页配置则跳过，只补缺失的文章（可重复执行）。
+- `{ "force": true }`：写入新版本首页配置并覆盖同 slug 文章（改版后用）。
+
+**建议索引**：
+
+| 集合 | 字段 | 唯一 |
+|---|---|---|
+| home_configs | version | 否 |
+| articles | slug | 是 |
+| articles | status, category, publishedAt | 否 |
+| tickets | _openid, status | 否 |
+| visit_reservations | _openid, status, visitDate | 否 |
+
+> `getHomePortal` 的用户摘要查询失败会被吞掉并降级为空摘要——首页在匿名、弱网、集合尚未创建时都必须能打开。
