@@ -1,8 +1,20 @@
 .profile { display: flex; align-items: center; padding: 24rpx 8rpx 40rpx; }
-.profile__avatar {
-  width: 112rpx; height: 112rpx; border-radius: 56rpx;
-  background: var(--sr-bg-sunken); border: 3rpx solid var(--sr-primary);
+.profile__avatar-btn {
+  position: relative; padding: 0; margin: 0; width: 112rpx; height: 112rpx;
+  line-height: normal; background: transparent; border-radius: 56rpx; overflow: visible;
 }
+.profile__avatar-btn::after { border: none; }
+.profile__avatar {
+  width: 112rpx; height: 112rpx; border-radius: 56rpx; display: block;
+  background: var(--sr-bg-sunken); border: 3rpx solid var(--sr-primary); box-sizing: border-box;
+}
+.profile__avatar-edit {
+  position: absolute; right: -2rpx; bottom: -2rpx;
+  width: 40rpx; height: 40rpx; border-radius: 50%;
+  background: var(--sr-primary); border: 3rpx solid var(--sr-bg);
+  display: flex; align-items: center; justify-content: center;
+}
+.profile__avatar-edit image { width: 22rpx; height: 22rpx; filter: brightness(0) invert(1); }
 .profile__info { margin-left: 24rpx; display: flex; flex-direction: column; }
 .profile__name { font-size: 34rpx; font-weight: 700; color: var(--sr-text); }
 .profile__login {

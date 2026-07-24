@@ -71,6 +71,27 @@ Page({
       .catch((err) => wx.showToast({ title: err.message || '登录失败', icon: 'none' }))
   },
 
+  // 头像：chooseAvatar 可选「微信头像 / 相册 / 拍照」→ 上传云存储 → 持久化
+  onChooseAvatar(e) {
+    const tempUrl = e.detail && e.detail.avatarUrl
+    if (!tempUrl) return
+    wx.showLoading({ title: '上传中', mask: true })
+    const openid = app.globalData.openid || 'u'
+    const cloudPath = 'avatars/' + openid + '_' + Date.now() + '.png'
+    wx.cloud.uploadFile({ cloudPath, filePath: tempUrl })
+      .then((up) => request.call('updateAvatar', { avatarUrl: up.fileID }).then(() => up.fileID))
+      .then((fileID) => {
+        if (app.globalData.userInfo) app.globalData.userInfo.avatarUrl = fileID
+        this.setData({ userInfo: Object.assign({}, this.data.userInfo || {}, { avatarUrl: fileID }) })
+        wx.hideLoading()
+        wx.showToast({ title: '头像已更新', icon: 'success' })
+      })
+      .catch((err) => {
+        wx.hideLoading()
+        wx.showToast({ title: (err && err.message) || '上传失败', icon: 'none' })
+      })
+  },
+
   goMember() {
     haptic('light')
     const url = this.data.member ? '/pages/member/card/card' : '/pages/member/detail/detail'
