@@ -37,7 +37,9 @@
     "pages/refund/detail/detail",
     "pages/reservation/entry/entry",
     "pages/reservation/create/create",
-    "pages/reservation/detail/detail"
+    "pages/reservation/detail/detail",
+    "pages/service/detail/detail",
+    "pages/service/lead/lead"
   ],
   "window": {
     "backgroundTextStyle": "dark",
