@@ -28,7 +28,8 @@
     "pages/content/list/list",
     "pages/content/detail/detail",
     "pages/guide/guide",
-    "pages/concierge/concierge"
+    "pages/concierge/concierge",
+    "pages/ticket/detail/detail"
   ],
   "window": {
     "backgroundTextStyle": "dark",

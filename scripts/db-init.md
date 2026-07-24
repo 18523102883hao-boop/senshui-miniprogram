@@ -87,3 +87,28 @@
 | visit_reservations | _openid, status, visitDate | 否 |
 
 > `getHomePortal` 的用户摘要查询失败会被吞掉并降级为空摘要——首页在匿名、弱网、集合尚未创建时都必须能打开。
+
+## 8. 门票目录（本轮功能扩展 Task 6）
+
+**新增云函数**：`listTicketProducts`、`getTicketProduct`、`seedTicketProducts`
+
+**灌票种**：部署后在「云函数 → seedTicketProducts → 云端测试」执行：
+
+```json
+{}
+```
+
+- 不带参数：已存在的 sku 跳过（可重复执行）。
+- `{ "force": true }`：按 sku 覆盖更新——**改价后用这个**。
+
+**改价流程**：改 `docs/业务参数.md` → 改 `cloudfunctions/seedTicketProducts/seed-tickets.js` → 重新部署 → `{"force": true}`。
+
+**建议索引**：
+
+| 集合 | 字段 | 唯一 |
+|---|---|---|
+| ticket_products | sku | 是 |
+| ticket_products | status, category, sort | 否 |
+
+**支付未就绪时的降级开关**：给 `listTicketProducts` 与 `getTicketProduct` 配环境变量 `NATIVE_PAY_READY=false`，
+所有原生支付票种会自动降级到「咨询管家」，不需要改数据库。恢复时删掉该变量即可。

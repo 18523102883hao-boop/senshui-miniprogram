@@ -1,4 +1,5 @@
 {
-  "navigationBarTitleText": "线上购票",
+  "navigationBarTitleText": "门票与套票",
+  "enablePullDownRefresh": true,
   "usingComponents": {}
 }
