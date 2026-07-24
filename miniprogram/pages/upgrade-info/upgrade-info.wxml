@@ -1,79 +1,204 @@
-<view class="sr-page sr-enter">
-  <!-- 套票价（升级锚点） -->
-  <view class="hero">
-    <text class="hero__tagline">已购单项票？现场补差即可升级</text>
-    <view class="hero__combo">
-      <view class="hero__names">
-        <text class="hero__name">溪降</text>
-        <text class="hero__plus">+</text>
-        <text class="hero__name">营地</text>
-      </view>
-      <text class="hero__pkg">双项套票</text>
+<view class="upgrade-page sr-page sr-enter">
+  <!-- 支付完成：使用云端返回的项目与金额，不伪造订单号 -->
+  <view class="result-state" wx:if="{{success}}">
+    <view class="result-state__mark">
+      <image src="/assets/icons/status/status-success.png" mode="aspectFit" />
     </view>
-    <view class="hero__price">
-      <text class="hero__cur">¥</text>
-      <text class="hero__num sr-num">{{comboPrice}}</text>
-      <view class="hero__price-side">
-        <text class="hero__orig sr-num">原价 ¥{{originalPrice}}</text>
-        <text class="hero__save">立省 ¥{{saved}}</text>
+    <text class="result-state__eyebrow">PAYMENT COMPLETE</text>
+    <text class="result-state__title">补差支付完成</text>
+    <text class="result-state__desc">你的升级权益已经生效，现场核验时出示微信支付凭证即可。</text>
+
+    <view class="result-card">
+      <view class="result-card__row">
+        <text class="result-card__label">升级项目</text>
+        <text class="result-card__value">{{success.itemLabel}}</text>
       </view>
+      <view class="result-card__row result-card__row--amount">
+        <text class="result-card__label">已支付</text>
+        <text class="result-card__amount sr-num">¥{{success.amountYuan}}</text>
+      </view>
+    </view>
+
+    <view class="result-guide">
+      <view class="result-guide__step">
+        <text class="result-guide__num sr-num">01</text>
+        <view class="result-guide__copy">
+          <text class="result-guide__title">保留微信支付凭证</text>
+          <text class="result-guide__desc">可在微信支付账单中随时查看</text>
+        </view>
+      </view>
+      <view class="result-guide__step">
+        <text class="result-guide__num sr-num">02</text>
+        <view class="result-guide__copy">
+          <text class="result-guide__title">向现场工作人员出示</text>
+          <text class="result-guide__desc">确认后即可享受升级权益</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="result-state__again sr-touch" hover-class="sr-touch--press"
+          aria-role="button" aria-label="返回升级选项" bindtap="clearSuccess">
+      返回升级选项
     </view>
   </view>
 
-  <!-- 升级明细（整行点按购买） -->
-  <view class="sr-card" wx:for="{{groups}}" wx:for-index="gi" wx:key="dir">
-    <view class="grp-head">
-      <view class="grp-head__bar"></view>
-      <text class="grp-head__title">{{item.dir}}</text>
-    </view>
-    <view class="upg sr-touch" hover-class="sr-touch--press" hover-stay-time="60"
-          wx:for="{{item.items}}" wx:for-item="it" wx:for-index="ii" wx:key="itemId"
-          data-gi="{{gi}}" data-ii="{{ii}}" bindtap="onItemTap">
-      <view class="upg__info">
-        <text class="upg__name">{{it.name}}</text>
-        <text class="upg__benefit">{{it.benefit}}</text>
-        <text class="upg__orig sr-num">原价 ¥{{it.orig}}</text>
+  <block wx:else>
+    <!-- 任务型页头：先说清楚要完成什么，不用通用套票价干扰本次应付 -->
+    <view class="intro">
+      <view class="intro__topline">
+        <text class="intro__kicker">官方补差升级</text>
+        <text class="intro__index sr-num">01—02</text>
       </view>
-      <view class="upg__right">
-        <text class="upg__add sr-num">{{it.add}}</text>
-        <view class="upg__cta">立即补差 ›</view>
+      <text class="intro__title">已买单项票，</text>
+      <text class="intro__title intro__title--next">也能补齐一天的体验。</text>
+      <text class="intro__desc">先选择你现在持有的票，再查看对应的升级方案。最终金额由官方订单锁定。</text>
+      <view class="intro__promises">
+        <text>官方锁价</text>
+        <view class="intro__dot"></view>
+        <text>权益一致</text>
+        <view class="intro__dot"></view>
+        <text>微信支付</text>
       </view>
     </view>
-  </view>
 
-  <!-- 升级后权益 -->
-  <view class="sr-card">
-    <view class="grp-head">
-      <view class="grp-head__bar"></view>
-      <text class="grp-head__title">升级后权益</text>
-    </view>
-    <view class="ben" wx:for="{{benefits}}" wx:for-item="b" wx:key="*this">
-      <image class="ben__ico" src="/assets/icons/status/status-success.png" mode="aspectFit" />
-      <text class="ben__text">{{b}}</text>
-    </view>
-  </view>
+    <!-- Step 01：当前票种 -->
+    <view class="section">
+      <view class="section-head">
+        <text class="section-head__index sr-num">01</text>
+        <view class="section-head__copy">
+          <text class="section-head__eyebrow">CURRENT TICKET</text>
+          <text class="section-head__title">你当前持有什么票？</text>
+        </view>
+      </view>
 
-  <view class="foot">线上支付后凭微信支付凭证升级，也可到游客中心 / 前台咨询办理。</view>
+      <view class="direction-picker">
+        <view class="direction {{activeGroupIndex == index ? 'direction--active' : ''}} sr-touch"
+              hover-class="sr-touch--press" hover-stay-time="60"
+              wx:for="{{groups}}" wx:key="key" data-index="{{index}}"
+              aria-role="button" aria-label="选择{{item.choice}}" bindtap="onDirectionTap">
+          <view class="direction__status"><view class="direction__dot"></view></view>
+          <text class="direction__choice">{{item.choice}}</text>
+          <text class="direction__target">{{item.target}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- Step 02：当前方向可用项目 -->
+    <view class="section section--options">
+      <view class="section-head">
+        <text class="section-head__index sr-num">02</text>
+        <view class="section-head__copy">
+          <text class="section-head__eyebrow">UPGRADE OPTION</text>
+          <text class="section-head__title">选择你的升级方案</text>
+        </view>
+      </view>
+
+      <view class="route-summary">
+        <view class="route-summary__route">
+          <text>{{activeGroup.eyebrow}}</text>
+          <text class="route-summary__arrow">→</text>
+          <text>{{activeGroup.target}}</text>
+        </view>
+        <text class="route-summary__desc">{{activeGroup.description}}</text>
+      </view>
+
+      <view class="upgrade-list">
+        <view class="upgrade-row sr-touch" hover-class="sr-touch--press" hover-stay-time="60"
+              wx:for="{{visibleItems}}" wx:for-item="it" wx:for-index="ii" wx:key="itemId"
+              data-ii="{{ii}}" aria-role="button"
+              aria-label="{{it.name}}，本次补差{{it.add}}" bindtap="onItemTap">
+          <view class="upgrade-row__main">
+            <text class="upgrade-row__name">{{it.name}}</text>
+            <text class="upgrade-row__benefit">{{it.benefit}}</text>
+            <text class="upgrade-row__orig sr-num">当前票面价 ¥{{it.orig}}</text>
+          </view>
+          <view class="upgrade-row__price">
+            <text class="upgrade-row__label">本次补差</text>
+            <text class="upgrade-row__amount sr-num">{{it.add}}</text>
+          </view>
+          <image class="upgrade-row__chevron" src="/assets/icons/forest/chevron-right.png" mode="aspectFit" />
+        </view>
+      </view>
+    </view>
+
+    <!-- 完整权益说明 -->
+    <view class="assurance">
+      <view class="assurance__head">
+        <view>
+          <text class="assurance__eyebrow">ONE DAY, COMPLETE</text>
+          <text class="assurance__title">升级后，享受完整套票权益</text>
+        </view>
+        <text class="assurance__badge">¥178 套票权益</text>
+      </view>
+      <view class="assurance__grid">
+        <view class="assurance__item" wx:for="{{benefits}}" wx:for-item="benefit" wx:key="*this">
+          <image src="/assets/icons/status/status-success.png" mode="aspectFit" />
+          <text>{{benefit}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="foot-note">
+      <text>也可以前往游客中心或前台，由工作人员协助办理。</text>
+    </view>
+  </block>
 
   <!-- 底部购买面板 -->
   <view class="sheet-mask" wx:if="{{buy}}" bindtap="closeBuy">
     <view class="sheet" catchtap="noop">
       <view class="sheet__grab"></view>
-      <text class="sheet__name">{{buy.name}}</text>
+      <view class="sheet__head">
+        <view class="sheet__head-copy">
+          <text class="sheet__eyebrow">确认升级</text>
+          <text class="sheet__name">{{buy.name}}</text>
+        </view>
+        <view class="sheet__close sr-touch" hover-class="sr-touch--press"
+              aria-role="button" aria-label="关闭确认面板" bindtap="closeBuy">
+          <image src="/assets/icons/forest/close.png" mode="aspectFit" />
+        </view>
+      </view>
+
+      <view class="sheet__route">
+        <text>{{activeGroup.eyebrow}}</text>
+        <text class="sheet__route-arrow">→</text>
+        <text>{{activeGroup.target}}</text>
+      </view>
       <text class="sheet__benefit">{{buy.benefit}}</text>
+
       <view class="sheet__price">
-        <text class="sheet__price-label">补差价</text>
+        <view>
+          <text class="sheet__price-label">本次应付</text>
+          <text class="sheet__price-note">最终金额由官方订单锁定</text>
+        </view>
         <text class="sheet__price-num sr-num">{{buy.add}}</text>
       </view>
-      <view class="sheet__field">
-        <text class="sheet__field-label">接待员工</text>
-        <input class="sheet__input" value="{{staffRef}}" bindinput="onStaffRef"
-               placeholder="员工姓名或手机号（没有可不填）" placeholder-class="sheet__ph" />
+
+      <view class="staff-disclosure sr-touch" hover-class="sr-touch--press"
+            aria-role="button" aria-expanded="{{staffExpanded}}"
+            bindtap="toggleStaff">
+        <view class="staff-disclosure__copy">
+          <view class="staff-disclosure__title-row">
+            <text class="staff-disclosure__title">有现场员工接待？</text>
+            <text class="staff-disclosure__optional">选填</text>
+          </view>
+          <text class="staff-disclosure__desc">仅用于服务归属，不影响升级权益</text>
+        </view>
+        <image class="staff-disclosure__chevron {{staffExpanded ? 'staff-disclosure__chevron--open' : ''}}"
+               src="/assets/icons/forest/chevron-right.png" mode="aspectFit" />
       </view>
-      <button class="sr-btn sr-btn--seal sheet__pay" bindtap="onPay" loading="{{paying}}" disabled="{{paying}}">
-        微信支付 {{buy.add}}
+
+      <view class="staff-field" wx:if="{{staffExpanded}}">
+        <text class="staff-field__label">接待员工</text>
+        <input class="staff-field__input" value="{{staffRef}}" bindinput="onStaffRef"
+               maxlength="20" confirm-type="done"
+               placeholder="输入员工姓名或手机号" placeholder-class="staff-field__placeholder" />
+      </view>
+
+      <button class="sr-btn sr-btn--seal sheet__pay" bindtap="onPay"
+              loading="{{paying}}" disabled="{{paying}}">
+        确认微信支付 {{buy.add}}
       </button>
-      <text class="sheet__safe">支付将通过微信安全支付完成，款项进入森水长河官方账户。</text>
+      <text class="sheet__safe">支付通过微信安全支付完成，款项进入森水长河官方账户。</text>
     </view>
   </view>
 </view>
