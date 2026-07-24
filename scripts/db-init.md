@@ -195,3 +195,59 @@
 | visit_reservations | visitDate, status | 否 |
 
 > 分享给同行人只带 `shareToken`，非本人访问一律降级为脱敏摘要（无手机号、无 openid）。
+
+## 12. 部署与运维通道（重要）
+
+### 为什么 cloudbase CLI 总是「无有效身份信息」
+
+`cloudbase login` 把凭证写进 `~/.config/.cloudbase/auth.json`，其中：
+
+- `tmpSecretId` / `tmpSecretKey` —— **有效期只有 2 小时**（看 `tmpExpired` 字段）
+- `refreshToken` —— 有效期 30 天，但 **CLI 3.6.4 不会自动拿它续期**
+
+所以每次登录后隔一两个小时再用，就一定报「无有效身份信息」。这不是配置问题，重新登录也只能再撑 2 小时。**不要再依赖它。**
+
+### 通道 A：部署云函数代码 —— 微信开发者工具 CLI
+
+```bash
+scripts/deploy-functions.sh              # 部署本轮全部待部署函数
+scripts/deploy-functions.sh fn1 fn2      # 只部署指定函数
+scripts/deploy-functions.sh --list       # 列出云端已有函数
+```
+
+底层是 `/Applications/wechatwebdevtools.app/Contents/MacOS/cli cloud functions deploy`，
+复用开发者工具的登录态，**不会过期**。
+
+**前置（一次性）**：微信开发者工具 → 设置 → 安全设置 → **服务端口：开启**。
+没开会报 `IDE service port disabled`。
+
+### 通道 B：数据库读写与调用云函数 —— 服务端 API Key + HTTP API
+
+```bash
+export TCB_API_KEY='eyJ...'              # 云开发控制台 → 环境 → 服务端 API Key
+node scripts/tcb-api.mjs collections     # 列出集合与文档数
+node scripts/tcb-api.mjs get ticket_products '{"sku":"creek_single"}'
+node scripts/tcb-api.mjs seed            # 灌首页配置/文章/票种（幂等）
+node scripts/tcb-api.mjs invoke initDb '{}'
+```
+
+API Key 永不过期，权限是 system admin。**绝不能提交进仓库**，只走环境变量。
+
+**踩过的坑**（写进脚本注释了，避免重犯）：
+
+| 坑 | 正确做法 |
+|---|---|
+| `?filter=` 被静默忽略，导致误判"数据已存在" | 用 `?query=` |
+| 插入报 `Invalid request body` | body 必须是 `{ data: [文档] }`（数组） |
+| 建集合报 `collectionName is required` | 字段名是 `CollectionName`（大写 C） |
+| 读出来 `{"$numberInt":"5800"}` | 这是 Strict EJSON 响应格式，库里存的是整数，云函数读到的是普通数字 |
+
+### 两条通道的能力边界
+
+| 操作 | 通道 A（工具 CLI） | 通道 B（HTTP API） |
+|---|---|---|
+| 部署云函数代码 | ✅ | ❌ 不支持 |
+| 读写数据库 | ❌ | ✅ |
+| 调用云函数 | ❌ | ✅ |
+| 配置环境变量 | ❌ | ❌ **只能在云开发控制台操作** |
+| 建数据库索引 | ❌ | ❌ **只能在云开发控制台操作** |
