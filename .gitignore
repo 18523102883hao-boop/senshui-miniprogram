@@ -13,7 +13,9 @@ miniprogram/miniprogram_npm/
 ._*
 .AppleDouble
 .LSOverride
-Icon?
+# macOS 自定义文件夹图标（文件名是 "Icon" + 回车符）
+# 注意：不能写成 Icon?，macOS 大小写不敏感会把 assets/icons 整个目录一起忽略
+Icon[\r]
 *.icloud
 .iCloud/
 .Trashes
