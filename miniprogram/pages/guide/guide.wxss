@@ -1,0 +1,50 @@
+/* 入园攻略 */
+.head {
+  background: linear-gradient(135deg, var(--sr-primary) 0%, #173628 100%);
+  border-radius: var(--sr-radius-lg); padding: 40rpx; margin-bottom: 28rpx;
+}
+.head__title { display: block; font-size: 38rpx; font-weight: 800; color: #F7F3EA; letter-spacing: 2rpx; }
+.head__addr { display: block; font-size: 24rpx; color: rgba(247, 243, 234, 0.76); margin-top: 12rpx; line-height: 1.6; }
+.head__acts { display: flex; margin-top: 28rpx; }
+.head__btn {
+  display: flex; align-items: center; justify-content: center;
+  padding: 18rpx 32rpx; border-radius: 40rpx; margin-right: 20rpx;
+  font-size: 26rpx; font-weight: 600; color: var(--sr-primary); background: rgba(247, 243, 234, 0.92);
+}
+.head__btn--primary { background: var(--sr-gold); color: #173628; }
+.head__icon { width: 32rpx; height: 32rpx; margin-right: 10rpx; }
+
+.grp { background: var(--sr-bg-card); border-radius: var(--sr-radius); box-shadow: var(--sr-shadow); margin-bottom: 24rpx; overflow: hidden; }
+.grp__head { display: flex; align-items: center; padding: 26rpx 32rpx; background: var(--sr-primary-weak); }
+.grp__icon { width: 40rpx; height: 40rpx; margin-right: 16rpx; }
+.grp__title { font-size: 29rpx; font-weight: 700; color: var(--sr-primary); }
+.grp__body { padding: 8rpx 32rpx 20rpx; }
+.row { padding: 22rpx 0; border-bottom: 1rpx solid var(--sr-line); }
+.row:last-child { border-bottom: none; }
+.row__title { display: block; font-size: 27rpx; font-weight: 600; color: var(--sr-text); }
+.row__desc { display: block; font-size: 24rpx; color: var(--sr-text-sub); margin-top: 8rpx; line-height: 1.6; }
+/* 待确认项弱化处理，明确告诉用户去问管家，而不是给假信息 */
+.row__desc--ask { color: var(--sr-gold); font-style: normal; }
+
+.sec-title { display: block; font-size: 30rpx; font-weight: 700; color: var(--sr-text); margin: 20rpx 4rpx 18rpx; }
+.b-text { display: block; font-size: 27rpx; color: var(--sr-text); line-height: 1.8; margin-bottom: 20rpx; }
+.b-list { background: var(--sr-bg-card); border-radius: var(--sr-radius); box-shadow: var(--sr-shadow); padding: 26rpx 32rpx; margin-bottom: 20rpx; }
+.b-list__title { display: block; font-size: 28rpx; font-weight: 700; color: var(--sr-text); margin-bottom: 14rpx; }
+.b-list__item { display: flex; align-items: flex-start; padding: 10rpx 0; }
+.b-list__dot { width: 12rpx; height: 12rpx; border-radius: 50%; background: var(--sr-seal); margin: 14rpx 18rpx 0 0; flex-shrink: 0; }
+.b-list__text { flex: 1; font-size: 26rpx; color: var(--sr-text-sub); line-height: 1.7; }
+.b-notice { display: flex; align-items: flex-start; background: rgba(240, 112, 85, 0.1); border-left: 6rpx solid var(--sr-seal); border-radius: var(--sr-radius-sm); padding: 24rpx 26rpx; margin-bottom: 20rpx; }
+.b-notice__icon { width: 36rpx; height: 36rpx; flex-shrink: 0; margin-top: 2rpx; }
+.b-notice__text { flex: 1; font-size: 25rpx; color: var(--sr-text); line-height: 1.7; margin-left: 18rpx; }
+
+.ask-card {
+  display: flex; align-items: center; justify-content: space-between;
+  background: var(--sr-bg-card); border-radius: var(--sr-radius);
+  box-shadow: var(--sr-shadow); padding: 30rpx 32rpx; margin-top: 8rpx;
+  border-left: 8rpx solid var(--sr-gold);
+}
+.ask-card__title { display: block; font-size: 29rpx; font-weight: 700; color: var(--sr-text); }
+.ask-card__sub { display: block; font-size: 22rpx; color: var(--sr-text-weak); margin-top: 8rpx; }
+.ask-card__arrow { font-size: 40rpx; color: var(--sr-text-weak); }
+
+.tail { font-size: 21rpx; color: var(--sr-text-weak); text-align: center; padding: 32rpx 0 40rpx; }

@@ -26,7 +26,9 @@
     "pages/legal/privacy/privacy",
     "pages/legal/agreement/agreement",
     "pages/content/list/list",
-    "pages/content/detail/detail"
+    "pages/content/detail/detail",
+    "pages/guide/guide",
+    "pages/concierge/concierge"
   ],
   "window": {
     "backgroundTextStyle": "dark",

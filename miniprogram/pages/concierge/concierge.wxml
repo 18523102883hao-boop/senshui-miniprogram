@@ -1,0 +1,42 @@
+<view class="sr-page sr-enter">
+  <view class="head">
+    <text class="head__title">{{parkName}} 管家</text>
+    <text class="head__sub">到园前后有人对接，行程、餐食、活动都能帮你安排</text>
+    <view class="head__hours" wx:if="{{serviceHours}}">
+      <image class="head__icon" src="/assets/icons/forest/home-open-status.png" mode="aspectFit" />
+      <text>服务时间 {{serviceHours}}</text>
+    </view>
+  </view>
+
+  <view class="ch-list">
+    <block wx:for="{{channels}}" wx:key="type">
+      <!-- 微信客服必须用 button open-type=contact 触发 -->
+      <button wx:if="{{item.type === 'wechat'}}" class="ch ch--btn {{item.primary ? 'ch--primary' : ''}}" open-type="contact">
+        <image class="ch__icon" src="{{item.icon}}" mode="aspectFit" />
+        <view class="ch__body">
+          <text class="ch__title">{{item.title}}</text>
+          <text class="ch__desc">{{item.desc}}</text>
+        </view>
+        <text class="ch__arrow">›</text>
+      </button>
+
+      <view wx:else class="ch sr-touch" hover-class="sr-touch--press" hover-stay-time="60"
+            data-type="{{item.type}}" bindtap="onChannelTap">
+        <image class="ch__icon" src="{{item.icon}}" mode="aspectFit" />
+        <view class="ch__body">
+          <text class="ch__title">{{item.title}}</text>
+          <text class="ch__desc">{{item.desc}}</text>
+        </view>
+        <text class="ch__arrow">›</text>
+      </view>
+    </block>
+  </view>
+
+  <!-- 二维码仅在配置后渲染 -->
+  <view class="qr" wx:if="{{qrcodeUrl}}">
+    <image class="qr__img" src="{{qrcodeUrl}}" mode="aspectFit" bindtap="onPreviewQrcode" show-menu-by-longpress />
+    <text class="qr__tip">长按识别或点击放大</text>
+  </view>
+
+  <view class="tail">如遇紧急情况请直接拨打前台电话，或就近联系园区工作人员。</view>
+</view>

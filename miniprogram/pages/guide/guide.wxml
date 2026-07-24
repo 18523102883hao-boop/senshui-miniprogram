@@ -1,0 +1,61 @@
+<view class="sr-page sr-enter">
+  <!-- 到达信息头 -->
+  <view class="head">
+    <text class="head__title">{{park.name}}</text>
+    <text class="head__addr">{{park.address}}</text>
+    <view class="head__acts">
+      <view class="head__btn head__btn--primary sr-touch" hover-class="sr-touch--cta" hover-stay-time="60" bindtap="onNavigate">
+        <image class="head__icon" src="/assets/icons/forest/map-navigation.png" mode="aspectFit" />
+        <text>{{canNavigate ? '一键导航' : '复制地址'}}</text>
+      </view>
+      <view class="head__btn sr-touch" hover-class="sr-touch--press" hover-stay-time="60" bindtap="onCallFront">
+        <image class="head__icon head__icon--dark" src="/assets/icons/forest/mine-phone.png" mode="aspectFit" />
+        <text>打电话</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 攻略分组 -->
+  <view class="grp" wx:for="{{groups}}" wx:key="key">
+    <view class="grp__head">
+      <image class="grp__icon" src="{{item.icon}}" mode="aspectFit" />
+      <text class="grp__title">{{item.title}}</text>
+    </view>
+    <view class="grp__body">
+      <view class="row" wx:for="{{item.items}}" wx:key="title" wx:for-item="row">
+        <text class="row__title">{{row.title}}</text>
+        <text class="row__desc {{row.status === 'ask' ? 'row__desc--ask' : ''}}">{{row.desc}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 云端补充内容（运营可随时更新） -->
+  <block wx:if="{{blocks.length}}">
+    <text class="sec-title">运营补充</text>
+    <block wx:for="{{blocks}}" wx:key="index">
+      <text class="b-text" wx:if="{{item.type === 'text'}}">{{item.data.text}}</text>
+      <view class="b-list" wx:elif="{{item.type === 'list'}}">
+        <text class="b-list__title" wx:if="{{item.data.title}}">{{item.data.title}}</text>
+        <view class="b-list__item" wx:for="{{item.data.items}}" wx:key="*this" wx:for-item="li">
+          <view class="b-list__dot"></view>
+          <text class="b-list__text">{{li}}</text>
+        </view>
+      </view>
+      <view class="b-notice" wx:elif="{{item.type === 'notice'}}">
+        <image class="b-notice__icon" src="/assets/icons/status/status-warning.png" mode="aspectFit" />
+        <text class="b-notice__text">{{item.data.text}}</text>
+      </view>
+    </block>
+  </block>
+
+  <!-- 兜底：拿不准的都找管家 -->
+  <view class="ask-card sr-touch" hover-class="sr-touch--press" hover-stay-time="60" bindtap="goConcierge">
+    <view class="ask-card__body">
+      <text class="ask-card__title">还有问题？找管家</text>
+      <text class="ask-card__sub">标注「请咨询管家」的项目以现场为准</text>
+    </view>
+    <text class="ask-card__arrow">›</text>
+  </view>
+
+  <view class="tail">园区信息以现场公示和工作人员说明为准。</view>
+</view>

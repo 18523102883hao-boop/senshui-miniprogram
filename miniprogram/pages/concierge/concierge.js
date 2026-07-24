@@ -1,0 +1,77 @@
+// 管家服务（功能扩展 Task 5）
+// PRD §11.1：微信客服优先，同时必须提供电话与表单等无障碍替代路径。
+// 二维码只有在配置后才渲染，未配置不出现空图。
+const env = require('../../env.js')
+const { haptic } = require('../../utils/haptics.js')
+const { makePhoneCall } = require('../../utils/util.js')
+
+function buildChannels(cfg) {
+  const c = cfg || {}
+  const channels = [
+    {
+      type: 'wechat',
+      title: '微信客服',
+      desc: '在微信内直接对话，响应最快',
+      icon: '/assets/icons/forest/customer-service.png',
+      primary: true
+    }
+  ]
+  if (c.phone) {
+    channels.push({
+      type: 'phone',
+      title: '拨打前台电话',
+      desc: c.phone,
+      icon: '/assets/icons/forest/mine-phone.png'
+    })
+  }
+  // 未配置二维码就不加这一项，避免渲染空图（PRD §11.1）
+  if (c.qrcodeUrl) {
+    channels.push({
+      type: 'qrcode',
+      title: '添加企业微信管家',
+      desc: '长按或点击保存二维码',
+      icon: '/assets/icons/forest/activity-scan.png'
+    })
+  }
+  channels.push({
+    type: 'form',
+    title: '提交咨询表单',
+    desc: '留下需求与联系方式，管家会主动联系你',
+    icon: '/assets/icons/forest/edit.png'
+  })
+  return channels
+}
+
+Page({
+  data: {
+    channels: buildChannels(env.concierge),
+    qrcodeUrl: (env.concierge && env.concierge.qrcodeUrl) || '',
+    serviceHours: (env.concierge && env.concierge.serviceHours) || '',
+    phone: (env.concierge && env.concierge.phone) || env.frontDeskPhone || '',
+    parkName: (env.park && env.park.name) || '森水长河'
+  },
+
+  onChannelTap(e) {
+    const type = e.currentTarget.dataset.type
+    haptic('light')
+    if (type === 'phone') return makePhoneCall(this.data.phone)
+    if (type === 'qrcode') return this.onPreviewQrcode()
+    if (type === 'form') {
+      return wx.navigateTo({
+        url: '/pages/service/lead/lead?type=consult',
+        fail: () => wx.showToast({ title: '该功能即将开放', icon: 'none' })
+      })
+    }
+    // wechat 渠道由 wxml 的 <button open-type="contact"> 直接触发，无需 JS 处理
+  },
+
+  onPreviewQrcode() {
+    const url = this.data.qrcodeUrl
+    if (!url) return wx.showToast({ title: '二维码待配置', icon: 'none' })
+    wx.previewImage({ urls: [url], current: url })
+  },
+
+  onShareAppMessage() {
+    return { title: '森水长河 · 管家服务', path: '/pages/concierge/concierge' }
+  }
+})
