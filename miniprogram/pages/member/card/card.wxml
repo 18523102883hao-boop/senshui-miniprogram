@@ -1,9 +1,12 @@
 <view class="sr-page">
   <!-- 有卡 -->
   <block wx:if="{{member}}">
-    <view class="card">
+    <view class="card sr-goldcard sr-gold-hairline">
       <view class="card__head">
-        <text class="card__title">森水会员卡</text>
+        <view class="card__brand">
+          <text class="card__title">森水会员卡</text>
+          <text class="card__badge">SVIP</text>
+        </view>
         <text class="card__status">{{member.statusText}}</text>
       </view>
       <text class="card__expire">有效期至 {{member.expireText}}</text>
@@ -20,6 +23,7 @@
       <text class="sr-subtitle">权益状态</text>
       <view class="sr-divider"></view>
       <view class="ben" wx:for="{{benefits}}" wx:key="type">
+        <image class="ben__icon" src="{{item.type === 'ling' ? '/assets/icons/forest/activity-token.png' : '/assets/icons/forest/mine-membership.png'}}" mode="aspectFit" />
         <text class="ben__name">{{item.name}}</text>
         <text class="ben__state {{item.done ? 'is-done' : ''}}">{{item.stateText}}</text>
       </view>

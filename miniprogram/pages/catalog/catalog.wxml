@@ -1,4 +1,4 @@
-<view class="sr-page">
+<view class="sr-page sr-enter">
   <!-- 分类（横滑选择 · 吸附选中态） -->
   <scroll-view scroll-x enable-flick class="tabs-scroll" wx:if="{{sections.length}}">
     <view class="tabs">
@@ -16,23 +16,27 @@
     <view wx:if="{{activeKey === item.key}}">
       <!-- 价目分组 -->
       <view wx:for="{{item.groups}}" wx:for-item="g" wx:key="name" class="sr-card">
-        <text class="sr-subtitle">{{g.name}}</text>
-        <view class="sr-divider"></view>
+        <view class="grp-head">
+          <view class="grp-head__bar"></view>
+          <text class="grp-head__title">{{g.name}}</text>
+        </view>
         <view wx:for="{{g.items}}" wx:for-item="it" wx:key="n" class="row">
           <text class="row__n">{{it.n}}</text>
-          <text class="row__p">¥{{it.p}}<text class="row__u" wx:if="{{g.unit}}"> /{{g.unit}}</text></text>
+          <text class="row__p sr-num">¥{{it.p}}<text class="row__u" wx:if="{{g.unit}}"> /{{g.unit}}</text></text>
         </view>
       </view>
 
       <!-- 租赁（租金 / 押金）-->
       <view wx:if="{{item.rentals}}" class="sr-card">
-        <text class="sr-subtitle">租金 / 押金</text>
-        <view class="sr-divider"></view>
+        <view class="grp-head">
+          <view class="grp-head__bar"></view>
+          <text class="grp-head__title">装备租赁</text>
+        </view>
         <view wx:for="{{item.rentals}}" wx:for-item="r" wx:key="n" class="row">
           <text class="row__n">{{r.n}}</text>
           <view class="rent">
-            <text class="rent__rent">租 ¥{{r.rent}}</text>
-            <text class="rent__dep">押 ¥{{r.deposit}}</text>
+            <text class="chip chip--rent sr-num">租 ¥{{r.rent}}</text>
+            <text class="chip chip--dep sr-num">押 ¥{{r.deposit}}</text>
           </view>
         </view>
         <text class="tip">押金在归还且设备完好后全额退还。</text>
@@ -42,8 +46,9 @@
       <view wx:if="{{item.services}}">
         <view wx:for="{{item.services}}" wx:for-item="s" wx:key="n" class="sr-card svc">
           <view class="svc__head">
+            <image class="svc__icon" src="/assets/icons/forest/shop-rental.png" mode="aspectFit" />
             <text class="svc__n">{{s.n}}</text>
-            <view class="svc__badge">押金 ¥{{s.deposit}}/台</view>
+            <view class="svc__badge sr-num">押金 ¥{{s.deposit}}/台</view>
           </view>
           <text class="svc__desc">{{s.desc}}</text>
         </view>
@@ -51,5 +56,7 @@
     </view>
   </block>
 
-  <view wx:if="{{loaded && !sections.length}}" class="empty">目录整备中，敬请期待。</view>
+  <!-- 加载 / 空态 -->
+  <view wx:if="{{!loaded}}" class="state">加载中…</view>
+  <view wx:if="{{loaded && !sections.length}}" class="state">目录整备中，敬请期待。</view>
 </view>

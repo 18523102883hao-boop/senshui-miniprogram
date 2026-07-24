@@ -11,21 +11,29 @@
 .tab--on { color: var(--sr-text-invert); background: var(--sr-primary); font-weight: 600; }
 .tab--on .tab__icon { filter: brightness(0) invert(1); opacity: 0.92; }
 
-.row { display: flex; align-items: center; justify-content: space-between; padding: 20rpx 0; border-bottom: 1rpx solid var(--sr-line); }
+/* 分组标题（色条，与全站统一） */
+.grp-head { display: flex; align-items: center; margin-bottom: 12rpx; }
+.grp-head__bar { width: 6rpx; height: 30rpx; border-radius: 4rpx; background: var(--sr-primary); margin-right: 14rpx; }
+.grp-head__title { font-size: 30rpx; font-weight: 700; color: var(--sr-text); }
+
+.row { display: flex; align-items: center; justify-content: space-between; padding: 22rpx 0; border-bottom: 1rpx solid var(--sr-line); }
 .row:last-child { border-bottom: none; }
-.row__n { font-size: 28rpx; color: var(--sr-text); flex: 1; }
-.row__p { font-size: 30rpx; font-weight: 700; color: var(--sr-seal); }
+.row__n { font-size: 28rpx; color: var(--sr-text); flex: 1; padding-right: 20rpx; }
+.row__p { font-size: 32rpx; font-weight: 800; color: var(--sr-seal); flex-shrink: 0; }
 .row__u { font-size: 22rpx; font-weight: 400; color: var(--sr-text-weak); }
 
-.rent { display: flex; gap: 16rpx; align-items: center; }
-.rent__rent { font-size: 28rpx; font-weight: 700; color: var(--sr-primary); }
-.rent__dep { font-size: 24rpx; color: var(--sr-text-sub); }
+/* 租金 / 押金 chip */
+.rent { display: flex; gap: 12rpx; align-items: center; flex-shrink: 0; }
+.chip { font-size: 24rpx; padding: 8rpx 18rpx; border-radius: 24rpx; }
+.chip--rent { color: var(--sr-primary); font-weight: 700; background: var(--sr-primary-weak); }
+.chip--dep { color: var(--sr-text-sub); background: var(--sr-bg-sunken); }
 
 .tip { display: block; font-size: 22rpx; color: var(--sr-text-weak); margin-top: 16rpx; line-height: 1.6; }
 
-.svc__head { display: flex; align-items: center; justify-content: space-between; }
-.svc__n { font-size: 32rpx; font-weight: 700; color: var(--sr-primary); }
-.svc__badge { font-size: 24rpx; color: #fff; background: var(--sr-seal); border-radius: 8rpx; padding: 4rpx 16rpx; }
-.svc__desc { display: block; font-size: 26rpx; color: var(--sr-text-sub); margin-top: 16rpx; line-height: 1.7; }
+.svc__head { display: flex; align-items: center; }
+.svc__icon { width: 48rpx; height: 48rpx; flex-shrink: 0; margin-right: 16rpx; }
+.svc__n { font-size: 32rpx; font-weight: 700; color: var(--sr-primary); flex: 1; }
+.svc__badge { font-size: 24rpx; color: #fff; background: var(--sr-seal); border-radius: 10rpx; padding: 6rpx 18rpx; flex-shrink: 0; }
+.svc__desc { display: block; font-size: 26rpx; color: var(--sr-text-sub); margin-top: 18rpx; line-height: 1.7; }
 
-.empty { text-align: center; color: var(--sr-text-weak); font-size: 26rpx; padding: 80rpx 0; }
+.state { text-align: center; color: var(--sr-text-weak); font-size: 26rpx; padding: 100rpx 0; }
