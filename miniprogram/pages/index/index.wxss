@@ -95,14 +95,15 @@
   background: linear-gradient(transparent, rgba(23, 54, 40, 0.62));
 }
 
-.map-viewer {
-  position: fixed; inset: 0; z-index: 200; background: rgba(10, 14, 12, 0.94);
-  display: flex; flex-direction: column;
+.map-viewer { position: fixed; inset: 0; z-index: 200; background: rgba(10, 14, 12, 0.96); }
+.mv-area { width: 100vw; height: 100vh; overflow: hidden; }
+.mv-view { display: flex; }
+.mv-hint {
+  position: fixed; bottom: calc(48rpx + env(safe-area-inset-bottom)); left: 0; right: 0;
+  text-align: center; color: rgba(255, 255, 255, 0.7); font-size: 22rpx;
 }
-.map-viewer__scroll { flex: 1; }
-.map-viewer__img { width: 100%; display: block; }
 .map-viewer__close {
-  position: fixed; top: calc(20rpx + env(safe-area-inset-top)); right: 32rpx;
+  position: fixed; top: calc(24rpx + env(safe-area-inset-top)); right: 32rpx;
   color: #fff; font-size: 26rpx; background: rgba(0, 0, 0, 0.5);
-  padding: 10rpx 24rpx; border-radius: 32rpx;
+  padding: 12rpx 28rpx; border-radius: 32rpx; z-index: 1;
 }

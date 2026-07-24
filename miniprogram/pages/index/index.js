@@ -16,6 +16,8 @@ Page({
     campMapUrl: '', // 营地游览图云端临时链接（管理员上传后覆盖本地图）
     creekMapUrl: '', // 溪降游览图云端临时链接
     mapViewer: '', // 全屏查看的地图 src（空=关闭）
+    mapViewW: 0, // 查看器图片宽（px）
+    mapViewH: 0, // 查看器图片高（px，按原图比例）
     // 园区指南入口（会员卡在上方独立卡片，见 wxml）
     quickLinks: [
       { key: 'catalog', title: '商品与服务', desc: '酒水·小卖部·租赁', icon: '/assets/icons/forest/home-store.png' },
@@ -84,17 +86,26 @@ Page({
     wx.navigateTo({ url: '/pages/member/detail/detail' })
   },
 
-  // 打开全屏地图查看（云端图优先，否则用本地打包图）
+  // 打开全屏地图查看（云端图优先，否则用本地打包图）；支持双指缩放
   openMap(e) {
     const key = e.currentTarget.dataset.key
     const src = key === 'creek'
       ? (this.data.creekMapUrl || '/images/map-creek.jpg')
       : (this.data.campMapUrl || '/images/map-camp.jpg')
-    this.setData({ mapViewer: src })
+    haptic('light')
+    const winW = (wx.getWindowInfo && wx.getWindowInfo().windowWidth) || 375
+    wx.getImageInfo({
+      src,
+      success: (info) => {
+        const h = Math.round(winW * info.height / info.width)
+        this.setData({ mapViewer: src, mapViewW: winW, mapViewH: h })
+      },
+      fail: () => this.setData({ mapViewer: src, mapViewW: winW, mapViewH: winW })
+    })
   },
 
   closeMapViewer() {
-    this.setData({ mapViewer: '' })
+    this.setData({ mapViewer: '', mapViewW: 0, mapViewH: 0 })
   },
 
   onShareAppMessage() {

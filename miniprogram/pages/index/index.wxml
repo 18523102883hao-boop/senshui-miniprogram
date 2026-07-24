@@ -80,11 +80,15 @@
     </view>
   </view>
 
-  <!-- 全屏地图查看 -->
-  <view class="map-viewer" wx:if="{{mapViewer}}" bindtap="closeMapViewer">
-    <scroll-view scroll-y class="map-viewer__scroll">
-      <image src="{{mapViewer}}" mode="widthFix" class="map-viewer__img" />
-    </scroll-view>
-    <view class="map-viewer__close">✕ 点击关闭</view>
+  <!-- 全屏地图查看（双指缩放 + 拖动） -->
+  <view class="map-viewer" wx:if="{{mapViewer}}">
+    <movable-area class="mv-area" scale-area>
+      <movable-view class="mv-view" direction="all" scale scale-min="1" scale-max="4" scale-value="1"
+                    style="width:{{mapViewW}}px;height:{{mapViewH}}px;">
+        <image src="{{mapViewer}}" style="width:{{mapViewW}}px;height:{{mapViewH}}px;" mode="scaleToFill" />
+      </movable-view>
+    </movable-area>
+    <view class="mv-hint">双指缩放查看 · 拖动移动</view>
+    <view class="map-viewer__close" bindtap="closeMapViewer">✕ 关闭</view>
   </view>
 </view>
