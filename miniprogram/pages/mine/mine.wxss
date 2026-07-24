@@ -5,13 +5,16 @@
 }
 .profile__info { margin-left: 24rpx; display: flex; flex-direction: column; }
 .profile__name { font-size: 34rpx; font-weight: 700; color: var(--sr-text); }
-.profile__phone {
-  margin: 12rpx 0 0; padding: 0 20rpx; height: 52rpx; line-height: 52rpx;
-  font-size: 24rpx; color: var(--sr-primary); background: var(--sr-primary-weak);
-  border-radius: 26rpx; align-self: flex-start;
+.profile__login {
+  display: inline-flex; align-items: center; gap: 10rpx;
+  margin: 14rpx 0 0; padding: 0 26rpx; height: 62rpx; line-height: 62rpx;
+  font-size: 26rpx; font-weight: 600; color: #fff; background: var(--sr-primary);
+  border-radius: 32rpx; align-self: flex-start;
 }
-.profile__phone::after { border: none; }
-.profile__phone-done { font-size: 24rpx; color: var(--sr-text-sub); margin-top: 8rpx; }
+.profile__login::after { border: none; }
+.profile__login-icon { width: 32rpx; height: 32rpx; filter: brightness(0) invert(1); }
+.profile__phone-done { display: flex; align-items: center; gap: 8rpx; font-size: 24rpx; color: var(--sr-text-sub); margin-top: 10rpx; }
+.profile__done-icon { width: 28rpx; height: 28rpx; }
 
 /* ===== 黑金会员卡 ===== */
 .mcard {

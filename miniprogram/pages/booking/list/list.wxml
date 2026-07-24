@@ -1,24 +1,43 @@
-<!-- 溪降预约 - 场次列表 -->
-<view class="container">
-  <!-- 日期选择器 -->
-  <view class="date-picker">
+<view class="sr-page sr-enter">
+  <view class="sr-card date-picker-card">
+    <view class="sr-row-between">
+      <view class="sec-head">
+        <view class="sec-head__bar"></view>
+        <text class="sr-subtitle">选择日期</text>
+      </view>
+      <image class="sr-icon--sm sec-head__icon" src="/assets/icons/forest/home-calendar.png" mode="aspectFit" />
+    </view>
+    
     <picker mode="date" value="{{selectedDate}}" start="{{today}}" bindchange="onDateChange">
-      <view class="date-display">
+      <view class="date-display sr-touch" hover-class="sr-touch--press" hover-stay-time="60">
         <text class="date-text">{{formatDate(selectedDate)}}</text>
-        <text class="date-arrow">▼</text>
+        <image class="date-arrow" src="/assets/icons/forest/chevron-right.png" mode="aspectFit" />
       </view>
     </picker>
   </view>
 
-  <!-- 场次列表 -->
   <view class="session-list" wx:if="{{sessions.length > 0}}">
-    <view class="session-card" wx:for="{{sessions}}" wx:key="_id" bindtap="onSelectSession" data-id="{{item._id}}">
+    <view 
+      class="sr-card session-card sr-touch" 
+      hover-class="sr-touch--press" 
+      hover-stay-time="60"
+      wx:for="{{sessions}}" 
+      wx:key="_id" 
+      bindtap="onSelectSession" 
+      data-id="{{item._id}}"
+    >
       <view class="session-header">
-        <text class="session-time">{{item.startTime}}</text>
-        <text class="session-status {{item.status === 'closed' ? 'closed' : ''}}">
+        <view class="session-time-wrapper">
+          <image class="session-time-icon" src="/assets/icons/forest/booking-time.png" mode="aspectFit" />
+          <text class="session-time">{{item.startTime}}</text>
+        </view>
+        <text class="session-status {{item.status === 'closed' ? 'status-closed' : 'status-open'}}">
           {{item.status === 'open' ? '开放中' : '已关闭'}}
         </text>
       </view>
+      
+      <view class="session-divider"></view>
+      
       <view class="session-body">
         <view class="session-info">
           <text class="info-label">剩余名额</text>
@@ -33,19 +52,27 @@
           <text class="info-value">{{item.booked}}</text>
         </view>
       </view>
+      
       <view class="session-footer" wx:if="{{item.status === 'closed' && item.note}}">
+        <image class="session-note-icon" src="/assets/icons/forest/booking-warning.png" mode="aspectFit" />
         <text class="session-note">{{item.note}}</text>
       </view>
     </view>
   </view>
 
-  <!-- 空状态 -->
   <view class="empty-state" wx:else>
+    <image class="empty-icon" src="/assets/icons/forest/booking-safety.png" mode="aspectFit" />
     <text class="empty-text">当日暂无场次</text>
   </view>
 
-  <!-- 我的预约入口 -->
-  <view class="my-bookings-btn" bindtap="goToMyBookings">
-    <text>我的预约</text>
+  <view class="footer-btn-wrapper">
+    <view 
+      class="sr-btn sr-touch" 
+      hover-class="sr-touch--cta" 
+      hover-stay-time="60"
+      bindtap="goToMyBookings"
+    >
+      <text>我的预约</text>
+    </view>
   </view>
 </view>

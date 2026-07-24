@@ -1,5 +1,6 @@
 // 溪降预约 - 创建预约
 const { call, callWithLoading } = require('../../../utils/request')
+const { haptic } = require('../../../utils/haptics')
 
 Page({
   data: {
@@ -82,11 +83,15 @@ Page({
       return
     }
 
+    haptic('light')
+
     try {
       const data = await callWithLoading('createBooking', {
         sessionId,
         phone
       }, '预约中...')
+
+      haptic('medium')
 
       // 保存预约码到本地（离线持久化）
       wx.setStorageSync('lastBookingCode', data.code)

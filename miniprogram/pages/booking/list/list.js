@@ -1,5 +1,6 @@
 // 溪降预约 - 场次列表
 const { call, callWithLoading } = require('../../../utils/request')
+const { haptic } = require('../../../utils/haptics')
 
 Page({
   data: {
@@ -43,6 +44,7 @@ Page({
 
   // 日期选择变化
   onDateChange(e) {
+    haptic('light')
     this.setData({
       selectedDate: e.detail.value
     })
@@ -72,6 +74,7 @@ Page({
       return
     }
 
+    haptic('light')
     wx.navigateTo({
       url: `/pages/booking/create/create?sessionId=${sessionId}`
     })
@@ -79,6 +82,7 @@ Page({
 
   // 跳转我的预约
   goToMyBookings() {
+    haptic('light')
     wx.navigateTo({
       url: '/pages/booking/detail/detail'
     })

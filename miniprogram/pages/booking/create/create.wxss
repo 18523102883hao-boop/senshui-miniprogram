@@ -1,120 +1,105 @@
-/* 溪降预约 - 创建预约 */
-.container {
-  padding: 20rpx;
-  background-color: #F6F4F0;
-  min-height: 100vh;
-  padding-bottom: 120rpx;
+.submit-wrapper {
+  padding-top: 8rpx;
+  padding-bottom: calc(48rpx + env(safe-area-inset-bottom));
 }
 
-/* 卡片通用样式 */
-.session-info-card,
-.form-card,
-.notice-card {
-  background: #FFFFFF;
-  border-radius: 16rpx;
-  padding: 30rpx;
-  margin-bottom: 20rpx;
-  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
+.sec-head {
+  display: flex;
+  align-items: center;
 }
 
-.card-title {
-  font-size: 28rpx;
-  font-weight: bold;
-  color: #244B36;
-  margin-bottom: 20rpx;
-  padding-bottom: 20rpx;
-  border-bottom: 1rpx solid #E8E3D8;
+.sec-head__bar {
+  width: 6rpx;
+  height: 30rpx;
+  border-radius: 4rpx;
+  background: var(--sr-seal);
+  margin-right: 14rpx;
 }
 
-/* 信息行 */
+.sec-head__icon {
+  opacity: 0.8;
+}
+
 .info-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16rpx 0;
+  padding: 24rpx 0;
 }
 
 .info-label {
   font-size: 28rpx;
-  color: #8A8072;
+  color: var(--sr-text-sub);
 }
 
 .info-value {
   font-size: 28rpx;
-  color: #2B2B2B;
-  font-weight: 500;
+  color: var(--sr-text);
+  font-weight: 600;
 }
 
-.info-value.warning {
-  color: #F07055;
-  font-weight: bold;
+.info-value--warning {
+  color: var(--sr-seal);
+  font-weight: 700;
 }
 
-/* 表单 */
+.info-divider {
+  height: 1rpx;
+  background: var(--sr-line);
+}
+
 .form-item {
-  margin-bottom: 20rpx;
+  margin-top: 20rpx;
 }
 
 .form-label {
   font-size: 28rpx;
-  color: #2B2B2B;
+  color: var(--sr-text);
   margin-bottom: 16rpx;
   display: block;
+  font-weight: 500;
 }
 
 .form-input {
-  background: white;
-  border: 1rpx solid #E8E3D8;
-  border-radius: 12rpx;
-  padding: 20rpx;
+  background: var(--sr-bg-sunken);
+  border-radius: var(--sr-radius-sm);
+  padding: 24rpx;
   font-size: 28rpx;
   width: 100%;
   box-sizing: border-box;
+  color: var(--sr-text);
 }
 
 .form-tip {
+  display: block;
   font-size: 24rpx;
-  color: #8A8072;
-  margin-top: 16rpx;
+  color: var(--sr-text-weak);
+  margin-top: 20rpx;
 }
 
-/* 注意事项 */
 .notice-item {
   display: flex;
-  margin-bottom: 16rpx;
+  margin-bottom: 20rpx;
   align-items: flex-start;
 }
 
+.notice-item:last-child {
+  margin-bottom: 0;
+}
+
 .notice-dot {
-  color: #244B36;
-  margin-right: 12rpx;
-  font-size: 28rpx;
+  width: 8rpx;
+  height: 8rpx;
+  border-radius: 50%;
+  background: var(--sr-primary);
+  margin-top: 10rpx;
+  margin-right: 16rpx;
+  flex-shrink: 0;
 }
 
 .notice-text {
   font-size: 26rpx;
-  color: #6B6B6B;
+  color: var(--sr-text-sub);
   line-height: 1.6;
   flex: 1;
-}
-
-/* 提交按钮 */
-.submit-btn {
-  position: fixed;
-  bottom: 40rpx;
-  left: 20rpx;
-  right: 20rpx;
-  background: #244B36;
-  color: white;
-  text-align: center;
-  padding: 28rpx;
-  border-radius: 16rpx;
-  font-size: 32rpx;
-  font-weight: bold;
-  box-shadow: 0 4rpx 12rpx rgba(42, 77, 58, 0.3);
-}
-
-.submit-btn.disabled {
-  background: #C8C4BC;
-  box-shadow: none;
 }

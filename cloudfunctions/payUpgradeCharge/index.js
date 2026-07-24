@@ -47,6 +47,7 @@ exports.main = async (event) => {
       outTradeNo: c.outTradeNo,
       spbillCreateIp: '127.0.0.1',
       subMchId: SUB_MCH_ID,
+      subAppid: wxContext.APPID, // 子商户小程序 APPID（服务商模式要求；若报"appid不匹配"可删）
       totalFee: c.amount,
       envId: wxContext.ENV,
       functionName: CALLBACK_FN,

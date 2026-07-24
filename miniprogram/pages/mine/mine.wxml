@@ -6,11 +6,17 @@
       <text class="profile__name">{{userInfo.nickName || '森水游客'}}</text>
       <button
         wx:if="{{!hasPhone}}"
-        class="profile__phone"
+        class="profile__login"
         open-type="getPhoneNumber"
         bindgetphonenumber="onGetPhone"
-      >绑定手机号</button>
-      <text wx:else class="profile__phone-done">{{phoneMask}}</text>
+      >
+        <image class="profile__login-icon" src="/assets/icons/forest/mine-phone.png" mode="aspectFit" />
+        <text>手机号一键登录</text>
+      </button>
+      <view wx:else class="profile__phone-done">
+        <image class="profile__done-icon" src="/assets/icons/status/status-success.png" mode="aspectFit" />
+        <text>已登录 · {{phoneMask}}</text>
+      </view>
     </view>
   </view>
 

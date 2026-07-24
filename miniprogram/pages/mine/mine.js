@@ -23,7 +23,13 @@ Page({
   },
 
   onShow() {
-    this.setData({ userInfo: app.globalData.userInfo })
+    const u = app.globalData.userInfo || null
+    const phone = u && u.phone
+    this.setData({
+      userInfo: u,
+      hasPhone: !!phone,
+      phoneMask: phone ? phone.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2') : ''
+    })
     this.refresh()
     if (typeof this.getTabBar === 'function' && this.getTabBar()) {
       this.getTabBar().setData({ selected: 2, theme: 'light' })
@@ -57,10 +63,12 @@ Page({
     }
     auth.bindPhone(e.detail.code)
       .then((d) => {
-        this.setData({ hasPhone: true, phoneMask: (d && d.phoneMask) || '已绑定' })
-        wx.showToast({ title: '绑定成功', icon: 'success' })
+        const mask = (d && d.phoneMask) || '已登录'
+        if (app.globalData.userInfo) app.globalData.userInfo.phone = mask
+        this.setData({ hasPhone: true, phoneMask: mask })
+        wx.showToast({ title: '登录成功', icon: 'success' })
       })
-      .catch((err) => wx.showToast({ title: err.message || '绑定失败', icon: 'none' }))
+      .catch((err) => wx.showToast({ title: err.message || '登录失败', icon: 'none' }))
   },
 
   goMember() {
