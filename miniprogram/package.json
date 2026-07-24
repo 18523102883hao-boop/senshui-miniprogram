@@ -4,7 +4,6 @@
   "description": "森水长河 · 游客向导小程序（微信云开发）",
   "private": true,
   "dependencies": {
-    "tdesign-miniprogram": "^1.9.0",
     "weapp-qrcode-canvas-2d": "^1.0.0"
   }
 }
