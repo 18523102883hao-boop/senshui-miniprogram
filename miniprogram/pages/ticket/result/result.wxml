@@ -1,0 +1,35 @@
+<view class="sr-page res-page sr-enter">
+  <!-- 确认中：回调可能延迟，绝不报失败 -->
+  <view class="res" wx:if="{{state === 'confirming'}}">
+    <view class="res__spin"></view>
+    <text class="res__title">支付确认中</text>
+    <text class="res__sub">微信支付结果正在同步，通常几秒内完成</text>
+    <text class="res__no sr-num" wx:if="{{outTradeNo}}">订单号 {{outTradeNo}}</text>
+
+    <view class="res__support" wx:if="{{showSupport}}">
+      <text class="res__support-text">如果超过 1 分钟仍未出票，请联系管家核对，款项不会丢失。</text>
+      <view class="res__btn res__btn--ghost" bindtap="goConcierge">联系管家</view>
+    </view>
+
+    <view class="res__acts">
+      <view class="res__btn res__btn--ghost" bindtap="goWallet">查看票夹</view>
+    </view>
+  </view>
+
+  <!-- 成功 -->
+  <view class="res" wx:if="{{state === 'success'}}">
+    <image class="res__icon" src="/assets/icons/status/status-success.png" mode="aspectFit" />
+    <text class="res__title">购买成功</text>
+    <text class="res__sub">共 {{tickets.length}} 张票券，可在票夹查看入园码</text>
+
+    <view class="tk" wx:for="{{tickets}}" wx:key="ticketNo">
+      <text class="tk__name">{{item.productName}}</text>
+      <text class="tk__no sr-num">票号 {{item.ticketNo}}</text>
+    </view>
+
+    <view class="res__acts">
+      <view class="res__btn" bindtap="goWallet">查看入园码</view>
+      <view class="res__btn res__btn--ghost" bindtap="goHome">返回首页</view>
+    </view>
+  </view>
+</view>

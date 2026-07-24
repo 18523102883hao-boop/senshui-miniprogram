@@ -29,7 +29,10 @@
     "pages/content/detail/detail",
     "pages/guide/guide",
     "pages/concierge/concierge",
-    "pages/ticket/detail/detail"
+    "pages/ticket/detail/detail",
+    "pages/ticket/checkout/checkout",
+    "pages/ticket/result/result",
+    "pages/ticket/wallet/wallet"
   ],
   "window": {
     "backgroundTextStyle": "dark",

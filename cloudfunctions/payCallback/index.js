@@ -1,12 +1,14 @@
-// 云函数：payCallback —— 微信支付结果回调，按订单类型分流（T13 会员卡 / T20 补差价收款）
+// 云函数：payCallback —— 微信支付结果回调，按订单类型分流
+//   T13 会员卡 / T20 补差价收款 / 功能扩展 Task 7 门票订单
 // 由各下单函数的 unifiedOrder(functionName:'payCallback') 指定，支付成功后微信回调此函数。
 // 关键点：
 //   ① 幂等：回调可能重复，已处理订单直接 ack，绝不重复处理
-//   ② 事务：状态更新（+ 会员卡发卡）原子完成
-//   ③ 类型分流：type='ticket_upgrade' 仅置 paid 记账；其余（会员卡）走发卡逻辑
+//   ② 事务：状态更新（+ 会员卡发卡 / 出票）原子完成
+//   ③ 类型分流：ticket_upgrade 仅记账；ticket_order 出票；其余（会员卡）走发卡逻辑
 const cloud = require('wx-server-sdk')
 cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV })
 const db = cloud.database()
+const ticketIssue = require('./ticket-issue.js')
 
 function genMemberCode() {
   return 'SR' + Date.now().toString(36).toUpperCase() + Math.random().toString(36).slice(2, 6).toUpperCase()
@@ -37,7 +39,62 @@ exports.main = async (event) => {
   if (order.type === 'ticket_upgrade') {
     return handleUpgrade(order, event)
   }
+  if (order.type === 'ticket_order') {
+    return handleTicketOrder(order, event)
+  }
   return handleMemberCard(order, event, callbackOpenid)
+}
+
+// —— 门票订单（Task 7）：事务内出票 + 扣库存，回调重放只出一次票 ——
+async function handleTicketOrder(order, event) {
+  try {
+    await db.runTransaction(async (t) => {
+      const o = await t.collection('orders').doc(order._id).get()
+      const current = o.data
+      if (current.status === 'paid' || current.status === 'paid_dup') return
+
+      // 第二道保险：订单已出过票就不再出（唯一索引之外的应用层防重）
+      const issued = await t.collection('tickets')
+        .where({ orderId: current.outTradeNo })
+        .count()
+      if (!ticketIssue.shouldIssue(current, issued.total)) {
+        await t.collection('orders').doc(order._id).update({
+          data: { status: 'paid', paidAt: new Date(), transactionId: event.transactionId || '', updatedAt: new Date() }
+        })
+        return
+      }
+
+      const now = new Date()
+      const tickets = ticketIssue.buildTickets(current, now)
+      for (const ticket of tickets) {
+        await t.collection('tickets').add({ data: ticket })
+      }
+
+      // 限量商品扣库存（unlimited 不动）
+      if (current.productId) {
+        const prod = await t.collection('ticket_products').doc(current.productId).get().catch(() => null)
+        const p = prod && prod.data
+        if (p && (p.stockMode === 'total' || p.stockMode === 'daily')) {
+          const left = Math.max(0, (Number(p.stock) || 0) - (Number(current.quantity) || 0))
+          await t.collection('ticket_products').doc(current.productId).update({ data: { stock: left, updatedAt: now } })
+        }
+      }
+
+      await t.collection('orders').doc(order._id).update({
+        data: {
+          status: 'paid',
+          paidAt: now,
+          ticketCount: tickets.length,
+          transactionId: event.transactionId || '',
+          updatedAt: now
+        }
+      })
+    })
+  } catch (e) {
+    console.error('[payCallback] 门票出票事务失败', order.outTradeNo, e)
+    return { errcode: 1, errmsg: 'RETRY' }
+  }
+  return ACK
 }
 
 // —— 补差价收款（T20）：仅幂等置 paid，不发任何权益 ——

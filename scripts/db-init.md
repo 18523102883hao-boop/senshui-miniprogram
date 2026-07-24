@@ -112,3 +112,27 @@
 
 **支付未就绪时的降级开关**：给 `listTicketProducts` 与 `getTicketProduct` 配环境变量 `NATIVE_PAY_READY=false`，
 所有原生支付票种会自动降级到「咨询管家」，不需要改数据库。恢复时删掉该变量即可。
+
+## 9. 原生门票下单与出票（本轮功能扩展 Task 7）
+
+**新增云函数**：`createTicketOrder`、`getMyTickets`、`getTicketCode`
+**需重新部署**：`payCallback`（新增 `ticket_order` 分支，会员卡与补差价逻辑未改动）
+
+**环境变量**：
+
+| 云函数 | 变量 | 说明 |
+|---|---|---|
+| createTicketOrder | `SUB_MCH_ID` | 与 createMemberOrder 相同的子商户号 |
+| createTicketOrder | `NATIVE_PAY_READY` | 设 `false` 可临时关停在线购票 |
+| getTicketCode | `TICKET_QR_SECRET` | 随机长串；**必须与 verifyTicket 相同**（Task 8 用） |
+
+**必须建的索引**（防重复出票的第二道保险）：
+
+| 集合 | 字段 | 唯一 |
+|---|---|---|
+| tickets | ticketNo | **是** |
+| tickets | _openid, status | 否 |
+| tickets | orderId | 否 |
+| orders | _openid, idempotencyKey | 否 |
+
+> ⚠️ 部署 `payCallback` 后请复测一次**会员卡购买**与**补差价收款**，确认既有链路正常。
