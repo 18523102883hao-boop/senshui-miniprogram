@@ -1,42 +1,67 @@
-<view class="sr-page">
-  <!-- 套票价 -->
+<view class="sr-page sr-enter">
+  <!-- 套票价（升级锚点） -->
   <view class="hero">
-    <text class="hero__label">已购单项票？现场补差即可升级为「溪降 + 营地」套票</text>
+    <text class="hero__tagline">已购单项票？现场补差即可升级</text>
+    <view class="hero__combo">
+      <view class="hero__names">
+        <text class="hero__name">溪降</text>
+        <text class="hero__plus">+</text>
+        <text class="hero__name">营地</text>
+      </view>
+      <text class="hero__pkg">双项套票</text>
+    </view>
     <view class="hero__price">
-      <text class="hero__cur">¥</text><text class="hero__num">{{comboPrice}}</text>
-      <text class="hero__orig">原价 ¥{{originalPrice}}</text>
+      <text class="hero__cur">¥</text>
+      <text class="hero__num sr-num">{{comboPrice}}</text>
+      <view class="hero__price-side">
+        <text class="hero__orig sr-num">原价 ¥{{originalPrice}}</text>
+        <text class="hero__save">立省 ¥{{saved}}</text>
+      </view>
     </view>
   </view>
 
   <!-- 各方向升级明细 -->
   <view class="sr-card" wx:for="{{groups}}" wx:key="dir">
-    <text class="sr-subtitle">{{item.dir}}</text>
-    <view class="sr-divider"></view>
-    <view class="up" wx:for="{{item.items}}" wx:for-item="it" wx:key="name">
-      <view class="up__head">
-        <view class="up__left">
-          <text class="up__name">{{it.name}}</text>
-          <text class="up__orig">原价 ¥{{it.orig}}</text>
+    <view class="grp-head">
+      <view class="grp-head__bar"></view>
+      <text class="grp-head__title">{{item.dir}}</text>
+    </view>
+    <view class="upg" wx:for="{{item.items}}" wx:for-item="it" wx:key="name">
+      <view class="upg__main">
+        <view class="upg__info">
+          <text class="upg__name">{{it.name}}</text>
+          <text class="upg__orig sr-num">原价 ¥{{it.orig}}</text>
         </view>
-        <view class="up__add">补差 {{it.add}}</view>
+        <view class="upg__price">
+          <text class="upg__price-label">补差</text>
+          <text class="upg__price-num sr-num">{{it.add}}</text>
+        </view>
       </view>
-      <text class="up__benefit">{{it.benefit}}</text>
+      <view class="upg__benefit">
+        <image class="upg__benefit-icon" src="/assets/icons/status/status-success.png" mode="aspectFit" />
+        <text class="upg__benefit-text">{{it.benefit}}</text>
+      </view>
     </view>
   </view>
 
   <!-- 升级后权益 -->
   <view class="sr-card">
-    <text class="sr-subtitle">升级后权益</text>
-    <view class="sr-divider"></view>
+    <view class="grp-head">
+      <view class="grp-head__bar"></view>
+      <text class="grp-head__title">升级后权益</text>
+    </view>
     <view class="ben" wx:for="{{benefits}}" wx:for-item="b" wx:key="*this">
-      <text class="ben__ico">✓</text><text class="ben__text">{{b}}</text>
+      <image class="ben__ico" src="/assets/icons/status/status-success.png" mode="aspectFit" />
+      <text class="ben__text">{{b}}</text>
     </view>
   </view>
 
   <!-- 为什么升级 -->
   <view class="sr-card">
-    <text class="sr-subtitle">为什么现在升级</text>
-    <view class="sr-divider"></view>
+    <view class="grp-head">
+      <view class="grp-head__bar"></view>
+      <text class="grp-head__title">为什么现在升级</text>
+    </view>
     <view class="reason" wx:for="{{reasons}}" wx:for-item="r" wx:key="t">
       <text class="reason__t">{{r.t}}</text>
       <text class="reason__d">{{r.d}}</text>

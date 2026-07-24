@@ -51,9 +51,9 @@ page { background: var(--sr-dark-bg); }
 .hunt__join { font-size: 20rpx; color: var(--sr-dark-muted); margin-top: 8rpx; }
 
 /* ===== 兑换 ===== */
-.ex-grid { display: flex; flex-wrap: wrap; gap: 18rpx; }
+.ex-grid { display: flex; flex-wrap: wrap; justify-content: space-between; }
 .ex {
-  width: calc(50% - 9rpx); box-sizing: border-box;
+  width: 48.5%; box-sizing: border-box; margin-bottom: 18rpx;
   background: var(--sr-dark-card); border-radius: var(--sr-radius);
   padding: 28rpx; display: flex; flex-direction: column; align-items: flex-start;
 }

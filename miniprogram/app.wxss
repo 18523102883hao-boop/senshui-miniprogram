@@ -52,6 +52,8 @@ page {
 
 /* ---------- 通用布局类 ---------- */
 .sr-page { min-height: 100vh; padding: 24rpx 32rpx calc(48rpx + env(safe-area-inset-bottom)); box-sizing: border-box; }
+/* tab 页：自定义 tabBar 浮于页面上，需为其留出底部空间避免遮挡内容 */
+.sr-page--tab { padding-bottom: calc(180rpx + env(safe-area-inset-bottom)); }
 .sr-card {
   background: var(--sr-bg-card);
   border-radius: var(--sr-radius);

@@ -10,9 +10,19 @@
   background: #fff; border-radius: 8rpx;
   padding: 2rpx 14rpx; margin-right: 16rpx;
 }
+/* 跑马灯：视口裁剪，双份文字无缝循环 */
+.notice__viewport { flex: 1; overflow: hidden; }
+.notice__track {
+  display: inline-flex; white-space: nowrap;
+  animation: notice-marquee 14s linear infinite;
+}
 .notice__text {
-  font-size: 26rpx; color: #fff; font-weight: 500;
-  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  font-size: 26rpx; color: #fff; font-weight: 500; white-space: nowrap;
+  padding-right: 60rpx;
+}
+@keyframes notice-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
 }
 
 /* ===== 会员卡黑金主推 ===== */

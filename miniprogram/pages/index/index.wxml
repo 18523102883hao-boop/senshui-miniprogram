@@ -1,8 +1,13 @@
-<view class="sr-page sr-enter">
+<view class="sr-page sr-page--tab sr-enter">
   <!-- 公告横幅（高对比 · 户外强光可读） -->
   <view class="notice" wx:if="{{notice}}">
     <view class="notice__tag">公告</view>
-    <text class="notice__text">{{notice}}</text>
+    <view class="notice__viewport">
+      <view class="notice__track">
+        <text class="notice__text">{{notice}}</text>
+        <text class="notice__text notice__text--dup">{{notice}}</text>
+      </view>
+    </view>
   </view>
 
   <!-- 会员卡（黑金主推 · 整卡可点） -->
