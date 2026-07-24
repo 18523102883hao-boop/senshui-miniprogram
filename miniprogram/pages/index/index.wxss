@@ -192,3 +192,12 @@
   color: #fff; font-size: 26rpx; background: rgba(0, 0, 0, 0.5);
   padding: 12rpx 28rpx; border-radius: 32rpx; z-index: 1;
 }
+
+/* ===== 园区导览入口（地图移到园区 Tab 后的首页高可达入口）===== */
+.park-entry { position: relative; height: 200rpx; border-radius: var(--sr-radius); overflow: hidden; box-shadow: var(--sr-shadow); }
+.park-entry__bg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.park-entry__mask { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(23,54,40,0.82) 0%, rgba(23,54,40,0.35) 100%); }
+.park-entry__body { position: absolute; left: 32rpx; top: 0; bottom: 0; display: flex; flex-direction: column; justify-content: center; }
+.park-entry__title { font-size: 32rpx; font-weight: 700; color: #F7F3EA; }
+.park-entry__sub { font-size: 22rpx; color: rgba(247,243,234,0.8); margin-top: 10rpx; }
+.park-entry__go { position: absolute; right: 32rpx; bottom: 28rpx; font-size: 24rpx; color: var(--sr-gold-light); font-weight: 600; }

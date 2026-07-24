@@ -1,0 +1,69 @@
+<view class="sr-page sr-page--tab sr-enter">
+  <!-- 到园与导航（园区 Tab 顶部主行动） -->
+  <view class="nav-card">
+    <view class="nav-card__glow"></view>
+    <view class="nav-card__body">
+      <text class="nav-card__title">{{park.name || '森水长河'}}</text>
+      <text class="nav-card__addr">{{park.address}}</text>
+      <text class="nav-card__hours" wx:if="{{park.admissionHours}}">入园 {{park.admissionHours}}</text>
+    </view>
+    <view class="nav-card__btn sr-touch" hover-class="sr-touch--cta" hover-stay-time="60" bindtap="onNavigate">
+      <sr-icon name="map-navigation" theme="light" size="md" invert />
+      <text>{{canNavigate ? '导航' : '复制地址'}}</text>
+    </view>
+  </view>
+
+  <!-- 园区地图（主视野） -->
+  <sr-section-header title="园区地图" extra="点击看大图" />
+  <view class="maps">
+    <view class="mapc sr-touch" hover-class="sr-touch--card" hover-stay-time="60" data-key="camp" bindtap="openMap">
+      <image src="{{campMapUrl || '/images/map-camp.jpg'}}" mode="aspectFill" class="mapc__img" />
+      <view class="mapc__label"><sr-icon name="map-campsite" theme="light" size="sm" /><text>营地游览图</text></view>
+    </view>
+    <view class="mapc sr-touch" hover-class="sr-touch--card" hover-stay-time="60" data-key="creek" bindtap="openMap">
+      <image src="{{creekMapUrl || '/images/map-creek.jpg'}}" mode="aspectFill" class="mapc__img" />
+      <view class="mapc__label"><sr-icon name="map-stream-descent" theme="light" size="sm" /><text>溪降游览图</text></view>
+    </view>
+  </view>
+
+  <!-- 今日活动时间表 -->
+  <sr-section-header title="今日活动" />
+  <view class="sr-card">
+    <view class="act" wx:for="{{activities}}" wx:key="id">
+      <text class="act__time sr-num">{{item.time}}</text>
+      <view class="act__body">
+        <text class="act__name">{{item.name}}</text>
+        <text class="act__loc">{{item.loc}}</text>
+      </view>
+    </view>
+    <view class="act-note">活动会根据季节、主题和实际情况调整，以现场通知为准。</view>
+  </view>
+
+  <!-- 园内服务（整卡可点） -->
+  <sr-section-header title="现场服务" />
+  <view class="svc-grid">
+    <view class="svc sr-touch" hover-class="sr-touch--card" hover-stay-time="60"
+          wx:for="{{services}}" wx:key="key" data-key="{{item.key}}" bindtap="onServiceTap">
+      <view class="svc__iconbox"><image class="svc__icon" src="{{item.iconPath}}" mode="aspectFit" /></view>
+      <view class="svc__body">
+        <text class="svc__title">{{item.title}}</text>
+        <text class="svc__desc">{{item.desc}}</text>
+      </view>
+      <sr-icon name="chevron-right" theme="light" size="sm" />
+    </view>
+  </view>
+
+  <!-- 全屏地图查看（双指缩放 + 拖动） -->
+  <view class="map-viewer" wx:if="{{mapViewer}}">
+    <movable-area class="mv-area" scale-area>
+      <movable-view class="mv-view" direction="all" scale scale-min="1" scale-max="4" scale-value="1"
+                    style="width:{{mapViewW}}px;height:{{mapViewH}}px;">
+        <image src="{{mapViewer}}" style="width:{{mapViewW}}px;height:{{mapViewH}}px;" mode="scaleToFill" />
+      </movable-view>
+    </movable-area>
+    <view class="mv-hint">双指缩放查看 · 拖动移动</view>
+    <view class="map-viewer__close sr-touch" hover-class="sr-touch--press" hover-stay-time="60" bindtap="closeMapViewer">
+      <sr-icon name="close" theme="light" size="sm" invert />
+    </view>
+  </view>
+</view>

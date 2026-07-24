@@ -1,0 +1,55 @@
+/* 园区 Tab */
+.nav-card {
+  position: relative; overflow: hidden;
+  display: flex; align-items: center;
+  background: linear-gradient(135deg, var(--sr-primary) 0%, var(--sr-primary-deep) 100%);
+  border-radius: var(--sr-radius-lg); padding: 36rpx 32rpx; margin-bottom: var(--sr-gap-5);
+}
+.nav-card__glow { position: absolute; right: -70rpx; top: -90rpx; width: 300rpx; height: 300rpx; border-radius: 50%;
+  background: radial-gradient(circle, rgba(213,164,58,0.28) 0%, rgba(213,164,58,0) 70%); pointer-events: none; }
+.nav-card__body { position: relative; flex: 1; min-width: 0; }
+.nav-card__title { display: block; font-size: 36rpx; font-weight: 700; color: var(--sr-text-invert); }
+.nav-card__addr { display: block; font-size: 23rpx; color: rgba(247,243,234,0.76); margin-top: 10rpx; line-height: 1.5; }
+.nav-card__hours { display: block; font-size: 22rpx; color: rgba(247,243,234,0.6); margin-top: 8rpx; }
+.nav-card__btn { position: relative; flex-shrink: 0; margin-left: 20rpx;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  width: 128rpx; height: 128rpx; border-radius: 50%; background: var(--sr-gold);
+  color: #173628; font-size: 24rpx; font-weight: 700; }
+.nav-card__btn text { margin-top: 6rpx; }
+
+.maps { display: flex; justify-content: space-between; margin-bottom: var(--sr-gap-5); }
+.mapc { width: 48.5%; border-radius: var(--sr-radius); overflow: hidden; position: relative; background: var(--sr-bg-sunken); box-shadow: var(--sr-shadow); }
+.mapc__img { width: 100%; height: 300rpx; display: block; }
+.mapc__label { position: absolute; left: 0; right: 0; bottom: 0;
+  display: flex; align-items: center; justify-content: center; gap: 8rpx;
+  font-size: 24rpx; color: #fff; padding: 14rpx 0;
+  background: linear-gradient(transparent, rgba(23,54,40,0.75)); }
+.mapc__label text { color: #fff; }
+
+.act { display: flex; align-items: center; padding: 20rpx 0; border-bottom: 1rpx solid var(--sr-line); }
+.act:last-of-type { border-bottom: none; }
+.act__time { font-size: 30rpx; font-weight: 800; color: var(--sr-seal); width: 120rpx; flex-shrink: 0; }
+.act__body { flex: 1; display: flex; flex-direction: column; }
+.act__name { font-size: 28rpx; font-weight: 600; color: var(--sr-text); }
+.act__loc { font-size: 22rpx; color: var(--sr-text-weak); margin-top: 4rpx; }
+.act-note { margin-top: 16rpx; padding-top: 16rpx; border-top: 1rpx dashed var(--sr-line); font-size: 22rpx; color: var(--sr-text-weak); line-height: 1.6; }
+
+.svc-grid { display: flex; flex-direction: column; }
+.svc { display: flex; align-items: center;
+  background: var(--sr-bg-card); border-radius: var(--sr-radius);
+  box-shadow: var(--sr-shadow); padding: 28rpx 32rpx; margin-bottom: 20rpx; }
+.svc__iconbox { width: 84rpx; height: 84rpx; border-radius: 50%; background: var(--sr-primary-weak);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.svc__icon { width: 46rpx; height: 46rpx; }
+.svc__body { flex: 1; margin-left: 24rpx; min-width: 0; }
+.svc__title { display: block; font-size: 30rpx; font-weight: 600; color: var(--sr-text); }
+.svc__desc { display: block; font-size: 23rpx; color: var(--sr-text-sub); margin-top: 6rpx; }
+
+.map-viewer { position: fixed; inset: 0; z-index: 200; background: rgba(10,14,12,0.96); }
+.mv-area { width: 100vw; height: 100vh; overflow: hidden; }
+.mv-view { display: flex; }
+.mv-hint { position: fixed; bottom: calc(48rpx + env(safe-area-inset-bottom)); left: 0; right: 0;
+  text-align: center; color: rgba(255,255,255,0.7); font-size: 22rpx; }
+.map-viewer__close { position: fixed; top: calc(24rpx + env(safe-area-inset-top)); right: 32rpx;
+  width: 72rpx; height: 72rpx; border-radius: 50%; background: rgba(0,0,0,0.5);
+  display: flex; align-items: center; justify-content: center; z-index: 1; }

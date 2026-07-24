@@ -121,25 +121,15 @@
     <view class="act-note">活动会根据季节、主题和实际情况调整，具体以现场通知为准。</view>
   </view>
 
-  <!-- 9. 园区地图 -->
-  <view class="sr-card" wx:if="{{showMap}}">
-    <view class="sr-row-between">
-      <view class="sec-head">
-        <view class="sec-head__bar"></view>
-        <text class="sr-subtitle">园区地图</text>
-      </view>
-      <text class="sr-text-weak">点击查看大图</text>
+  <!-- 9. 园区导览入口（地图与现场服务已移到「园区」Tab，此处保持高可达） -->
+  <view class="park-entry sr-touch" wx:if="{{showMap}}" hover-class="sr-touch--card" hover-stay-time="60" bindtap="goPark">
+    <image class="park-entry__bg" src="{{campMapUrl || '/images/map-camp.jpg'}}" mode="aspectFill" />
+    <view class="park-entry__mask"></view>
+    <view class="park-entry__body">
+      <text class="park-entry__title">园区地图与现场服务</text>
+      <text class="park-entry__sub">地图 · 今日活动 · 酒水小卖部 · 补差价升级</text>
     </view>
-    <view class="maps">
-      <view class="mapc sr-touch" hover-class="sr-touch--press" hover-stay-time="60" data-key="camp" bindtap="openMap">
-        <image src="{{campMapUrl || '/images/map-camp.jpg'}}" mode="aspectFill" class="mapc__img" />
-        <text class="mapc__label">营地游览图</text>
-      </view>
-      <view class="mapc sr-touch" hover-class="sr-touch--press" hover-stay-time="60" data-key="creek" bindtap="openMap">
-        <image src="{{creekMapUrl || '/images/map-creek.jpg'}}" mode="aspectFill" class="mapc__img" />
-        <text class="mapc__label">溪降游览图</text>
-      </view>
-    </view>
+    <text class="park-entry__go">进入园区 ›</text>
   </view>
 
   <!-- 10. 页脚：客服与协议 -->

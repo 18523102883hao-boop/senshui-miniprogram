@@ -31,7 +31,7 @@ Page({
     })
     this.refresh()
     if (typeof this.getTabBar === 'function' && this.getTabBar()) {
-      this.getTabBar().setData({ selected: 2, theme: 'light' })
+      this.getTabBar().setData({ selected: 3, theme: 'light' })
     }
   },
 

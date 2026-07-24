@@ -1,5 +1,6 @@
 {
   "pages": [
+    "pages/park/park",
     "pages/index/index",
     "pages/ling/ling",
     "pages/mine/mine",
@@ -55,6 +56,10 @@
       {
         "pagePath": "pages/index/index",
         "text": "向导"
+      },
+      {
+        "pagePath": "pages/park/park",
+        "text": "园区"
       },
       {
         "pagePath": "pages/ling/ling",

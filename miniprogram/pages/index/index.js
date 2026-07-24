@@ -41,7 +41,7 @@ const SECTION_ICONS = {
 }
 
 // tabBar 页必须用 switchTab，navigateTo 会直接失败
-const TAB_PAGES = ['/pages/index/index', '/pages/ling/ling', '/pages/mine/mine']
+const TAB_PAGES = ['/pages/index/index', '/pages/park/park', '/pages/ling/ling', '/pages/mine/mine']
 const FALLBACK_NOTICE = '欢迎来到森水长河 · 入园即入江湖'
 const EMPTY_SUMMARY = { unusedTicketCount: 0, upcomingReservation: null }
 
@@ -196,6 +196,11 @@ Page({
   },
 
   // 状态卡：有票看入园码，有预约看预约详情
+  goPark() {
+    haptic('light')
+    wx.switchTab({ url: '/pages/park/park' })
+  },
+
   goMyTickets() {
     this.goRoute('/pages/ticket/wallet/wallet', {})
   },

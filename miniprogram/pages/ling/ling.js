@@ -32,7 +32,7 @@ Page({
   onShow() {
     this.loadMyLing()
     if (typeof this.getTabBar === 'function' && this.getTabBar()) {
-      this.getTabBar().setData({ selected: 1, theme: 'dark' })
+      this.getTabBar().setData({ selected: 2, theme: 'dark' })
     }
   },
 
