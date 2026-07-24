@@ -20,26 +20,23 @@
     </view>
   </view>
 
-  <!-- 各方向升级明细 -->
-  <view class="sr-card" wx:for="{{groups}}" wx:key="dir">
+  <!-- 升级明细（整行点按购买） -->
+  <view class="sr-card" wx:for="{{groups}}" wx:for-index="gi" wx:key="dir">
     <view class="grp-head">
       <view class="grp-head__bar"></view>
       <text class="grp-head__title">{{item.dir}}</text>
     </view>
-    <view class="upg" wx:for="{{item.items}}" wx:for-item="it" wx:key="name">
-      <view class="upg__main">
-        <view class="upg__info">
-          <text class="upg__name">{{it.name}}</text>
-          <text class="upg__orig sr-num">原价 ¥{{it.orig}}</text>
-        </view>
-        <view class="upg__price">
-          <text class="upg__price-label">补差</text>
-          <text class="upg__price-num sr-num">{{it.add}}</text>
-        </view>
+    <view class="upg sr-touch" hover-class="sr-touch--press" hover-stay-time="60"
+          wx:for="{{item.items}}" wx:for-item="it" wx:for-index="ii" wx:key="itemId"
+          data-gi="{{gi}}" data-ii="{{ii}}" bindtap="onItemTap">
+      <view class="upg__info">
+        <text class="upg__name">{{it.name}}</text>
+        <text class="upg__benefit">{{it.benefit}}</text>
+        <text class="upg__orig sr-num">原价 ¥{{it.orig}}</text>
       </view>
-      <view class="upg__benefit">
-        <image class="upg__benefit-icon" src="/assets/icons/status/status-success.png" mode="aspectFit" />
-        <text class="upg__benefit-text">{{it.benefit}}</text>
+      <view class="upg__right">
+        <text class="upg__add sr-num">{{it.add}}</text>
+        <view class="upg__cta">立即补差 ›</view>
       </view>
     </view>
   </view>
@@ -56,17 +53,27 @@
     </view>
   </view>
 
-  <!-- 为什么升级 -->
-  <view class="sr-card">
-    <view class="grp-head">
-      <view class="grp-head__bar"></view>
-      <text class="grp-head__title">为什么现在升级</text>
-    </view>
-    <view class="reason" wx:for="{{reasons}}" wx:for-item="r" wx:key="t">
-      <text class="reason__t">{{r.t}}</text>
-      <text class="reason__d">{{r.d}}</text>
+  <view class="foot">线上支付后凭微信支付凭证升级，也可到游客中心 / 前台咨询办理。</view>
+
+  <!-- 底部购买面板 -->
+  <view class="sheet-mask" wx:if="{{buy}}" bindtap="closeBuy">
+    <view class="sheet" catchtap="noop">
+      <view class="sheet__grab"></view>
+      <text class="sheet__name">{{buy.name}}</text>
+      <text class="sheet__benefit">{{buy.benefit}}</text>
+      <view class="sheet__price">
+        <text class="sheet__price-label">补差价</text>
+        <text class="sheet__price-num sr-num">{{buy.add}}</text>
+      </view>
+      <view class="sheet__field">
+        <text class="sheet__field-label">接待员工</text>
+        <input class="sheet__input" value="{{staffRef}}" bindinput="onStaffRef"
+               placeholder="员工姓名或手机号（没有可不填）" placeholder-class="sheet__ph" />
+      </view>
+      <button class="sr-btn sr-btn--seal sheet__pay" bindtap="onPay" loading="{{paying}}" disabled="{{paying}}">
+        微信支付 {{buy.add}}
+      </button>
+      <text class="sheet__safe">支付将通过微信安全支付完成，款项进入森水长河官方账户。</text>
     </view>
   </view>
-
-  <view class="foot">请到游客中心 / 前台咨询办理，现场补差即享双重体验。</view>
 </view>

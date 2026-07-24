@@ -1,0 +1,9 @@
+{
+  "name": "createSelfUpgrade",
+  "version": "1.0.0",
+  "description": "客户自助补差价升级下单（T26）",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3"
+  }
+}

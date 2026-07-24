@@ -2,7 +2,7 @@
 .hero {
   background: linear-gradient(135deg, #244B36, #173628);
   border-radius: var(--sr-radius-lg); padding: 40rpx; margin-bottom: 24rpx;
-  display: flex; flex-direction: column; position: relative; overflow: hidden;
+  display: flex; flex-direction: column;
 }
 .hero__tagline { font-size: 24rpx; color: rgba(247, 243, 234, 0.8); }
 .hero__combo { display: flex; align-items: center; gap: 16rpx; margin-top: 20rpx; }
@@ -14,7 +14,6 @@
 }
 .hero__plus { font-size: 30rpx; color: var(--sr-gold-light); font-weight: 700; }
 .hero__pkg { font-size: 24rpx; color: var(--sr-gold-light); }
-
 .hero__price { display: flex; align-items: flex-end; margin-top: 28rpx; }
 .hero__cur { font-size: 40rpx; font-weight: 700; color: var(--sr-gold-light); margin-bottom: 8rpx; }
 .hero__num { font-size: 96rpx; font-weight: 900; color: var(--sr-gold-light); line-height: 0.9; margin-left: 4rpx; }
@@ -27,34 +26,57 @@
 .grp-head__bar { width: 6rpx; height: 30rpx; border-radius: 4rpx; background: var(--sr-primary); margin-right: 14rpx; }
 .grp-head__title { font-size: 32rpx; font-weight: 700; color: var(--sr-text); }
 
-/* ===== 升级项卡 ===== */
-.upg { padding: 30rpx 0; border-bottom: 1rpx solid var(--sr-line); }
-.upg:last-child { border-bottom: none; padding-bottom: 8rpx; }
-.upg__main { display: flex; justify-content: space-between; align-items: flex-start; }
-.upg__info { display: flex; flex-direction: column; flex: 1; padding-right: 20rpx; }
-.upg__name { font-size: 32rpx; font-weight: 700; color: var(--sr-text); }
-.upg__orig { font-size: 24rpx; color: var(--sr-text-weak); margin-top: 8rpx; }
-.upg__price {
-  flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end;
-  background: rgba(240, 112, 85, 0.09);
-  border: 1rpx solid rgba(240, 112, 85, 0.26);
-  border-radius: 18rpx; padding: 12rpx 22rpx; max-width: 320rpx;
+/* ===== 升级项（整行点按购买）===== */
+.upg {
+  display: flex; align-items: center;
+  padding: 28rpx 0; border-bottom: 1rpx solid var(--sr-line);
 }
-.upg__price-label { font-size: 20rpx; color: var(--sr-seal); opacity: 0.9; }
-.upg__price-num { font-size: 34rpx; font-weight: 800; color: var(--sr-seal); line-height: 1.15; text-align: right; }
-
-.upg__benefit { display: flex; align-items: flex-start; margin-top: 18rpx; }
-.upg__benefit-icon { width: 30rpx; height: 30rpx; margin-right: 12rpx; margin-top: 4rpx; flex-shrink: 0; }
-.upg__benefit-text { flex: 1; font-size: 24rpx; color: var(--sr-text-sub); line-height: 1.65; }
+.upg:last-child { border-bottom: none; padding-bottom: 8rpx; }
+.upg__info { flex: 1; display: flex; flex-direction: column; padding-right: 24rpx; }
+.upg__name { font-size: 31rpx; font-weight: 700; color: var(--sr-text); }
+.upg__benefit { font-size: 23rpx; color: var(--sr-text-sub); line-height: 1.6; margin-top: 8rpx; }
+.upg__orig { font-size: 22rpx; color: var(--sr-text-weak); margin-top: 8rpx; }
+.upg__right { flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; }
+.upg__add { font-size: 40rpx; font-weight: 800; color: var(--sr-seal); line-height: 1.1; }
+.upg__cta {
+  margin-top: 10rpx; font-size: 22rpx; font-weight: 600; color: var(--sr-primary);
+  background: var(--sr-primary-weak); border-radius: 24rpx; padding: 8rpx 20rpx;
+}
 
 /* ===== 升级后权益 ===== */
 .ben { display: flex; align-items: flex-start; padding: 12rpx 0; }
 .ben__ico { width: 32rpx; height: 32rpx; margin-right: 14rpx; margin-top: 2rpx; flex-shrink: 0; }
 .ben__text { flex: 1; font-size: 26rpx; color: var(--sr-text-sub); line-height: 1.7; }
 
-/* ===== 为什么升级 ===== */
-.reason { display: flex; align-items: baseline; padding: 14rpx 0; }
-.reason__t { flex-shrink: 0; width: 120rpx; font-size: 28rpx; font-weight: 700; color: var(--sr-primary); }
-.reason__d { flex: 1; font-size: 24rpx; color: var(--sr-text-sub); line-height: 1.6; }
-
 .foot { text-align: center; font-size: 24rpx; color: var(--sr-text-weak); padding: 24rpx 16rpx; line-height: 1.6; }
+
+/* ===== 底部购买面板 ===== */
+.sheet-mask {
+  position: fixed; inset: 0; z-index: 300;
+  background: rgba(14, 26, 19, 0.55);
+  display: flex; align-items: flex-end;
+}
+.sheet {
+  width: 100%; box-sizing: border-box;
+  background: var(--sr-bg-card);
+  border-radius: 40rpx 40rpx 0 0;
+  padding: 20rpx 40rpx calc(40rpx + env(safe-area-inset-bottom));
+  display: flex; flex-direction: column;
+  animation: sheet-up 0.32s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes sheet-up {
+  from { transform: translateY(40%); opacity: 0.6; }
+  to { transform: translateY(0); opacity: 1; }
+}
+.sheet__grab { width: 72rpx; height: 8rpx; border-radius: 4rpx; background: var(--sr-bg-sunken); align-self: center; margin-bottom: 24rpx; }
+.sheet__name { font-size: 34rpx; font-weight: 700; color: var(--sr-text); }
+.sheet__benefit { font-size: 24rpx; color: var(--sr-text-sub); margin-top: 8rpx; line-height: 1.6; }
+.sheet__price { display: flex; align-items: baseline; gap: 16rpx; margin: 28rpx 0 8rpx; }
+.sheet__price-label { font-size: 24rpx; color: var(--sr-text-sub); }
+.sheet__price-num { font-size: 64rpx; font-weight: 900; color: var(--sr-seal); line-height: 1.1; }
+.sheet__field { display: flex; align-items: center; padding: 24rpx 0; border-top: 1rpx solid var(--sr-line); border-bottom: 1rpx solid var(--sr-line); margin-top: 16rpx; }
+.sheet__field-label { flex-shrink: 0; width: 150rpx; font-size: 28rpx; color: var(--sr-text); }
+.sheet__input { flex: 1; font-size: 28rpx; color: var(--sr-text); }
+.sheet__ph { color: var(--sr-text-weak); font-size: 26rpx; }
+.sheet__pay { margin-top: 32rpx; }
+.sheet__safe { font-size: 22rpx; color: var(--sr-text-weak); text-align: center; margin-top: 20rpx; line-height: 1.6; }
