@@ -75,8 +75,9 @@ Page({
     }
 
     haptic('light')
+    // 必须带上当前选中的日期：创建页据此查询场次，否则预约非当天场次会查不到
     wx.navigateTo({
-      url: `/pages/booking/create/create?sessionId=${sessionId}`
+      url: `/pages/booking/create/create?sessionId=${sessionId}&date=${this.data.selectedDate}`
     })
   },
 

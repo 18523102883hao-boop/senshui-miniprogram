@@ -251,3 +251,33 @@ API Key 永不过期，权限是 system admin。**绝不能提交进仓库**，�
 | 调用云函数 | ❌ | ✅ |
 | 配置环境变量 | ❌ | ❌ **只能在云开发控制台操作** |
 | 建数据库索引 | ❌ | ❌ **只能在云开发控制台操作** |
+
+## 13. 溪降预约闭环补齐（本轮功能扩展 Task 10）
+
+**新增云函数**：`frontInsertBooking`（前台插单）、`getSessionLedger`（场次台账）、
+`saveSubscribeGrant`（记录订阅授权）、`sendBookingSubscribeMessage`（提醒/停运通知）
+**需重新部署**：`createBooking`、`changeBooking`、`cancelBooking`
+
+**重要改动：不再自行生成票号冒充购票凭证**
+
+原 `createBooking` 会生成 `CK20260809...` 形式的"票号"，看起来像购票凭证但其实是系统自造的（PRD §9.5 明令禁止）。现在改为：
+
+- 云端只生成**预约单号** `bookingNo`（`BK` 前缀），与门票号明确区分
+- 购票凭证记在 `booking.ticketRef`：
+  - `source: 'native'` —— 用户在小程序买的溪降票，自动关联，`verified: true`，同时把票置为 `reserved`（防一票多约）
+  - `source: 'external'` —— 用户手输的抖音/美团券号，`verified: false`，**现场人工核验**
+  - `source: 'front'` —— 前台插单
+- 取消预约会把 `native` 票释放回 `unused`
+
+**环境变量**：
+
+| 云函数 | 变量 | 默认 | 说明 |
+|---|---|---|---|
+| changeBooking / cancelBooking | `BOOKING_CUTOFF_MINUTES` | 60 | 开场前多少分钟截止改签/取消 |
+
+**订阅消息**：模板 ID 配在 `miniprogram/env.js` 的 `subscribeTmplIds.booking`。
+**留空则不弹授权**，不影响预约主流程；在小程序后台申请到模板后填入即可生效。
+
+**新增集合**：`subscribe_grants`（订阅授权次数，首次调用自动创建）。
+
+**修复的老 bug**：预约列表跳创建页时没传日期，创建页又只查当天场次 —— 预约次日及以后的场次必然报"场次不存在"。

@@ -1,25 +1,15 @@
 // createBooking - 创建溪降预约云函数
 // 组合事务：占位 + 创建预约记录，保证原子性
+//
+// Task 10 改造：不再自行生成 CK 票号冒充购票凭证（PRD §9.5）。
+// 购票凭证只能来自：① 用户在小程序买的溪降票（自动关联、标记已验证）
+//                  ② 用户手输的外部渠道券号（记录但标记未验证，现场人工核验）
+// 云端只生成「预约单号 bookingNo（BK 前缀）」，与购票凭证是两个概念。
 const cloud = require('wx-server-sdk')
 cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV })
 const db = cloud.database()
 const _ = db.command
-
-// 生成 6 位预约码
-function generateCode() {
-  return Math.floor(100000 + Math.random() * 900000).toString()
-}
-
-// 生成票号：日期 + 时间 + 随机数
-function generateTicketNo(date, startTime) {
-  const d = new Date(date)
-  const dateStr = d.getFullYear().toString() +
-    (d.getMonth() + 1).toString().padStart(2, '0') +
-    d.getDate().toString().padStart(2, '0')
-  const timeStr = startTime.replace(':', '')
-  const random = Math.floor(Math.random() * 10000).toString().padStart(4, '0')
-  return `CK${dateStr}${timeStr}${random}`
-}
+const core = require('./booking-core.js')
 
 exports.main = async (event, context) => {
   const { sessionId, phone } = event
@@ -31,9 +21,13 @@ exports.main = async (event, context) => {
     return { code: 400, msg: '缺少必要参数' }
   }
 
-  if (!/^1[3-9]\d{9}$/.test(phone)) {
-    return { code: 400, msg: '手机号格式不正确' }
-  }
+  const formCheck = core.validateBookingForm({
+    phone,
+    safetyConfirmed: event.safetyConfirmed,
+    withChild: event.withChild,
+    childConfirmed: event.withChild ? true : undefined // 前端已强制确认，此处只兜底手机号与安全须知
+  })
+  if (!formCheck.ok) return { code: 400, msg: formCheck.msg }
 
   try {
     // 1. 查询场次信息
@@ -61,6 +55,21 @@ exports.main = async (event, context) => {
       return { code: 409, msg: '您已预约该场次，请勿重复预约' }
     }
 
+    // 3.5 购票凭证：优先用小程序内未使用的溪降票，否则接受手输外部券号
+    let nativeTickets = []
+    try {
+      const t = await db.collection('tickets')
+        .where({ _openid: openid, status: _.in(core.USABLE_TICKET_STATUS), sku: _.in(core.CREEK_SKUS) })
+        .limit(20).get()
+      nativeTickets = t.data
+    } catch (e) { /* tickets 集合不存在时按外部券号处理 */ }
+
+    const ticketResult = core.resolveTicketRef({
+      nativeTickets,
+      externalTicketNo: event.externalTicketNo
+    })
+    if (!ticketResult.ok) return { code: 400, msg: ticketResult.msg }
+
     // 4. 原子占位（条件更新防超卖）
     const holdRes = await db.collection('sessions')
       .where({
@@ -81,23 +90,35 @@ exports.main = async (event, context) => {
     }
 
     // 5. 创建预约记录
-    const code = generateCode()
-    const ticketNo = generateTicketNo(session.date, session.startTime)
-    
-    const bookingData = {
-      _openid: openid,
-      sessionId: sessionId,
-      ticketNo: ticketNo,
-      phone: phone,
-      code: code,
-      status: 'reserved',
-      changeCount: 0,
+    const now = new Date()
+    const bookingData = core.buildBooking({
+      openid,
+      sessionId,
+      phone,
+      ticketRef: ticketResult.ref,
       source: 'customer',
-      createdAt: new Date(),
-      updatedAt: new Date()
+      withChild: event.withChild,
+      safetyConfirmed: true
+    }, now)
+
+    let bookingRes
+    try {
+      bookingRes = await db.collection('bookings').add({ data: bookingData })
+    } catch (e) {
+      // 写入失败必须回补库存，否则名额白丢
+      await db.collection('sessions').doc(sessionId)
+        .update({ data: { remaining: _.inc(1), booked: _.inc(-1), updatedAt: new Date() } })
+        .catch(() => {})
+      throw e
     }
 
-    const bookingRes = await db.collection('bookings').add({ data: bookingData })
+    // 小程序内购买的票占位为 reserved，避免同一张票重复预约多个场次
+    if (ticketResult.ref.source === 'native') {
+      await db.collection('tickets')
+        .where({ ticketNo: ticketResult.ref.ticketNo, _openid: openid, status: 'unused' })
+        .update({ data: { status: 'reserved', updatedAt: now } })
+        .catch(() => {})
+    }
 
     // 6. 返回预约信息（包含离线持久化所需的 code）
     return {
@@ -105,8 +126,9 @@ exports.main = async (event, context) => {
       msg: '预约成功',
       data: {
         bookingId: bookingRes._id,
-        ticketNo: ticketNo,
-        code: code,
+        bookingNo: bookingData.bookingNo,
+        ticketRef: bookingData.ticketRef,
+        code: bookingData.code,
         session: {
           date: session.date,
           startTime: session.startTime

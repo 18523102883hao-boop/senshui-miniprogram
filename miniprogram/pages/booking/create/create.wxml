@@ -1,87 +1,63 @@
-<view class="sr-page sr-enter">
+<view class="sr-page bk-page sr-enter">
+  <!-- 场次信息 -->
+  <view class="sr-card" wx:if="{{session._id}}">
+    <text class="sr-subtitle">预约场次</text>
+    <view class="sr-divider"></view>
+    <view class="row"><text class="row__label">日期</text><text class="row__value sr-num">{{session.date}}</text></view>
+    <view class="row"><text class="row__label">开始时间</text><text class="row__value sr-num">{{session.startTime}}</text></view>
+    <view class="row"><text class="row__label">剩余名额</text><text class="row__value sr-num">{{session.remaining}}</text></view>
+  </view>
+
+  <!-- 购票凭证 -->
   <view class="sr-card">
-    <view class="sr-row-between">
-      <view class="sec-head">
-        <view class="sec-head__bar"></view>
-        <text class="sr-subtitle">场次信息</text>
+    <text class="sr-subtitle">购票凭证</text>
+    <view class="sr-divider"></view>
+    <view class="ticket-ok" wx:if="{{hasNativeTicket}}">
+      <image class="ticket-ok__icon" src="/assets/icons/status/status-success.png" mode="aspectFit" />
+      <text>已识别到你的溪降票 <text class="sr-num">{{nativeTicketNo}}</text>，预约将自动关联</text>
+    </view>
+    <block wx:else>
+      <view class="row">
+        <text class="row__label">渠道券号</text>
+        <input class="row__input" maxlength="40" placeholder="抖音/美团券号"
+               value="{{externalTicketNo}}" bindinput="onExternalTicketInput" />
       </view>
-      <image class="sr-icon--sm sec-head__icon" src="/assets/icons/forest/booking-time.png" mode="aspectFit" />
-    </view>
-    
-    <view class="info-row">
-      <text class="info-label">日期</text>
-      <text class="info-value">{{formatDate(session.date)}}</text>
-    </view>
-    <view class="info-divider"></view>
-    <view class="info-row">
-      <text class="info-label">时间</text>
-      <text class="info-value">{{session.startTime}}</text>
-    </view>
-    <view class="info-divider"></view>
-    <view class="info-row">
-      <text class="info-label">剩余名额</text>
-      <text class="info-value info-value--warning">{{session.remaining}}</text>
+      <text class="hint">你在小程序内没有可用的溪降票。若已在其他渠道购票，请填写券号，入园时以现场核验为准。</text>
+    </block>
+  </view>
+
+  <!-- 联系方式 -->
+  <view class="sr-card">
+    <view class="row">
+      <text class="row__label">手机号</text>
+      <input class="row__input" type="number" maxlength="11" placeholder="用于现场联系"
+             value="{{phone}}" bindinput="onPhoneInput" />
     </view>
   </view>
 
+  <!-- 安全确认 -->
   <view class="sr-card">
-    <view class="sr-row-between">
-      <view class="sec-head">
-        <view class="sec-head__bar"></view>
-        <text class="sr-subtitle">预约信息</text>
-      </view>
-      <image class="sr-icon--sm sec-head__icon" src="/assets/icons/forest/mine-phone.png" mode="aspectFit" />
+    <text class="sr-subtitle">安全确认</text>
+    <view class="sr-divider"></view>
+    <view class="check" bindtap="onSafetyToggle">
+      <view class="check__box {{safetyConfirmed ? 'check__box--on' : ''}}"><text wx:if="{{safetyConfirmed}}">✓</text></view>
+      <text class="check__text">我已阅读并确认溪降安全须知</text>
     </view>
-    
-    <view class="form-item">
-      <text class="form-label">手机号</text>
-      <input 
-        class="form-input" 
-        type="number" 
-        maxlength="11" 
-        placeholder="请输入手机号"
-        value="{{phone}}"
-        bindinput="onPhoneInput"
-      />
-    </view>
-    <text class="form-tip">预约成功后，预约码将发送至该手机号</text>
-  </view>
+    <text class="check__link" bindtap="goNotice">查看《溪降须知》›</text>
 
-  <view class="sr-card">
-    <view class="sr-row-between">
-      <view class="sec-head">
-        <view class="sec-head__bar"></view>
-        <text class="sr-subtitle">注意事项</text>
-      </view>
-      <image class="sr-icon--sm sec-head__icon" src="/assets/icons/forest/booking-safety.png" mode="aspectFit" />
+    <view class="check" bindtap="onWithChildToggle">
+      <view class="check__box {{withChild ? 'check__box--on' : ''}}"><text wx:if="{{withChild}}">✓</text></view>
+      <text class="check__text">本次携带儿童参与</text>
     </view>
-    
-    <view class="notice-item">
-      <view class="notice-dot"></view>
-      <text class="notice-text">预约成功后可在"我的预约"中查看预约码</text>
-    </view>
-    <view class="notice-item">
-      <view class="notice-dot"></view>
-      <text class="notice-text">每人每场限预约 1 次，最多可改签 1 次</text>
-    </view>
-    <view class="notice-item">
-      <view class="notice-dot"></view>
-      <text class="notice-text">请提前 15 分钟到达现场核销入场</text>
-    </view>
-    <view class="notice-item">
-      <view class="notice-dot"></view>
-      <text class="notice-text">如遇天气原因停运，将统一发送通知</text>
+    <view class="check check--sub" wx:if="{{withChild}}" bindtap="onChildToggle">
+      <view class="check__box {{childConfirmed ? 'check__box--on' : ''}}"><text wx:if="{{childConfirmed}}">✓</text></view>
+      <text class="check__text">儿童身高符合要求，且全程由监护人陪同</text>
     </view>
   </view>
 
-  <view class="submit-wrapper">
-    <view 
-      class="sr-btn sr-touch {{!phone || phone.length !== 11 ? 'sr-btn--disabled' : ''}}" 
-      hover-class="sr-touch--cta" 
-      hover-stay-time="60"
-      bindtap="onSubmit"
-    >
-      <text>确认预约</text>
+  <view class="bar">
+    <view class="bar__cta {{submitting ? 'bar__cta--off' : ''}}" bindtap="onSubmit">
+      {{submitting ? '预约中…' : '确认预约'}}
     </view>
   </view>
 </view>
