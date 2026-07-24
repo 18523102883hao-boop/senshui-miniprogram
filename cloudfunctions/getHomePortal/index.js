@@ -54,17 +54,22 @@ async function loadMaps() {
 }
 
 // 用户摘要：失败返回 null，由 core 兜成空摘要
+// 只读聚合三张表，不改任何业务分支（会员发卡/出票逻辑不在此）
 async function loadSummary(openid) {
   if (!openid) return null
   try {
-    const [t, r] = await Promise.all([
-      db.collection('tickets').where({ _openid: openid, status: 'unused' }).limit(50).get(),
+    const [t, r, m] = await Promise.all([
+      // 取 unused + used，用于「待使用」与「复购态」判定
+      db.collection('tickets').where({ _openid: openid, status: _.in(['unused', 'used']) }).limit(100).get(),
       db.collection('visit_reservations')
         .where({ _openid: openid, status: _.in(['pending', 'confirmed']) })
-        .orderBy('visitDate', 'asc').limit(20).get()
+        .orderBy('visitDate', 'asc').limit(20).get(),
+      db.collection('members').where({ _openid: openid, status: 'active' }).limit(1).get()
     ])
     return core.buildUserSummary({
-      openid, now: new Date(), tickets: t.data, reservations: r.data
+      openid, now: new Date(),
+      tickets: t.data, reservations: r.data,
+      isMember: m.data.length > 0
     })
   } catch (e) {
     return null

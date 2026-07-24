@@ -10,6 +10,18 @@
     </view>
   </view>
 
+  <!-- 顶部快捷条（状态驱动）：有票→入园码，有预约→预约详情。无则不占位 -->
+  <view class="quickbar sr-touch" wx:if="{{quickBar}}" hover-class="sr-touch--press" hover-stay-time="60" bindtap="onQuickBar">
+    <view class="quickbar__icon">
+      <sr-icon name="{{quickBar.type === 'ticket' ? 'home-ticket' : 'home-reservation'}}" theme="light" size="md" invert />
+    </view>
+    <view class="quickbar__body">
+      <text class="quickbar__label">{{quickBar.type === 'ticket' ? '待入园' : '待到访'}}</text>
+      <text class="quickbar__text">{{quickBar.text}}</text>
+    </view>
+    <text class="quickbar__cta">{{quickBar.cta}} ›</text>
+  </view>
+
   <!-- 2. 品牌 Hero + 营业状态 -->
   <view class="hero" wx:if="{{hero}}">
     <view class="hero__glow"></view>
@@ -84,8 +96,17 @@
     </scroll-view>
   </block>
 
-  <!-- 7. 会员卡（黑金主推 · 整卡可点） -->
-  <view class="promo sr-goldcard sr-gold-hairline sr-touch" wx:if="{{memberSection}}"
+  <!-- 新客福利卡（仅从未交易的新客可见 · 原 Task 17） -->
+  <view class="newbie sr-touch" wx:if="{{showNewbieWelfare}}" hover-class="sr-touch--card" hover-stay-time="60" bindtap="onNewbieWelfare">
+    <view class="newbie__badge">新客专享</view>
+    <view class="newbie__body">
+      <text class="newbie__title">{{newbieWelfare.desc}}</text>
+      <text class="newbie__cta">{{newbieWelfare.cta}} ›</text>
+    </view>
+  </view>
+
+  <!-- 7. 会员卡（黑金主推 · 整卡可点 · 非会员才推） -->
+  <view class="promo sr-goldcard sr-gold-hairline sr-touch" wx:if="{{showMemberPromo}}"
         hover-class="sr-touch--card" hover-stay-time="60" data-key="{{memberSection.key}}" bindtap="onSectionTap">
     <view class="promo__left">
       <text class="promo__badge">SVIP</text>

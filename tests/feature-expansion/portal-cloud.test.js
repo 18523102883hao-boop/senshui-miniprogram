@@ -73,7 +73,7 @@ test('已过期的预约不计入首页摘要', () => {
 
 test('匿名访问返回空摘要而不是抛错', () => {
   const summary = portalCore.buildUserSummary({ openid: '', now: NOW })
-  assert.deepEqual(summary, { unusedTicketCount: 0, upcomingReservation: null })
+  assert.deepEqual(summary, { unusedTicketCount: 0, usedTicketCount: 0, isMember: false, hasAnyOrder: false, upcomingReservation: null })
 })
 
 test('摘要查询失败时首页仍返回完整骨架', () => {
@@ -85,7 +85,7 @@ test('摘要查询失败时首页仍返回完整骨架', () => {
   }, NOW)
   assert.equal(data.sections.length, 1)
   assert.deepEqual(data.activities, [])
-  assert.deepEqual(data.userSummary, { unusedTicketCount: 0, upcomingReservation: null })
+  assert.deepEqual(data.userSummary, { unusedTicketCount: 0, usedTicketCount: 0, isMember: false, hasAnyOrder: false, upcomingReservation: null })
   assert.equal(data.notice, null)
 })
 

@@ -24,7 +24,7 @@ const DEFAULT_SECTIONS = [
 
 // 预约摘要只认这两个状态（与 miniprogram/utils/domain.js 的 VISIT_RESERVATION_STATUS 对齐）
 const ACTIVE_RESERVATION_STATUS = ['pending', 'confirmed']
-const EMPTY_SUMMARY = { unusedTicketCount: 0, upcomingReservation: null }
+const EMPTY_SUMMARY = { unusedTicketCount: 0, usedTicketCount: 0, isMember: false, hasAnyOrder: false, upcomingReservation: null }
 
 function toTime(value) {
   if (value === null || value === undefined || value === '') return null
@@ -72,8 +72,9 @@ function buildUserSummary(input) {
   if (!openid) return Object.assign({}, EMPTY_SUMMARY)
   const nowTs = toTime(src.now) || Date.now()
 
-  const tickets = (Array.isArray(src.tickets) ? src.tickets : [])
-    .filter((t) => t && t._openid === openid && t.status === 'unused')
+  const ownTickets = (Array.isArray(src.tickets) ? src.tickets : []).filter((t) => t && t._openid === openid)
+  const unused = ownTickets.filter((t) => t.status === 'unused')
+  const used = ownTickets.filter((t) => t.status === 'used')
 
   const reservations = (Array.isArray(src.reservations) ? src.reservations : [])
     .filter((r) => r && r._openid === openid && ACTIVE_RESERVATION_STATUS.indexOf(r.status) >= 0)
@@ -85,7 +86,11 @@ function buildUserSummary(input) {
 
   const next = reservations[0]
   return {
-    unusedTicketCount: tickets.length,
+    unusedTicketCount: unused.length,
+    usedTicketCount: used.length,
+    // 首页状态驱动用：是否会员、是否有过任何交易（新客判定）
+    isMember: !!src.isMember,
+    hasAnyOrder: !!src.hasAnyOrder || ownTickets.length > 0 || !!src.isMember || reservations.length > 0,
     upcomingReservation: next
       ? {
         reservationId: next._id || '',

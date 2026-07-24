@@ -5,6 +5,7 @@ const request = require('../../utils/request.js')
 const env = require('../../env.js')
 const { haptic } = require('../../utils/haptics.js')
 const { makePhoneCall } = require('../../utils/util.js')
+const { resolveHomeState, NEWBIE_WELFARE } = require('../../utils/home-state.js')
 
 // 本地默认门户配置：弱网、云函数未部署或云端无配置时使用，保证首页永不白屏。
 // ⚠️ key 与 sort 必须与 cloudfunctions/seedPortalContent/seed-data.js 的 DEFAULT_SECTIONS 对应。
@@ -88,6 +89,12 @@ Page({
     notice: '',
     userSummary: EMPTY_SUMMARY,
     showUserStatus: false,
+    // 状态驱动（阶段4）
+    homeStage: 'first',
+    quickBar: null,
+    showNewbieWelfare: true,
+    showMemberPromo: true,
+    newbieWelfare: NEWBIE_WELFARE,
     openStatus: computeOpenStatus(),
     frontPhone: env.frontDeskPhone,
     // 固定日程（旺季）：前端直接控制，不被数据库历史活动覆盖；如需改活动跟我说
@@ -132,9 +139,16 @@ Page({
     const sections = Array.isArray(d.sections) && d.sections.length ? d.sections : LOCAL_SECTIONS
     const grouped = groupSections(sections)
     const summary = d.userSummary || EMPTY_SUMMARY
+    const stateInfo = resolveHomeState(summary)
     this.setData(Object.assign({}, grouped, {
       notice: noticeText || FALLBACK_NOTICE,
       userSummary: summary,
+      // 状态驱动：顶部快捷条 + 新客福利 + 会员推广随用户状态变化
+      homeStage: stateInfo.stage,
+      quickBar: stateInfo.quickBar,
+      showNewbieWelfare: stateInfo.showNewbieWelfare,
+      // 会员卡模块：非会员才推（已是会员则隐藏开卡卡）
+      showMemberPromo: stateInfo.showMemberPromo && !!grouped.memberSection,
       // 无票无预约时状态卡不占位（PRD §7.2）
       showUserStatus: grouped.hasUserStatusSection && (summary.unusedTicketCount > 0 || !!summary.upcomingReservation)
     }))
@@ -199,6 +213,20 @@ Page({
   goPark() {
     haptic('light')
     wx.switchTab({ url: '/pages/park/park' })
+  },
+
+  // 顶部快捷条：有票→入园码，有预约→预约详情
+  onQuickBar() {
+    const q = this.data.quickBar
+    if (!q) return
+    haptic('light')
+    const url = q.param ? q.route + '?id=' + encodeURIComponent(q.param) : q.route
+    wx.navigateTo({ url, fail: () => wx.showToast({ title: '请稍后重试', icon: 'none' }) })
+  },
+
+  onNewbieWelfare() {
+    haptic('light')
+    wx.navigateTo({ url: this.data.newbieWelfare.route, fail: () => wx.showToast({ title: '该功能即将开放', icon: 'none' }) })
   },
 
   goMyTickets() {
