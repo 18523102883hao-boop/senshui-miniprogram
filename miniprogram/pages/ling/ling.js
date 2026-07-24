@@ -8,10 +8,11 @@ Page({
     myLing: 0,
     story:
       '传说森水长河为「长河十二侠」镇守之地。入园即入江湖——参与擂台、完成营区试炼，即可获得「奖励令数」。持令可参与拍卖会、兑换侠客信物。令在江湖，快意用之。',
+    // 悬赏榜前端固定（不读数据库旧 seed，避免钓小龙虾等测试数据再出现）；与首页日程一致
     earnList: [
       { id: 'e1', name: '侠客滩捕鱼', reward: 0, join: 0, time: '13:00 / 16:00', location: '侠客滩' },
       { id: 'e2', name: '侠客打擂乐园', reward: 0, join: 0, time: '14:20', location: '打擂台' },
-      { id: 'e3', name: '森水长河夺宝大会', reward: 0, join: 0, time: '17:00', location: '主舞台' }
+      { id: 'e3', name: '海鲜大拍卖', reward: 0, join: 0, time: '17:00', location: '主舞台' }
     ],
     exchangeList: [
       { id: 'x1', name: '森水侠客水杯', cost: 800 },
@@ -40,7 +41,7 @@ Page({
       if (!d) return
       this.setData({
         story: d.story || this.data.story,
-        earnList: d.earnList || this.data.earnList,
+        // earnList 用前端固定，不被数据库旧 seed 覆盖
         exchangeList: d.exchangeList || this.data.exchangeList,
         npcSchedule: d.npcSchedule || this.data.npcSchedule
       })
