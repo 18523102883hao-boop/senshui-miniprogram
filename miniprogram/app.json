@@ -24,7 +24,9 @@
     "pages/upgrade-info/upgrade-info",
     "pages/staff/maps/maps",
     "pages/legal/privacy/privacy",
-    "pages/legal/agreement/agreement"
+    "pages/legal/agreement/agreement",
+    "pages/content/list/list",
+    "pages/content/detail/detail"
   ],
   "window": {
     "backgroundTextStyle": "dark",

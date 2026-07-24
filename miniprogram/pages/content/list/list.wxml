@@ -1,0 +1,51 @@
+<view class="sr-page sr-enter">
+  <!-- 分类筛选 -->
+  <scroll-view class="cats" scroll-x enable-flex show-scrollbar="{{false}}">
+    <view class="cat {{category === item.key ? 'cat--on' : ''}}"
+          wx:for="{{categories}}" wx:key="key" data-key="{{item.key}}" bindtap="onCategoryTap">
+      {{item.title}}
+    </view>
+  </scroll-view>
+
+  <!-- 弱网提示 -->
+  <view class="cache-tip" wx:if="{{fromCache}}">
+    <text>当前为离线缓存内容，联网后下拉刷新</text>
+  </view>
+
+  <!-- 骨架 / 加载 -->
+  <view class="skeleton" wx:if="{{loading}}">
+    <view class="skeleton__item" wx:for="{{[1,2,3]}}" wx:key="*this"></view>
+  </view>
+
+  <!-- 列表 -->
+  <view class="list" wx:if="{{!loading && list.length}}">
+    <view class="item sr-touch" hover-class="sr-touch--press" hover-stay-time="60"
+          wx:for="{{list}}" wx:key="id" data-slug="{{item.slug}}" bindtap="onItemTap">
+      <image class="item__cover" wx:if="{{item.coverFileId}}" src="{{item.coverFileId}}" mode="aspectFill" />
+      <view class="item__body">
+        <text class="item__title">{{item.title}}</text>
+        <text class="item__summary">{{item.summary}}</text>
+      </view>
+      <image class="item__arrow" src="/assets/icons/forest/chevron-right.png" mode="aspectFit" />
+    </view>
+  </view>
+
+  <!-- 空态 -->
+  <view class="state" wx:if="{{isEmpty && !loading && !hasError}}">
+    <image class="state__icon" src="/assets/icons/forest/map-info.png" mode="aspectFit" />
+    <text class="state__text">这个分类还没有内容</text>
+    <text class="state__sub">换个分类看看，或稍后再来</text>
+  </view>
+
+  <!-- 错误态 -->
+  <view class="state" wx:if="{{hasError && !loading}}">
+    <image class="state__icon" src="/assets/icons/status/status-warning.png" mode="aspectFit" />
+    <text class="state__text">内容加载失败</text>
+    <text class="state__sub">检查网络后可重试</text>
+    <view class="state__btn sr-touch" hover-class="sr-touch--cta" hover-stay-time="60" bindtap="onRetry">重新加载</view>
+  </view>
+
+  <!-- 加载更多 -->
+  <view class="more" wx:if="{{loadingMore}}">加载中…</view>
+  <view class="more" wx:if="{{!hasMore && list.length && !loadingMore}}">没有更多了</view>
+</view>

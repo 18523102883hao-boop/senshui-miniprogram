@@ -1,7 +1,11 @@
 // getArticle 的纯逻辑（PRD §10 内容中心 / §17.2 articles）
 
 // 正文块白名单：前端只实现了这几种渲染器，未知类型直接丢弃，避免出现空白段落
-const ALLOWED_BLOCK_TYPES = ['text', 'image', 'list', 'notice', 'gallery']
+// ⚠️ 必须与 miniprogram/pages/content/detail/detail.js 的 BLOCK_TYPES 一致
+const ALLOWED_BLOCK_TYPES = [
+  'hero', 'text', 'image', 'gallery', 'list', 'notice',
+  'feature_grid', 'service_list', 'timeline', 'faq', 'cta'
+]
 
 function sanitizeBlocks(blocks) {
   return (Array.isArray(blocks) ? blocks : [])
