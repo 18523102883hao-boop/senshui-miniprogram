@@ -37,7 +37,8 @@
     "pages/reservation/detail/detail",
     "pages/service/detail/detail",
     "pages/service/lead/lead",
-    "pages/staff/leads/leads"
+    "pages/staff/leads/leads",
+    "pages/service/mine/mine"
   ],
   "window": {
     "backgroundTextStyle": "dark",

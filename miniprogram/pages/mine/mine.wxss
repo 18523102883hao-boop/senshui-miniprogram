@@ -58,3 +58,6 @@
 .legal-links__sep { font-size: 24rpx; color: var(--sr-text-weak); margin: 0 16rpx; }
 
 .staff-entry { text-align: center; font-size: 24rpx; color: var(--sr-text-weak); padding: 24rpx 0 40rpx; opacity: 0.6; }
+
+/* 两组宫格之间的呼吸（sr-section-header 自带 24rpx 下边距） */
+.svc-list + .sh { margin-top: var(--sr-gap-5); }

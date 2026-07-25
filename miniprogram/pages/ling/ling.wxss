@@ -85,3 +85,14 @@ page { background: var(--sr-dark-bg); }
 .pv__cost { font-size: 96rpx; font-weight: 900; color: var(--sr-gold); line-height: 1.2; margin-top: 12rpx; }
 .pv__unit { font-size: 24rpx; color: var(--sr-dark-muted); margin-top: 4rpx; text-align: center; }
 .pv__close { font-size: 22rpx; color: var(--sr-dark-muted); margin-top: 36rpx; }
+
+/* ===== 余额加载 / 失败态（避免 0 令与未加载混淆）===== */
+.asset__balance--sk { min-height: 96rpx; display: flex; align-items: center; }
+.asset__sk {
+  width: 240rpx; height: 72rpx; border-radius: var(--sr-radius-xs);
+  background: var(--sr-dark-card-2); animation: asset-pulse 1.4s ease-in-out infinite;
+}
+@keyframes asset-pulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 0.85; } }
+.asset__balance--err { flex-direction: column; align-items: flex-start; }
+.asset__err { font-size: 30rpx; font-weight: 600; color: var(--sr-seal); }
+.asset__retry { font-size: 22rpx; color: var(--sr-dark-muted); margin-top: 8rpx; }

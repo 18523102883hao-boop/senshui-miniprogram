@@ -13,11 +13,19 @@ Page({
     phoneMask: '',
     member: null, // { status, expireText }
     frontPhone: env.frontDeskPhone,
-    grid: [
-      { key: 'coupon', title: '我的卡券', sub: '', icon: '/assets/icons/forest/mine-coupon.png' },
+    // 我的行程（四 Tab 决策：票券与预约归「我的」）—— 首屏优先
+    tripGrid: [
+      { key: 'wallet', title: '我的票券', sub: '', icon: '/assets/icons/forest/home-ticket.png' },
+      { key: 'reservation', title: '我的预约', sub: '', icon: '/assets/icons/forest/home-reservation.png' },
+      { key: 'order', title: '我的订单', sub: '', icon: '/assets/icons/forest/mine-orders.png' },
+      { key: 'coupon', title: '我的卡券', sub: '', icon: '/assets/icons/forest/mine-coupon.png' }
+    ],
+    // 资产与服务
+    assetGrid: [
       { key: 'ling', title: '长河令', sub: '', icon: '/assets/icons/forest/activity-token.png' },
       { key: 'lingcode', title: '我的令码', sub: '', icon: '/assets/icons/forest/activity-scan.png' },
-      { key: 'order', title: '我的订单', sub: '', icon: '/assets/icons/forest/mine-orders.png' }
+      { key: 'lead', title: '我的咨询', sub: '', icon: '/assets/icons/forest/edit.png' },
+      { key: 'concierge', title: '联系管家', sub: '', icon: '/assets/icons/forest/customer-service.png' }
     ]
   },
 
@@ -44,12 +52,22 @@ Page({
         }
       })
       .catch(() => {})
-    // 令余额 → 填入宫格
+    // 令余额 → 填入资产宫格
     request.call('getLingBalance', {})
       .then((d) => {
-        const grid = this.data.grid.slice()
-        grid[1].sub = ((d && d.balance) || 0) + ' 令'
-        this.setData({ grid })
+        const assetGrid = this.data.assetGrid.slice()
+        assetGrid[0].sub = ((d && d.balance) || 0) + ' 令'
+        this.setData({ assetGrid })
+      })
+      .catch(() => {})
+    // 待使用票券数 → 填入行程宫格（有票时给出明确数量，用户不必点进去猜）
+    request.call('getMyTickets', { status: 'unused' })
+      .then((d) => {
+        const n = ((d && d.list) || []).length
+        if (!n) return
+        const tripGrid = this.data.tripGrid.slice()
+        tripGrid[0].sub = n + ' 张待用'
+        this.setData({ tripGrid })
       })
       .catch(() => {})
   },
@@ -100,15 +118,23 @@ Page({
   onGrid(e) {
     haptic('light')
     const key = e.currentTarget.dataset.key
+    // 长河令是 tabBar 页，必须 switchTab
     if (key === 'ling') {
       wx.switchTab({ url: '/pages/ling/ling' })
-    } else if (key === 'lingcode') {
-      wx.navigateTo({ url: '/pages/ling/mycode/mycode' })
-    } else if (key === 'coupon') {
-      wx.navigateTo({ url: '/pages/coupon/coupon' })
-    } else if (key === 'order') {
-      wx.navigateTo({ url: '/pages/order/order' })
+      return
     }
+    const ROUTES = {
+      wallet: '/pages/ticket/wallet/wallet',
+      reservation: '/pages/reservation/entry/entry',
+      order: '/pages/order/order',
+      coupon: '/pages/coupon/coupon',
+      lingcode: '/pages/ling/mycode/mycode',
+      lead: '/pages/service/mine/mine',
+      concierge: '/pages/concierge/concierge'
+    }
+    const url = ROUTES[key]
+    if (!url) return
+    wx.navigateTo({ url, fail: () => wx.showToast({ title: '该功能即将开放', icon: 'none' }) })
   },
 
   callFront() {
