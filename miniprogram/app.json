@@ -76,7 +76,8 @@
     "sr-empty-state": "/components/ui/sr-empty-state/index",
     "sr-error-state": "/components/ui/sr-error-state/index",
     "sr-skeleton": "/components/ui/sr-skeleton/index",
-    "sr-section-header": "/components/ui/sr-section-header/index"
+    "sr-section-header": "/components/ui/sr-section-header/index",
+    "sr-qrcode": "/components/ui/sr-qrcode/index"
   },
   "sitemapLocation": "sitemap.json",
   "style": "v2",

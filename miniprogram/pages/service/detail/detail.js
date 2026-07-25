@@ -44,14 +44,18 @@ Page({
     blocks: [],
     loading: false,
     hasError: false,
+    qrScene: 'concierge',
     frontPhone: env.frontDeskPhone
   },
 
   onLoad(options) {
     const type = (options && options.type) || ''
     const svc = SERVICES[type]
+    // 服务类型 → 二维码场景（env.qrcodes 的键）
+    const QR_SCENE = { birthday: 'birthday', team_building: 'teamBuilding', brand: 'brand' }
     this.setData({
       type,
+      qrScene: QR_SCENE[type] || 'concierge',
       title: (svc && svc.title) || '特色服务',
       fallbackIntro: (svc && svc.intro) || '园区可提供生日、团建与品牌合作等定制服务，具体安排请咨询管家。',
       points: (svc && svc.points) || []

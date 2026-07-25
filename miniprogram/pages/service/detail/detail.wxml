@@ -35,6 +35,9 @@
     </view>
   </block>
 
+  <!-- 对应服务的企业微信顾问二维码（未配置则整块不渲染）-->
+  <sr-qrcode scene="{{qrScene}}" desc="长按识别添加顾问，沟通具体方案与档期" />
+
   <view class="tail">具体方案、价格与档期以管家沟通确认为准。</view>
 
   <view class="bar">

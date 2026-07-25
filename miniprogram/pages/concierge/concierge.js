@@ -4,9 +4,11 @@
 const env = require('../../env.js')
 const { haptic } = require('../../utils/haptics.js')
 const { makePhoneCall } = require('../../utils/util.js')
+const { getQrcode } = require('../../utils/qrcode.js')
 
 function buildChannels(cfg) {
   const c = cfg || {}
+  const qr = getQrcode('concierge')
   const channels = [
     {
       type: 'wechat',
@@ -25,7 +27,8 @@ function buildChannels(cfg) {
     })
   }
   // 未配置二维码就不加这一项，避免渲染空图（PRD §11.1）
-  if (c.qrcodeUrl) {
+  // 配置走 env.qrcodes.concierge，由 utils/qrcode.js 统一解析
+  if (qr.enabled) {
     channels.push({
       type: 'qrcode',
       title: '添加企业微信管家',
@@ -45,7 +48,7 @@ function buildChannels(cfg) {
 Page({
   data: {
     channels: buildChannels(env.concierge),
-    qrcodeUrl: (env.concierge && env.concierge.qrcodeUrl) || '',
+    qrcodeUrl: getQrcode('concierge').url,
     serviceHours: (env.concierge && env.concierge.serviceHours) || '',
     phone: (env.concierge && env.concierge.phone) || env.frontDeskPhone || '',
     parkName: (env.park && env.park.name) || '森水长河'

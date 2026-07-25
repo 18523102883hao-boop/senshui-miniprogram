@@ -10,6 +10,7 @@ const conciergePath = path.join(projectRoot, 'miniprogram/pages/concierge/concie
 const requestPath = path.join(projectRoot, 'miniprogram/utils/request.js')
 const hapticsPath = path.join(projectRoot, 'miniprogram/utils/haptics.js')
 const envPath = path.join(projectRoot, 'miniprogram/env.js')
+const qrcodePath = path.join(projectRoot, 'miniprogram/utils/qrcode.js')
 
 function clone(value) {
   return JSON.parse(JSON.stringify(value))
@@ -37,7 +38,12 @@ function mountPage(t, pagePath, options = {}) {
     callWithLoading(name, data) { return this.call(name, data) }
   })
   stub(hapticsPath, { haptic() {} })
-  if (options.env) stub(envPath, options.env)
+  if (options.env) {
+    stub(envPath, options.env)
+    // qrcode.js 读 env，必须让它重新加载才能拿到注入的配置
+    originals[qrcodePath] = require.cache[qrcodePath]
+    delete require.cache[qrcodePath]
+  }
 
   global.wx = {
     navigateTo(o) { calls.navigate.push(o.url); if (options.navigateFail && o.fail) o.fail({}) },
@@ -198,7 +204,7 @@ test('未配置二维码时不渲染二维码渠道，避免空图', (t) => {
 
 test('配置二维码后才出现二维码渠道且可预览', (t) => {
   const { page, calls } = mountPage(t, conciergePath, {
-    env: envWith({ concierge: Object.assign({}, BASE_ENV.concierge, { qrcodeUrl: 'https://cdn/qr.png' }) })
+    env: envWith({ qrcodes: { concierge: 'https://cdn/qr.png' } })
   })
   const qr = page.data.channels.filter((c) => c.type === 'qrcode')[0]
   assert.ok(qr, '配置后应出现二维码渠道')
