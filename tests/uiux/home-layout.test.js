@@ -187,7 +187,7 @@ test('营地与溪降营业时间分别配置，不再共用一个字段', () =>
 
 test('营业状态按项目分别计算：营地未结束时溪降可能已结束', () => {
   const { computeOpenStatus } = require(path.join(projectRoot, 'miniprogram/utils/park-status.js'))
-  // 17:00：营地开到 18:00 仍在营业，溪降 16:30 已结束
+  // 17:00：营地开到 21:00 仍在营业，溪降 16:30 已停止检票
   const s = computeOpenStatus(new Date(2026, 6, 25, 17, 0))
   const camp = s.items.filter((i) => i.key === 'camp')[0]
   const creek = s.items.filter((i) => i.key === 'creek')[0]
@@ -196,10 +196,32 @@ test('营业状态按项目分别计算：营地未结束时溪降可能已结�
   assert.equal(s.open, true, '有项目营业即算园区营业中')
 })
 
+test('营地 19:00 后仍营业但标为已停止供餐（不能与营业中同状态）', () => {
+  const { computeOpenStatus } = require(path.join(projectRoot, 'miniprogram/utils/park-status.js'))
+  const s = computeOpenStatus(new Date(2026, 6, 25, 20, 0))
+  const camp = s.items.filter((i) => i.key === 'camp')[0]
+  assert.equal(camp.isOpen, true, '20:00 营地仍在营业')
+  assert.equal(camp.state, 'partial', '过了 19:00 应标为部分服务停止')
+  assert.match(camp.text, /供餐/, '需明确告知已停止供餐，避免客人白跑一趟点餐')
+})
+
+test('营地 19:00 前是完整营业状态', () => {
+  const { computeOpenStatus } = require(path.join(projectRoot, 'miniprogram/utils/park-status.js'))
+  const camp = computeOpenStatus(new Date(2026, 6, 25, 18, 0)).items.filter((i) => i.key === 'camp')[0]
+  assert.equal(camp.state, 'open')
+})
+
 test('开园前与闭园后的整体状态正确', () => {
   const { computeOpenStatus } = require(path.join(projectRoot, 'miniprogram/utils/park-status.js'))
   assert.equal(computeOpenStatus(new Date(2026, 6, 25, 9, 0)).open, false, '9:00 未开园')
-  assert.equal(computeOpenStatus(new Date(2026, 6, 25, 19, 0)).open, false, '19:00 已闭园')
+  assert.equal(computeOpenStatus(new Date(2026, 6, 25, 22, 0)).open, false, '22:00 已闭园')
+  assert.equal(computeOpenStatus(new Date(2026, 6, 25, 20, 0)).open, true, '20:00 营地仍开')
+})
+
+test('溪降结束文案是「停止检票」而非「结束」（业务口径）', () => {
+  const { computeOpenStatus } = require(path.join(projectRoot, 'miniprogram/utils/park-status.js'))
+  const creek = computeOpenStatus(new Date(2026, 6, 25, 11, 0)).items.filter((i) => i.key === 'creek')[0]
+  assert.match(creek.text, /停止检票/)
 })
 
 // ============ 二级页面常驻导航（业主：补差价页看不到 Tab）============

@@ -40,6 +40,9 @@
 .ph__hour-state { font-size: 19rpx; color: rgba(247,243,234,0.55); margin-top: 4rpx; }
 .ph__hour.is-open { background: rgba(54,182,106,0.18); }
 .ph__hour.is-open .ph__hour-state { color: #8FE0AE; font-weight: 600; }
+/* 仍在营业但中途服务已停（如营地过了 19:00 点不了餐）：金色区分，不与「营业中」同色 */
+.ph__hour.is-partial { background: rgba(213,164,58,0.18); }
+.ph__hour.is-partial .ph__hour-state { color: var(--sr-gold-light); font-weight: 600; }
 
 .ph__row { position: relative; display: flex; align-items: center; margin-top: 18rpx; }
 .ph__rowtext { font-size: 22rpx; color: rgba(247,243,234,0.78); margin-left: 12rpx; flex: 1;

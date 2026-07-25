@@ -15,10 +15,10 @@
 
   <!-- 营地与溪降分别标注（两者时间不同，合并会误导） -->
   <view class="ph__hours">
-    <view class="ph__hour {{item.isOpen ? 'is-open' : ''}}" wx:for="{{status.items}}" wx:key="key">
+    <view class="ph__hour {{item.state === 'open' ? 'is-open' : ''}} {{item.state === 'partial' ? 'is-partial' : ''}}" wx:for="{{status.items}}" wx:key="key">
       <text class="ph__hour-label">{{item.label}}</text>
       <text class="ph__hour-range sr-num">{{item.range}}</text>
-      <text class="ph__hour-state">{{item.isOpen ? '进行中' : (item.text === '今日已结束' ? '已结束' : '未开始')}}</text>
+      <text class="ph__hour-state">{{item.text}}</text>
     </view>
   </view>
 

@@ -51,6 +51,7 @@ Page({
   data: {
     todayText: '',
     hours: [],
+    campNote: '',
     activities: [],
     services: SERVICES.map((s) => Object.assign({}, s, { iconPath: '/assets/icons/forest/' + s.icon + '.png' })),
     frontPhone: env.frontDeskPhone,
@@ -74,9 +75,12 @@ Page({
   refreshTime() {
     const now = new Date()
     const status = computeOpenStatus(now)
+    // 营地的中途节点（19:00 停止供餐）单独说明，避免客人 20:00 到了点不到餐
+    const camp = status.items.filter((i) => i.key === 'camp')[0]
     this.setData({
       todayText: todayText(now),
       hours: status.items,
+      campNote: camp && camp.note ? '营地 ' + camp.note : '',
       activities: markSchedule(now)
     })
   },
