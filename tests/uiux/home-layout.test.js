@@ -284,3 +284,38 @@ test('挂了常驻导航的页面都留了底部避让空间', () => {
   }
   assert.deepEqual(missing, [], '以下页面底部内容会被导航遮挡：\n  ' + missing.join('\n  '))
 })
+
+// ---- 三大主行动：方卡网格（业主 2026-07-25 指定的正方形块状布置）----
+test('主行动网格跨度：落单的最后一张通栏，永不留半个空位', () => {
+  const src = fs.readFileSync(indexPath, 'utf8')
+  const m = src.match(/function actionSpan\(index, total\) \{\s*return ([^\n]+)\n\}/)
+  assert.ok(m, 'index.js 应导出 actionSpan 布局规则')
+  const actionSpan = new Function('index', 'total', 'return ' + m[1].replace(/^return /, ''))
+  const layout = (n) => Array.from({ length: n }, (_, i) => actionSpan(i, n))
+
+  assert.deepEqual(layout(3), ['half', 'half', 'full'], '三张 = 两方卡 + 一通栏')
+  assert.deepEqual(layout(2), ['half', 'half'], '两张各占一半')
+  assert.deepEqual(layout(1), ['full'], '只剩一张时通栏，不留半边空白')
+  assert.deepEqual(layout(4), ['half', 'half', 'half', 'half'], '偶数张全部并排')
+  // 任意数量下，half 的个数必须是偶数，否则最后一排会缺一块
+  for (let n = 1; n <= 9; n++) {
+    const halves = layout(n).filter((s) => s === 'half').length
+    assert.equal(halves % 2, 0, n + ' 张时 half 数量应为偶数')
+  }
+})
+
+test('三张主行动卡统一白底，不出现实心背景块', () => {
+  const css = indexWxss
+  const block = css.slice(css.indexOf('/* ===== 三大主行动'))
+  assert.ok(/\.act \{[^}]*background: var\(--sr-bg-card\)/s.test(block), '.act 应为白底卡片')
+  assert.ok(!/\.act--lead[^{]*\{[^}]*background:\s*var\(--sr-primary\)\s*;/.test(block),
+    '主卡不得使用品牌绿实心背景（业主要求三个都是白底）')
+  assert.ok(!/linear-gradient/.test(block), '主行动卡不得使用渐变')
+})
+
+test('主行动卡底距与数量无关，不靠 nth-last-child 清零', () => {
+  const css = indexWxss
+  const block = css.slice(css.indexOf('/* ===== 三大主行动'))
+  assert.ok(!/\.act[^{]*:nth-last-child/.test(block),
+    '3 张时倒数第二张在第一排，nth-last-child 清零会让两排贴死')
+})

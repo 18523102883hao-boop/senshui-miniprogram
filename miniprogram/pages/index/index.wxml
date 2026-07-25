@@ -28,21 +28,23 @@
   </view>
 
   <!-- 4. 三大主行动：购票 / 预约 / 补差价升级
-       结构统一的纵向列表，主次只靠「实心 vs 白底」区分——
-       尺寸差异过大会让次要项显得可有可无，也会因数量变化留出空位 -->
+       方卡网格：两列并排，落单的最后一张通栏（span 由 JS 算好）。
+       三张卡都是白底，主次只靠标题色与水印深浅，不用实心块压场。 -->
   <view class="acts" wx:if="{{primaryActions.length}}">
     <view wx:for="{{primaryActions}}" wx:key="key"
-          class="act {{item.level === 'primary' ? 'act--lead' : 'act--sub'}} sr-touch"
-          hover-class="{{item.level === 'primary' ? 'sr-touch--cta' : 'sr-touch--press'}}" hover-stay-time="60"
+          class="act act--{{item.span}} {{item.level === 'primary' ? 'act--lead' : 'act--sub'}} sr-touch"
+          hover-class="sr-touch--card" hover-stay-time="60"
           data-key="{{item.key}}" bindtap="onSectionTap">
-      <view class="act__iconbox">
-        <image class="act__icon" src="{{item.icon}}" mode="aspectFit" />
-      </view>
-      <view class="act__body">
+      <view class="act__text">
         <text class="act__title">{{item.title}}</text>
         <text class="act__sub">{{item.subtitle}}</text>
       </view>
-      <sr-icon name="nav-forward" theme="light" size="sm" invert="{{item.level === 'primary'}}" />
+      <!-- 方卡：图标作右下角水印；通栏卡：图标回到左侧圆底 -->
+      <image class="act__mark" src="{{item.icon}}" mode="aspectFit" wx:if="{{item.span === 'half'}}" />
+      <view class="act__iconbox" wx:else>
+        <image class="act__icon" src="{{item.icon}}" mode="aspectFit" />
+      </view>
+      <sr-icon name="chevron-right" theme="light" size="sm" wx:if="{{item.span === 'full'}}" />
     </view>
   </view>
 

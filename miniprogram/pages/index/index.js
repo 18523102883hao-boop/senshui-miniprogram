@@ -44,14 +44,20 @@ const SECTION_ICONS = {
 }
 
 // 三大主行动的层级（业主反馈：不用特别标识，靠排版体现轻重缓急）
-// 只区分尺寸与位置：primary 实心大卡（唯一强调），secondary 白底并排次卡
+// 三张卡统一白底，只用「方卡网格 + 标题色」拉开主次
 const ACTION_STYLE = {
-  ticket_entry: { level: 'primary' },      // 唯一实心主卡
+  ticket_entry: { level: 'primary' },
   reservation_entry: { level: 'secondary' },
   upgrade_entry: { level: 'secondary' }
 }
 // 云端新增未知主行动时按次卡渲染，保证不会出现没有层级定义的卡片
 const ACTION_STYLE_FALLBACK = { level: 'secondary' }
+
+// 网格跨度：两列排布，落单的最后一张通栏，永远不留半个空位。
+// 3 张 → 方/方/通栏；4 张 → 全方卡；1 张 → 通栏。数量随云端配置变也不会塌。
+function actionSpan(index, total) {
+  return (total % 2 === 1 && index === total - 1) ? 'full' : 'half'
+}
 
 // tabBar 页必须用 switchTab，navigateTo 会直接失败
 const TAB_PAGES = ['/pages/index/index', '/pages/park/park', '/pages/ling/ling', '/pages/mine/mine']
@@ -70,8 +76,11 @@ function groupSections(sections) {
   list.forEach((s) => { sectionMap[s.key] = s })
 
   // 主行动附加视觉标识；云端下发的也会被补齐，避免缺样式
-  const primaryActions = byType('primary_action')
-    .map((s) => Object.assign({}, s, ACTION_STYLE[s.key] || ACTION_STYLE_FALLBACK))
+  const actionList = byType('primary_action')
+  const primaryActions = actionList.map((s, i) => Object.assign(
+    {}, s, ACTION_STYLE[s.key] || ACTION_STYLE_FALLBACK,
+    { span: actionSpan(i, actionList.length) }
+  ))
 
   return {
     sections: list,
