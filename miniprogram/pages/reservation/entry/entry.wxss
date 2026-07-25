@@ -8,3 +8,6 @@
 .scene__desc { display: block; font-size: 23rpx; color: var(--sr-text-sub); margin-top: 8rpx; }
 
 .tail { font-size: 21rpx; color: var(--sr-text-weak); text-align: center; padding: 32rpx 0 40rpx; line-height: 1.6; }
+
+/* 常驻底部导航避让 */
+.sr-page { padding-bottom: calc(150rpx + env(safe-area-inset-bottom)) !important; }

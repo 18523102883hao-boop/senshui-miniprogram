@@ -1,0 +1,8 @@
+<view class="stb stb--{{theme}}">
+  <view class="stb__item" wx:for="{{list}}" wx:key="pagePath"
+        data-index="{{index}}" bindtap="onTap"
+        hover-class="stb__item--press" hover-stay-time="60">
+    <image class="stb__icon" src="{{item.icon}}" mode="aspectFit" />
+    <text class="stb__label">{{item.text}}</text>
+  </view>
+</view>

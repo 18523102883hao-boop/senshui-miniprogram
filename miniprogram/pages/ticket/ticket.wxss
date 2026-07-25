@@ -44,3 +44,6 @@
 .chan__action { font-size: 24rpx; color: var(--sr-primary); font-weight: 600; }
 .note { margin-top: 18rpx; padding-top: 18rpx; border-top: 1rpx dashed var(--sr-line); font-size: 22rpx; color: var(--sr-text-weak); line-height: 1.6; }
 
+
+/* 常驻底部导航避让 */
+.sr-page { padding-bottom: calc(150rpx + env(safe-area-inset-bottom)) !important; }

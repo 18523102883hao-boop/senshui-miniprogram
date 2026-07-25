@@ -48,3 +48,11 @@
   background: var(--sr-primary); color: #fff; font-size: 30rpx; font-weight: 700;
 }
 
+
+/* 常驻底部导航避让 */
+.sr-page { padding-bottom: calc(150rpx + env(safe-area-inset-bottom)) !important; }
+
+/* 底部操作栏 + 常驻导航同时存在：操作栏上移，页面留双份空间 */
+.bar { bottom: calc(130rpx + env(safe-area-inset-bottom)); }
+.detail-page { padding-bottom: calc(310rpx + env(safe-area-inset-bottom)) !important; }
+/* sr-tabbar 避让 */

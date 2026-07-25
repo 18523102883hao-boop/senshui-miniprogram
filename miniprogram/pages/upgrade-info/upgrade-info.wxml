@@ -203,4 +203,7 @@
       <text class="sheet__safe">支付通过微信安全支付完成，款项进入森水长河官方账户。</text>
     </view>
   </view>
+
+  <!-- 常驻底部导航：二级页面也能直接切 Tab -->
+  <sr-tabbar theme="light" />
 </view>

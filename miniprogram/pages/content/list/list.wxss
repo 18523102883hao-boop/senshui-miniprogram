@@ -35,3 +35,6 @@
 
 
 .more { text-align: center; font-size: 23rpx; color: var(--sr-text-weak); padding: 32rpx 0 16rpx; }
+
+/* 常驻底部导航避让 */
+.sr-page { padding-bottom: calc(150rpx + env(safe-area-inset-bottom)) !important; }

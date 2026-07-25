@@ -10,3 +10,6 @@
 .lead__name { display: block; font-size: 22rpx; color: var(--sr-text-weak); margin-top: 8rpx; }
 .tail { font-size: 21rpx; color: var(--sr-text-weak); text-align: center; padding: 24rpx 0 16rpx; line-height: 1.6; }
 .ask { text-align: center; font-size: 26rpx; color: var(--sr-primary); font-weight: 600; padding: 20rpx 0 40rpx; }
+
+/* 常驻底部导航避让 */
+.sr-page { padding-bottom: calc(150rpx + env(safe-area-inset-bottom)) !important; }

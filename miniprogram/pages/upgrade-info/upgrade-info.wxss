@@ -819,3 +819,6 @@
   line-height: 1.55;
   text-align: center;
 }
+
+/* 常驻底部导航避让 */
+.sr-page { padding-bottom: calc(150rpx + env(safe-area-inset-bottom)) !important; }

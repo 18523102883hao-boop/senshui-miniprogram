@@ -15,8 +15,12 @@ module.exports = {
     // 业主 2026-07-25 提供；wx.openLocation 用（微信内置地图 → 可一键转高德/苹果地图导航）
     latitude: 28.94570257985686,
     longitude: 106.96986979037949,
-    openHours: '10:00-18:00',
-    admissionHours: '10:00-16:30',
+    // ⚠️ 营地与溪降营业时间不同，必须分别标注，否则客人会按溪降时间理解整个园区
+    // （业主 2026-07-25 指出）
+    hours: {
+      camp: { label: '营地', open: '10:00', close: '18:00' },
+      creek: { label: '溪降', open: '10:00', close: '16:30' }
+    },
     creekNote: '溪降全程约 2 公里，游玩时长约 1.5 小时',
     heightLimit: '成人限制身高 150 厘米（含）以上'
   },

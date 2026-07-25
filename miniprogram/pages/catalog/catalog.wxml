@@ -71,4 +71,7 @@
                   desc="酒水、小卖部与租赁价目稍后上线，可先咨询管家" />
 
   <sr-error-state wx:if="{{hasError && !loading}}" bind:retry="onRetry" />
+
+  <!-- 常驻底部导航：二级页面也能直接切 Tab -->
+  <sr-tabbar theme="light" />
 </view>

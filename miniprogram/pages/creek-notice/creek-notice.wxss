@@ -16,3 +16,6 @@
 .note__text { flex: 1; font-size: 26rpx; color: var(--sr-text-sub); line-height: 1.75; }
 
 .foot { text-align: center; font-size: 24rpx; color: var(--sr-danger); padding: 24rpx 0 8rpx; }
+
+/* 常驻底部导航避让 */
+.sr-page { padding-bottom: calc(150rpx + env(safe-area-inset-bottom)) !important; }

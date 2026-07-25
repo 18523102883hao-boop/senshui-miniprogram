@@ -48,3 +48,6 @@
 .ask-card__arrow { font-size: 40rpx; color: var(--sr-text-weak); }
 
 .tail { font-size: 21rpx; color: var(--sr-text-weak); text-align: center; padding: 32rpx 0 40rpx; }
+
+/* 常驻底部导航避让 */
+.sr-page { padding-bottom: calc(150rpx + env(safe-area-inset-bottom)) !important; }

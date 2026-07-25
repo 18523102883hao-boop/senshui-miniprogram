@@ -103,4 +103,7 @@
       {{cta.text}}
     </view>
   </view>
+
+  <!-- 常驻底部导航：二级页面也能直接切 Tab -->
+  <sr-tabbar theme="light" />
 </view>

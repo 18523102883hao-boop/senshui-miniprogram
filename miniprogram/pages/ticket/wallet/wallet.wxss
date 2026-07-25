@@ -34,3 +34,6 @@
 .code__token { font-size: 22rpx; color: var(--sr-text); word-break: break-all; line-height: 1.6; }
 .code__tip { font-size: 21rpx; color: var(--sr-text-weak); margin-top: 22rpx; text-align: center; line-height: 1.6; }
 .code__close { margin-top: 32rpx; padding: 16rpx 56rpx; border-radius: 40rpx; background: var(--sr-primary); color: #fff; font-size: 26rpx; font-weight: 600; }
+
+/* 常驻底部导航避让 */
+.sr-page { padding-bottom: calc(150rpx + env(safe-area-inset-bottom)) !important; }

@@ -1,8 +1,29 @@
 <view class="sr-page sr-page--tab sr-enter">
-  <!-- 园区信息头（与首页同一组件，园区页不推销会员） -->
-  <sr-park-header show-member="{{false}}" />
+  <!-- 1. 今日安排：园内客人最先要看的是「现在几点、下一场是什么」 -->
+  <view class="today">
+    <view class="today__head">
+      <text class="today__date">{{todayText}}</text>
+      <view class="today__hours">
+        <text class="today__hour {{item.isOpen ? 'is-open' : ''}}" wx:for="{{hours}}" wx:key="key">
+          {{item.label}} {{item.range}}
+        </text>
+      </view>
+    </view>
+    <view class="today__acts">
+      <view class="act-item {{item.passed ? 'is-passed' : ''}} {{item.next ? 'is-next' : ''}}"
+            wx:for="{{activities}}" wx:key="id">
+        <text class="act-item__time sr-num">{{item.time}}</text>
+        <view class="act-item__body">
+          <text class="act-item__name">{{item.name}}</text>
+          <text class="act-item__loc">{{item.loc}}</text>
+        </view>
+        <text class="act-item__tag" wx:if="{{item.next}}">即将开始</text>
+      </view>
+    </view>
+    <text class="today__note">活动以现场通知为准</text>
+  </view>
 
-  <!-- 园区地图（主视野） -->
+  <!-- 2. 园区地图：园内高频，点开看大图找路 -->
   <sr-section-header title="园区地图" extra="点击看大图" />
   <view class="maps">
     <view class="mapc sr-touch" hover-class="sr-touch--card" hover-stay-time="60" data-key="camp" bindtap="openMap">
@@ -15,20 +36,7 @@
     </view>
   </view>
 
-  <!-- 今日活动时间表 -->
-  <sr-section-header title="今日活动" />
-  <view class="sr-card">
-    <view class="act" wx:for="{{activities}}" wx:key="id">
-      <text class="act__time sr-num">{{item.time}}</text>
-      <view class="act__body">
-        <text class="act__name">{{item.name}}</text>
-        <text class="act__loc">{{item.loc}}</text>
-      </view>
-    </view>
-    <view class="act-note">活动会根据季节、主题和实际情况调整，以现场通知为准。</view>
-  </view>
-
-  <!-- 园内服务（整卡可点） -->
+  <!-- 3. 现场服务：在园区里能用到的东西 -->
   <sr-section-header title="现场服务" />
   <view class="svc-grid">
     <view class="svc sr-touch" hover-class="sr-touch--card" hover-stay-time="60"
@@ -39,6 +47,18 @@
         <text class="svc__desc">{{item.desc}}</text>
       </view>
       <sr-icon name="chevron-right" theme="light" size="sm" />
+    </view>
+  </view>
+
+  <!-- 4. 到园与求助：还没到的人导航，到了的人找人 -->
+  <view class="help">
+    <view class="help__btn sr-touch" hover-class="sr-touch--press" hover-stay-time="60" bindtap="onNavigate">
+      <sr-icon name="map-navigation" theme="light" size="md" />
+      <text>{{canNavigate ? '导航到园区' : '复制园区地址'}}</text>
+    </view>
+    <view class="help__btn sr-touch" hover-class="sr-touch--press" hover-stay-time="60" bindtap="onCallFront">
+      <sr-icon name="mine-phone" theme="light" size="md" />
+      <text>联系前台 {{frontPhone}}</text>
     </view>
   </view>
 

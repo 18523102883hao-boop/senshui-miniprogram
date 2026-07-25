@@ -92,3 +92,6 @@
 
 .tail { font-size: 21rpx; color: var(--sr-text-weak); text-align: center; padding: 16rpx 0 40rpx; line-height: 1.6; }
 
+
+/* 常驻底部导航避让 */
+.sr-page { padding-bottom: calc(150rpx + env(safe-area-inset-bottom)) !important; }

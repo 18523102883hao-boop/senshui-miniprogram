@@ -27,11 +27,23 @@
 }
 .ph__navtext { font-size: 21rpx; font-weight: 700; color: #4A2F00; margin-top: 2rpx; }
 
-.ph__meta { position: relative; margin-top: 24rpx; }
-.ph__row { display: flex; align-items: center; padding: 8rpx 0; }
-.ph__rowtext { font-size: 23rpx; color: rgba(247,243,234,0.82); margin-left: 12rpx; flex: 1; }
-.ph__rowtext--addr { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
-.ph__row--status.is-open .ph__rowtext { color: #8FE0AE; font-weight: 600; }
+/* 营地 / 溪降分列：两者营业时间不同，必须让客人一眼看出差别 */
+.ph__hours { position: relative; display: flex; margin-top: 24rpx; }
+.ph__hour {
+  flex: 1; display: flex; flex-direction: column;
+  background: rgba(255,255,255,0.08); border-radius: var(--sr-radius-xs);
+  padding: 16rpx 20rpx; margin-right: 16rpx;
+}
+.ph__hour:last-child { margin-right: 0; }
+.ph__hour-label { font-size: 21rpx; color: rgba(247,243,234,0.7); }
+.ph__hour-range { font-size: 27rpx; font-weight: 700; color: #F7F3EA; margin-top: 4rpx; }
+.ph__hour-state { font-size: 19rpx; color: rgba(247,243,234,0.55); margin-top: 4rpx; }
+.ph__hour.is-open { background: rgba(54,182,106,0.18); }
+.ph__hour.is-open .ph__hour-state { color: #8FE0AE; font-weight: 600; }
+
+.ph__row { position: relative; display: flex; align-items: center; margin-top: 18rpx; }
+.ph__rowtext { font-size: 22rpx; color: rgba(247,243,234,0.78); margin-left: 12rpx; flex: 1;
+  overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 
 /* 会员条：与主体同卡但独立分区，金色细边区分 */
 .ph__member {

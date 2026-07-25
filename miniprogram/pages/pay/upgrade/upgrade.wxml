@@ -30,4 +30,7 @@
     </text>
     <text class="safe-tip">{{errorMsg || '请让工作人员重新生成收款码后再扫。'}}</text>
   </view>
+
+  <!-- 常驻底部导航：二级页面也能直接切 Tab -->
+  <sr-tabbar theme="light" />
 </view>

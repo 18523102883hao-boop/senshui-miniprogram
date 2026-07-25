@@ -1,0 +1,21 @@
+/* 二级页面常驻导航：与 custom-tab-bar 视觉一致，但不高亮任何项
+   （当前页不属于任何 Tab，高亮会误导用户以为自己在那个 Tab 里） */
+.stb {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 100;
+  display: flex; align-items: center;
+  padding: 10rpx 0 calc(10rpx + env(safe-area-inset-bottom));
+  background: rgba(246, 244, 240, 0.94);
+  border-top: 1rpx solid var(--sr-line);
+  backdrop-filter: blur(20rpx);
+}
+.stb__item {
+  flex: 1; display: flex; flex-direction: column; align-items: center;
+  padding: 8rpx 0;
+  transition: transform var(--sr-dur-fast) var(--sr-ease);
+}
+.stb__item--press { transform: scale(0.94); }
+.stb__icon { width: 44rpx; height: 44rpx; opacity: 0.55; }
+.stb__label { font-size: 20rpx; color: var(--sr-text-sub); margin-top: 4rpx; }
+
+.stb--dark { background: rgba(16, 21, 18, 0.94); border-top-color: var(--sr-dark-line); }
+.stb--dark .stb__label { color: var(--sr-dark-muted); }

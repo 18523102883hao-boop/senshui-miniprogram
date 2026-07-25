@@ -17,4 +17,7 @@
   </view>
 
   <view class="tail">团队预约由管家统一登记确认，确认前请勿安排车辆与行程。</view>
+
+  <!-- 常驻底部导航：二级页面也能直接切 Tab -->
+  <sr-tabbar theme="light" />
 </view>

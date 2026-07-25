@@ -82,7 +82,8 @@
     "sr-qrcode": "/components/ui/sr-qrcode/index",
     "sr-contact-card": "/components/ui/sr-contact-card/index",
     "privacy-popup": "/components/privacy-popup/index",
-    "sr-park-header": "/components/ui/sr-park-header/index"
+    "sr-park-header": "/components/ui/sr-park-header/index",
+    "sr-tabbar": "/components/ui/sr-tabbar/index"
   },
   "sitemapLocation": "sitemap.json",
   "style": "v2",

@@ -49,4 +49,7 @@
   </view>
 
   <view class="tail">如遇紧急情况请直接拨打前台电话，或就近联系园区工作人员。</view>
+
+  <!-- 常驻底部导航：二级页面也能直接切 Tab -->
+  <sr-tabbar theme="light" />
 </view>

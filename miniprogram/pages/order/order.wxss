@@ -26,3 +26,6 @@
 
 .ord__no { display: block; font-size: 20rpx; color: var(--sr-text-weak); margin-top: 16rpx;
   padding-top: 16rpx; border-top: 1rpx solid var(--sr-line); }
+
+/* 常驻底部导航避让 */
+.sr-page { padding-bottom: calc(150rpx + env(safe-area-inset-bottom)) !important; }
