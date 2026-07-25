@@ -7,9 +7,7 @@
     </view>
   </scroll-view>
 
-  <view class="skeleton" wx:if="{{loading}}">
-    <view class="skeleton__item" wx:for="{{[1,2,3]}}" wx:key="*this"></view>
-  </view>
+  <sr-skeleton wx:if="{{loading}}" type="card" rows="3" />
 
   <!-- 商品卡 -->
   <view class="plist" wx:if="{{!loading && products.length}}">
@@ -43,18 +41,11 @@
   </view>
 
   <!-- 错误态：商品拉不到，但购票入口不能死 -->
-  <view class="state" wx:if="{{hasError && !loading}}">
-    <image class="state__icon" src="/assets/icons/status/status-warning.png" mode="aspectFit" />
-    <text class="state__text">票种加载失败</text>
-    <text class="state__sub">可先通过下方官方渠道购买</text>
-    <view class="state__btn sr-touch" hover-class="sr-touch--cta" hover-stay-time="60" bindtap="onRetry">重新加载</view>
-  </view>
+  <sr-error-state wx:if="{{hasError && !loading}}" bind:retry="onRetry" />
 
-  <view class="state" wx:if="{{!loading && !hasError && !products.length}}">
-    <image class="state__icon" src="/assets/icons/forest/home-ticket.png" mode="aspectFit" />
-    <text class="state__text">该分类暂无在售票种</text>
-    <text class="state__sub">可切换分类或走官方渠道</text>
-  </view>
+  <sr-empty-state wx:if="{{!loading && !hasError && !products.length}}"
+                  icon="home-ticket" title="该分类暂无在售票种"
+                  desc="可切换分类查看，或通过官方渠道购买" />
 
   <!-- 外部渠道兜底 -->
   <view class="sr-card">

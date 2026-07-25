@@ -37,7 +37,3 @@
 .tk__btn--off { opacity: 0.6; }
 .tk__reset { margin-top: 18rpx; text-align: center; font-size: 25rpx; color: var(--sr-primary); }
 
-.state { display: flex; flex-direction: column; align-items: center; padding: 140rpx 40rpx; }
-.state__icon { width: 96rpx; height: 96rpx; opacity: 0.5; }
-.state__text { font-size: 30rpx; color: var(--sr-text); margin-top: 24rpx; font-weight: 700; }
-.state__sub { font-size: 23rpx; color: var(--sr-text-weak); margin-top: 12rpx; text-align: center; line-height: 1.6; }

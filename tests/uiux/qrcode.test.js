@@ -99,3 +99,26 @@ test('sr-qrcode 组件存在且未配置时不渲染 image', () => {
   // image 必须挂在 enabled 条件下，否则未配置会出现裂图
   assert.match(wxml, /wx:if="\{\{enabled\}\}"/, '二维码区块必须由 enabled 控制')
 })
+
+test('配置的本地二维码图片必须真实存在（避免路径失配导致裂图）', () => {
+  delete require.cache[envPath]
+  const env = require(envPath)
+  for (const scene of Object.keys(env.qrcodes || {})) {
+    const url = String(env.qrcodes[scene] || '').trim()
+    // 只校验本地图片路径；cloud:// 与 https 由运行时解析
+    if (!url || url.indexOf('/') !== 0) continue
+    const file = path.join(projectRoot, 'miniprogram', url)
+    assert.ok(fs.existsSync(file), `${scene} 配置的图片不存在：${url}`)
+  }
+})
+
+test('二维码图片不超过微信单资源 200KB 上限', () => {
+  delete require.cache[envPath]
+  const env = require(envPath)
+  for (const scene of Object.keys(env.qrcodes || {})) {
+    const url = String(env.qrcodes[scene] || '').trim()
+    if (!url || url.indexOf('/') !== 0) continue
+    const size = fs.statSync(path.join(projectRoot, 'miniprogram', url)).size
+    assert.ok(size <= 200 * 1024, `${scene} 图片 ${Math.round(size / 1024)}KB 超过 200KB，会导致上传失败`)
+  }
+})

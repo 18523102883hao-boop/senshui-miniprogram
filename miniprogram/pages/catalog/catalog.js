@@ -1,4 +1,6 @@
-// 商品与服务目录（T22 / T25 Vibe UI）——酒吧 / 小卖部 / 装备租赁 / 服务，供客户查看
+// 商品与服务目录（T22 / Vibe UI v2.0 改造）
+// 酒吧 / 小卖部 / 装备租赁 / 服务价目公示。
+// 改造点：补错误态（原来失败会永远停在「加载中」）、统一状态组件、加下单联系入口。
 const request = require('../../utils/request.js')
 const { haptic } = require('../../utils/haptics.js')
 
@@ -12,25 +14,42 @@ const SECTION_ICONS = {
 
 Page({
   data: {
-    loaded: false,
+    loading: true,
+    hasError: false,
+    isEmpty: false,
     sections: [],
     activeKey: ''
   },
 
   onLoad() {
-    this.load()
+    return this.load()
+  },
+
+  onPullDownRefresh() {
+    return this.load().then(() => wx.stopPullDownRefresh())
   },
 
   load() {
-    request.call('getCatalog', {})
+    this.setData({ loading: true, hasError: false })
+    return request.call('getCatalog', {})
       .then((d) => {
-        const sections = ((d && d.sections) || []).map((s) => ({
-          ...s,
+        const sections = ((d && d.sections) || []).map((s) => Object.assign({}, s, {
           iconPath: SECTION_ICONS[s.key] || SECTION_ICONS.store
         }))
-        this.setData({ loaded: true, sections, activeKey: sections.length ? sections[0].key : '' })
+        this.setData({
+          loading: false,
+          hasError: false,
+          sections,
+          isEmpty: sections.length === 0,
+          activeKey: sections.length ? sections[0].key : ''
+        })
       })
-      .catch(() => this.setData({ loaded: true }))
+      // 原实现 catch 后只置 loaded，页面会停在「加载中」；现在明确给错误态可重试
+      .catch(() => this.setData({ loading: false, hasError: true, isEmpty: false }))
+  },
+
+  onRetry() {
+    return this.load()
   },
 
   switchTab(e) {

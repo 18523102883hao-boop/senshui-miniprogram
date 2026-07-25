@@ -43,8 +43,8 @@ module.exports = {
   // ============================================================
   qrcodes: {
     // 周江 · 重庆嘿行行旅游开发有限公司（业主 2026-07-25 提供）
-    // ⚠️ 图片需存在于 miniprogram/images/qr-concierge.png，否则组件会自动隐藏二维码只留电话
-    concierge: '/images/qr-concierge.png',
+    // 图片：miniprogram/images/qr-concierge.jpg（周江 · 企业微信）
+    concierge: '/images/qr-concierge.jpg',
     birthday: '',     // 留空 = 回落到 concierge
     teamBuilding: '',
     brand: '',

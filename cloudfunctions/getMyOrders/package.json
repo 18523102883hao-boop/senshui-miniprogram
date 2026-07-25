@@ -1,0 +1,9 @@
+{
+  "name": "getMyOrders",
+  "version": "1.0.0",
+  "description": "统一订单中心",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3"
+  }
+}

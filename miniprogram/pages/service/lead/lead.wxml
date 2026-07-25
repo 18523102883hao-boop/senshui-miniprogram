@@ -41,7 +41,7 @@
 
     <view class="agree">
       <view class="agree__box {{form.privacyAgreed ? 'agree__box--on' : ''}}" bindtap="onPrivacyToggle">
-        <text wx:if="{{form.privacyAgreed}}">✓</text>
+        <sr-icon wx:if="{{form.privacyAgreed}}" name="status-success" theme="status" size="sm" />
       </view>
       <text class="agree__text" bindtap="onPrivacyToggle">我已阅读并同意</text>
       <text class="agree__link" bindtap="goPrivacy">《隐私政策》</text>

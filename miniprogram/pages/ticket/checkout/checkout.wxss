@@ -1,5 +1,4 @@
 .co-page { padding-bottom: calc(180rpx + env(safe-area-inset-bottom)); }
-.skeleton__line { height: 120rpx; border-radius: var(--sr-radius); background: var(--sr-bg-sunken); margin-bottom: 20rpx; opacity: 0.6; }
 
 .sum { display: flex; align-items: center; }
 .sum__cover { width: 160rpx; height: 120rpx; border-radius: var(--sr-radius-sm); background: var(--sr-bg-sunken); flex-shrink: 0; }
@@ -40,7 +39,3 @@
 .bar__cta { padding: 24rpx 64rpx; border-radius: 44rpx; background: var(--sr-primary); color: #fff; font-size: 30rpx; font-weight: 700; }
 .bar__cta--off { opacity: 0.6; }
 
-.state { display: flex; flex-direction: column; align-items: center; padding: 120rpx 40rpx; }
-.state__icon { width: 96rpx; height: 96rpx; opacity: 0.5; }
-.state__text { font-size: 28rpx; color: var(--sr-text); margin-top: 24rpx; font-weight: 600; }
-.state__btn { margin-top: 32rpx; padding: 18rpx 56rpx; border-radius: 40rpx; background: var(--sr-primary); color: #fff; font-size: 26rpx; font-weight: 600; }

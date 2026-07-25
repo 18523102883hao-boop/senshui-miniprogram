@@ -1,7 +1,5 @@
 <view class="sr-page sr-enter">
-  <view class="skeleton" wx:if="{{loading}}">
-    <view class="skeleton__line" wx:for="{{[1,2]}}" wx:key="*this"></view>
-  </view>
+  <sr-skeleton wx:if="{{loading}}" type="card" rows="3" />
 
   <block wx:if="{{!loading && !hasError}}">
     <!-- 结果 -->
@@ -43,11 +41,7 @@
     <view class="empty" wx:if="{{!refundable.length && !blocked.length}}">该订单没有可退票券</view>
   </block>
 
-  <view class="state" wx:if="{{hasError}}">
-    <image class="state__icon" src="/assets/icons/status/status-warning.png" mode="aspectFit" />
-    <text class="state__text">加载失败</text>
-    <view class="state__btn" bindtap="onRetry">重新加载</view>
-  </view>
+  <sr-error-state wx:if="{{hasError && !loading}}" bind:retry="onRetry" />
 
   <view class="bar" wx:if="{{canSubmit && !resultMode}}">
     <view class="bar__total">

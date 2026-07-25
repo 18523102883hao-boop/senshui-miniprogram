@@ -8,7 +8,6 @@
 }
 .cat--on { background: var(--sr-primary); color: #fff; font-weight: 600; }
 
-.skeleton__item { height: 240rpx; border-radius: var(--sr-radius); background: var(--sr-bg-sunken); margin-bottom: 20rpx; opacity: 0.6; }
 
 .plist { display: flex; flex-direction: column; }
 .pcard {
@@ -45,8 +44,3 @@
 .chan__action { font-size: 24rpx; color: var(--sr-primary); font-weight: 600; }
 .note { margin-top: 18rpx; padding-top: 18rpx; border-top: 1rpx dashed var(--sr-line); font-size: 22rpx; color: var(--sr-text-weak); line-height: 1.6; }
 
-.state { display: flex; flex-direction: column; align-items: center; padding: 90rpx 40rpx; }
-.state__icon { width: 96rpx; height: 96rpx; opacity: 0.5; }
-.state__text { font-size: 28rpx; color: var(--sr-text); margin-top: 24rpx; font-weight: 600; }
-.state__sub { font-size: 23rpx; color: var(--sr-text-weak); margin-top: 10rpx; }
-.state__btn { margin-top: 32rpx; padding: 18rpx 56rpx; border-radius: 40rpx; background: var(--sr-primary); color: #fff; font-size: 26rpx; font-weight: 600; }

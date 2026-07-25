@@ -11,6 +11,7 @@
 //   node scripts/tcb-api.mjs collections                    列出关键集合与文档数
 //   node scripts/tcb-api.mjs get <集合> [查询JSON]           查询文档
 //   node scripts/tcb-api.mjs seed                           灌入首页配置/文章/票种（幂等）
+//   node scripts/tcb-api.mjs sync-home                      把本地首页模块推到云端（改首页模块后必跑）
 //   node scripts/tcb-api.mjs invoke <云函数名> [入参JSON]     调用云函数
 //
 // 注意：
@@ -148,6 +149,31 @@ async function cmdSeed() {
   }
 }
 
+// 把本地 seed-data 的首页模块推到云端。
+// 首页模块在三处定义（种子/云函数兜底/前端本地），改动后云端不同步会导致新模块不显示 ——
+// 2026-07-25 补差价入口就是这么“消失”的。
+async function cmdSyncHome() {
+  const { DEFAULT_SECTIONS } = require(PROJ + '/cloudfunctions/seedPortalContent/seed-data.js')
+  const list = await find('home_configs', null, 1)
+  if (!list || !list.length) {
+    console.error('✖ 云端无首页配置，请先执行：node scripts/tcb-api.mjs seed')
+    return
+  }
+  const doc = list[0]
+  const cloudKeys = (doc.sections || []).map((s) => s.key)
+  const missing = DEFAULT_SECTIONS.filter((s) => cloudKeys.indexOf(s.key) < 0).map((s) => s.key)
+  console.log('云端 ' + cloudKeys.length + ' 个模块，本地 ' + DEFAULT_SECTIONS.length + ' 个')
+  console.log(missing.length ? '云端缺失：' + missing.join(', ') : '模块齐全')
+
+  const r = await db('PATCH', '/collections/home_configs/documents/' + doc._id, {
+    data: { sections: toEJSON(DEFAULT_SECTIONS), updatedAt: toEJSON(new Date()) }
+  })
+  if (r.status >= 300) return console.error('✖ 同步失败', r.status, r.text.slice(0, 200))
+  const after = (await find('home_configs', null, 1))[0]
+  console.log('✓ 已同步，云端现有 ' + after.sections.length + ' 个模块')
+  console.log('  主行动：' + after.sections.filter((s) => s.type === 'primary_action').map((s) => s.title).join(' / '))
+}
+
 async function cmdInvoke(name, payloadStr) {
   const r = await call(`${GW}/v1/functions/${name}`, 'POST', payloadStr ? JSON.parse(payloadStr) : {})
   console.log(r.status, r.text.slice(0, 2000))
@@ -158,11 +184,12 @@ const run = {
   collections: () => cmdCollections(),
   get: () => cmdGet(a1, a2),
   seed: () => cmdSeed(),
+  'sync-home': () => cmdSyncHome(),
   invoke: () => cmdInvoke(a1, a2)
 }[cmd]
 
 if (!run) {
-  console.log('用法: node scripts/tcb-api.mjs <collections|get|seed|invoke> [参数]')
+  console.log('用法: node scripts/tcb-api.mjs <collections|get|seed|sync-home|invoke> [参数]')
   process.exit(1)
 }
 run().catch((e) => { console.error('✖', e.message); process.exit(1) })

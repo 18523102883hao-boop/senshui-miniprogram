@@ -6,9 +6,7 @@
     </view>
   </view>
 
-  <view class="skeleton" wx:if="{{loading}}">
-    <view class="skeleton__item" wx:for="{{[1,2]}}" wx:key="*this"></view>
-  </view>
+  <sr-skeleton wx:if="{{loading}}" type="card" rows="3" />
 
   <view class="tlist" wx:if="{{!loading && visibleList.length}}">
     <view class="tcard sr-touch" hover-class="sr-touch--card" hover-stay-time="60"
@@ -25,17 +23,12 @@
     </view>
   </view>
 
-  <view class="state" wx:if="{{isEmpty && !loading && !hasError}}">
-    <image class="state__icon" src="/assets/icons/forest/home-ticket.png" mode="aspectFit" />
-    <text class="state__text">这里还没有票券</text>
-    <view class="state__btn" wx:if="{{activeTab === 'unused'}}" bindtap="goBuy">去购票</view>
-  </view>
+  <sr-empty-state wx:if="{{isEmpty && !loading && !hasError}}"
+                  icon="home-ticket" title="这里还没有票券"
+                  desc="购票后票券会自动出现在这里"
+                  actionText="去购票" bind:action="goBuy" />
 
-  <view class="state" wx:if="{{hasError && !loading}}">
-    <image class="state__icon" src="/assets/icons/status/status-warning.png" mode="aspectFit" />
-    <text class="state__text">票券加载失败</text>
-    <view class="state__btn" bindtap="onRetry">重新加载</view>
-  </view>
+  <sr-error-state wx:if="{{hasError && !loading}}" bind:retry="onRetry" />
 
   <!-- 入园码弹层：动态 token，90 秒失效 -->
   <view class="mask" wx:if="{{codeToken}}" bindtap="closeCode">

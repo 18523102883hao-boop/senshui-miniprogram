@@ -4,8 +4,6 @@
   background: rgba(213, 164, 58, 0.12);
   padding: 14rpx 24rpx; border-radius: var(--sr-radius-sm); margin-bottom: 20rpx;
 }
-.skeleton__title { height: 56rpx; width: 60%; border-radius: 12rpx; background: var(--sr-bg-sunken); margin-bottom: 28rpx; }
-.skeleton__line { height: 30rpx; border-radius: 10rpx; background: var(--sr-bg-sunken); margin-bottom: 18rpx; opacity: 0.7; }
 
 /* hero */
 .b-hero {
@@ -94,11 +92,3 @@
 
 .tail { font-size: 21rpx; color: var(--sr-text-weak); text-align: center; padding: 16rpx 0 40rpx; line-height: 1.6; }
 
-.state { display: flex; flex-direction: column; align-items: center; padding: 120rpx 40rpx; }
-.state__icon { width: 96rpx; height: 96rpx; opacity: 0.5; }
-.state__text { font-size: 28rpx; color: var(--sr-text); margin-top: 24rpx; font-weight: 600; }
-.state__sub { font-size: 23rpx; color: var(--sr-text-weak); margin-top: 10rpx; }
-.state__btn {
-  margin-top: 32rpx; padding: 18rpx 56rpx; border-radius: 40rpx;
-  background: var(--sr-primary); color: #fff; font-size: 26rpx; font-weight: 600;
-}

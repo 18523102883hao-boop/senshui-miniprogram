@@ -36,4 +36,3 @@
 .svc__badge { font-size: 24rpx; color: #fff; background: var(--sr-seal); border-radius: 10rpx; padding: 6rpx 18rpx; flex-shrink: 0; }
 .svc__desc { display: block; font-size: 26rpx; color: var(--sr-text-sub); margin-top: 18rpx; line-height: 1.7; }
 
-.state { text-align: center; color: var(--sr-text-weak); font-size: 26rpx; padding: 100rpx 0; }

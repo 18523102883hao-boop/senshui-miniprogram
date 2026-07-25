@@ -143,39 +143,35 @@
 
 
 /* ===== 三大主行动：购票 / 预约 / 补差价升级 =====
-   业主反馈「不需要特别标识，靠排版体现轻重缓急」——
-   因此只保留一个实心主卡，其余为白底次卡，全页仅一处强调色。 */
+   三张卡结构完全一致，主次只靠「实心 vs 白底」区分。
+   不用一大两小：尺寸落差过大会让次要项显得可有可无，
+   且次卡数量变化时会在行内留出空位。 */
 .acts { margin-bottom: var(--sr-gap-5); }
-.acts__row { display: flex; justify-content: space-between; margin-top: 16rpx; }
-
-.act { border-radius: var(--sr-radius); box-shadow: var(--sr-shadow); }
-
-/* 主卡：品牌绿实心，首屏唯一强调 */
-.act--lead {
-  display: flex; align-items: center; padding: 34rpx 32rpx;
-  background: var(--sr-primary);
+.act {
+  display: flex; align-items: center;
+  border-radius: var(--sr-radius); box-shadow: var(--sr-shadow);
+  padding: 28rpx 32rpx; margin-bottom: 16rpx;
 }
-.act--lead .act__body { flex: 1; margin-left: 22rpx; min-width: 0; }
-.act--lead .act__title { font-size: 34rpx; font-weight: 700; color: var(--sr-text-invert); }
-.act--lead .act__sub { display: block; font-size: 23rpx; color: rgba(247,243,234,0.78); margin-top: 6rpx; }
+.act:last-child { margin-bottom: 0; }
 .act__iconbox {
-  width: 88rpx; height: 88rpx; border-radius: 50%; flex-shrink: 0;
-  background: rgba(255,255,255,0.16);
+  width: 84rpx; height: 84rpx; border-radius: 50%; flex-shrink: 0;
   display: flex; align-items: center; justify-content: center;
 }
-.act__icon { width: 48rpx; height: 48rpx; filter: brightness(0) invert(1); }
+.act__icon { width: 44rpx; height: 44rpx; }
+.act__body { flex: 1; margin-left: 22rpx; min-width: 0; }
+.act__title { display: block; font-size: 32rpx; font-weight: 650; }
+.act__sub { display: block; font-size: 22rpx; margin-top: 6rpx;
+  overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 
-/* 次卡：白底，靠尺寸与位置区分层级，不再另配颜色 */
-.act--sub {
-  width: 48.5%; box-sizing: border-box; padding: 26rpx 24rpx;
-  background: var(--sr-bg-card);
-  display: flex; align-items: center;
-}
-.act__iconbox--sub { width: 64rpx; height: 64rpx; background: var(--sr-primary-weak); }
-.act__icon--sub { width: 36rpx; height: 36rpx; filter: none; }
-.act--sub .act__body { flex: 1; margin-left: 16rpx; min-width: 0; }
-.act__title--sub { display: block; font-size: 27rpx; font-weight: 600; color: var(--sr-text); }
-.act__sub--sub {
-  display: block; font-size: 19rpx; color: var(--sr-text-weak); margin-top: 4rpx;
-  overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
-}
+/* 主行动：品牌绿实心，全页唯一强调 */
+.act--lead { background: var(--sr-primary); }
+.act--lead .act__iconbox { background: rgba(255, 255, 255, 0.16); }
+.act--lead .act__icon { filter: brightness(0) invert(1); }
+.act--lead .act__title { color: var(--sr-text-invert); }
+.act--lead .act__sub { color: rgba(247, 243, 234, 0.78); }
+
+/* 次行动：白底，与页面其余卡片同调 */
+.act--sub { background: var(--sr-bg-card); }
+.act--sub .act__iconbox { background: var(--sr-primary-weak); }
+.act--sub .act__title { color: var(--sr-text); }
+.act--sub .act__sub { color: var(--sr-text-weak); }

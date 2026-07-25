@@ -20,10 +20,6 @@
 .lead__hist { font-size: 21rpx; color: var(--sr-text-weak); }
 
 .empty { text-align: center; font-size: 26rpx; color: var(--sr-text-weak); padding: 100rpx 0; }
-.state { display: flex; flex-direction: column; align-items: center; padding: 140rpx 40rpx; }
-.state__icon { width: 96rpx; height: 96rpx; opacity: 0.5; }
-.state__text { font-size: 30rpx; color: var(--sr-text); margin-top: 24rpx; font-weight: 700; }
-.state__sub { font-size: 23rpx; color: var(--sr-text-weak); margin-top: 12rpx; text-align: center; }
 
 .mask { position: fixed; inset: 0; z-index: 100; background: rgba(10,14,12,0.6); display: flex; align-items: flex-end; }
 .panel { width: 100%; box-sizing: border-box; background: var(--sr-bg-card);

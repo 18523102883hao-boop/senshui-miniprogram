@@ -34,33 +34,21 @@
   </view>
 
   <!-- 4. 三大主行动：购票 / 预约 / 补差价升级
-       层级靠排版而非配色：购票为唯一实心主卡，其余白底次卡 -->
+       结构统一的纵向列表，主次只靠「实心 vs 白底」区分——
+       尺寸差异过大会让次要项显得可有可无，也会因数量变化留出空位 -->
   <view class="acts" wx:if="{{primaryActions.length}}">
-    <block wx:for="{{primaryActions}}" wx:key="key">
-      <view wx:if="{{item.level === 'primary'}}"
-            class="act act--lead sr-touch" hover-class="sr-touch--cta" hover-stay-time="60"
-            data-key="{{item.key}}" bindtap="onSectionTap">
-        <view class="act__iconbox"><image class="act__icon" src="{{item.icon}}" mode="aspectFit" /></view>
-        <view class="act__body">
-          <text class="act__title">{{item.title}}</text>
-          <text class="act__sub">{{item.subtitle}}</text>
-        </view>
-        <sr-icon name="nav-forward" theme="light" size="sm" invert />
+    <view wx:for="{{primaryActions}}" wx:key="key"
+          class="act {{item.level === 'primary' ? 'act--lead' : 'act--sub'}} sr-touch"
+          hover-class="{{item.level === 'primary' ? 'sr-touch--cta' : 'sr-touch--press'}}" hover-stay-time="60"
+          data-key="{{item.key}}" bindtap="onSectionTap">
+      <view class="act__iconbox">
+        <image class="act__icon" src="{{item.icon}}" mode="aspectFit" />
       </view>
-    </block>
-
-    <view class="acts__row">
-      <block wx:for="{{primaryActions}}" wx:key="key">
-        <view wx:if="{{item.level !== 'primary'}}"
-              class="act act--sub sr-touch" hover-class="sr-touch--press" hover-stay-time="60"
-              data-key="{{item.key}}" bindtap="onSectionTap">
-          <view class="act__iconbox act__iconbox--sub"><image class="act__icon act__icon--sub" src="{{item.icon}}" mode="aspectFit" /></view>
-          <view class="act__body">
-            <text class="act__title act__title--sub">{{item.title}}</text>
-            <text class="act__sub act__sub--sub">{{item.subtitle}}</text>
-          </view>
-        </view>
-      </block>
+      <view class="act__body">
+        <text class="act__title">{{item.title}}</text>
+        <text class="act__sub">{{item.subtitle}}</text>
+      </view>
+      <sr-icon name="nav-forward" theme="light" size="sm" invert="{{item.level === 'primary'}}" />
     </view>
   </view>
 

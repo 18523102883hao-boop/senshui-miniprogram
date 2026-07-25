@@ -54,7 +54,7 @@
       <text class="ask-card__title">还有问题？找管家</text>
       <text class="ask-card__sub">标注「请咨询管家」的项目以现场为准</text>
     </view>
-    <text class="ask-card__arrow">›</text>
+    <sr-icon name="chevron-right" theme="light" size="sm" />
   </view>
 
   <view class="tail">园区信息以现场公示和工作人员说明为准。</view>

@@ -17,7 +17,7 @@
           <text class="ch__title">{{item.title}}</text>
           <text class="ch__desc">{{item.desc}}</text>
         </view>
-        <text class="ch__arrow">›</text>
+        <sr-icon name="chevron-right" theme="light" size="sm" />
       </button>
 
       <view wx:else class="ch sr-touch" hover-class="sr-touch--press" hover-stay-time="60"
@@ -27,7 +27,7 @@
           <text class="ch__title">{{item.title}}</text>
           <text class="ch__desc">{{item.desc}}</text>
         </view>
-        <text class="ch__arrow">›</text>
+        <sr-icon name="chevron-right" theme="light" size="sm" />
       </view>
     </block>
   </view>

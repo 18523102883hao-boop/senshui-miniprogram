@@ -16,11 +16,6 @@
 }
 
 /* 骨架屏：避免首屏白闪 */
-.skeleton__item {
-  height: 180rpx; border-radius: var(--sr-radius);
-  background: var(--sr-bg-sunken); margin-bottom: 20rpx;
-  opacity: 0.6;
-}
 
 .list { display: flex; flex-direction: column; }
 .item {
@@ -38,13 +33,5 @@
 }
 .item__arrow { width: 28rpx; height: 28rpx; opacity: 0.35; flex-shrink: 0; margin-left: 12rpx; }
 
-.state { display: flex; flex-direction: column; align-items: center; padding: 120rpx 40rpx; }
-.state__icon { width: 96rpx; height: 96rpx; opacity: 0.5; }
-.state__text { font-size: 28rpx; color: var(--sr-text); margin-top: 24rpx; font-weight: 600; }
-.state__sub { font-size: 23rpx; color: var(--sr-text-weak); margin-top: 10rpx; }
-.state__btn {
-  margin-top: 32rpx; padding: 18rpx 56rpx; border-radius: 40rpx;
-  background: var(--sr-primary); color: #fff; font-size: 26rpx; font-weight: 600;
-}
 
 .more { text-align: center; font-size: 23rpx; color: var(--sr-text-weak); padding: 32rpx 0 16rpx; }

@@ -1,3 +1,28 @@
-.soon { padding: 160rpx 40rpx; display: flex; flex-direction: column; align-items: center; }
-.soon__title { font-size: 34rpx; font-weight: 700; color: var(--sr-primary); }
-.soon__desc { font-size: 26rpx; color: var(--sr-text-sub); margin-top: 16rpx; text-align: center; }
+.tabs { display: flex; margin-bottom: var(--sr-gap-3); }
+.tab { flex: 1; text-align: center; padding: 16rpx 0; font-size: 26rpx; color: var(--sr-text-sub); }
+.tab--on { color: var(--sr-primary); font-weight: 700; border-bottom: 4rpx solid var(--sr-primary); }
+
+.ord { background: var(--sr-bg-card); border-radius: var(--sr-radius); box-shadow: var(--sr-shadow);
+  padding: 26rpx 32rpx; margin-bottom: 20rpx; }
+.ord__head { display: flex; align-items: center; justify-content: space-between; }
+.ord__type { font-size: 24rpx; color: var(--sr-primary); background: var(--sr-primary-weak);
+  padding: 6rpx 18rpx; border-radius: var(--sr-radius-sm); }
+.ord__status { font-size: 23rpx; color: var(--sr-text-sub); }
+.ord__status--pending { color: var(--sr-seal); font-weight: 600; }
+.ord__status--refunded, .ord__status--refunding { color: var(--sr-text-weak); }
+
+.ord__body { margin-top: 18rpx; }
+.ord__title { display: block; font-size: 30rpx; font-weight: 650; color: var(--sr-text); }
+.ord__sub { display: block; font-size: 23rpx; color: var(--sr-text-sub); margin-top: 6rpx; }
+
+.ord__foot { display: flex; align-items: center; justify-content: space-between; margin-top: 20rpx; }
+.ord__price { display: flex; align-items: baseline; }
+.ord__cur { font-size: 22rpx; color: var(--sr-text); font-weight: 600; }
+.ord__amount { font-size: 38rpx; font-weight: 800; color: var(--sr-text); line-height: 1; }
+.ord__acts { display: flex; }
+.ord__btn { font-size: 24rpx; font-weight: 600; color: var(--sr-text-sub);
+  border: 2rpx solid var(--sr-border); border-radius: 32rpx; padding: 12rpx 28rpx; margin-left: 16rpx; }
+.ord__btn--pay { background: var(--sr-primary); color: var(--sr-text-invert); border-color: var(--sr-primary); }
+
+.ord__no { display: block; font-size: 20rpx; color: var(--sr-text-weak); margin-top: 16rpx;
+  padding-top: 16rpx; border-top: 1rpx solid var(--sr-line); }

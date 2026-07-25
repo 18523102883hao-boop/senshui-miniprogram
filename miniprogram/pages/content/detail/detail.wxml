@@ -3,10 +3,7 @@
     <text>当前为离线缓存内容，联网后可重新加载</text>
   </view>
 
-  <view class="skeleton" wx:if="{{loading}}">
-    <view class="skeleton__title"></view>
-    <view class="skeleton__line" wx:for="{{[1,2,3,4]}}" wx:key="*this"></view>
-  </view>
+  <sr-skeleton wx:if="{{loading}}" type="card" rows="3" />
 
   <block wx:if="{{article && !loading}}">
     <!-- 结构化区块渲染：类型白名单在 detail.js，未知类型已被丢弃 -->
@@ -87,10 +84,5 @@
     <view class="tail">内容由森水长河运营维护，实际以现场公示为准。</view>
   </block>
 
-  <view class="state" wx:if="{{hasError && !loading}}">
-    <image class="state__icon" src="/assets/icons/status/status-warning.png" mode="aspectFit" />
-    <text class="state__text">内容加载失败</text>
-    <text class="state__sub">检查网络后可重试</text>
-    <view class="state__btn sr-touch" hover-class="sr-touch--cta" hover-stay-time="60" bindtap="onRetry">重新加载</view>
-  </view>
+  <sr-error-state wx:if="{{hasError && !loading}}" bind:retry="onRetry" />
 </view>

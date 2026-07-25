@@ -1,7 +1,5 @@
 <view class="sr-page co-page sr-enter">
-  <view class="skeleton" wx:if="{{loading}}">
-    <view class="skeleton__line" wx:for="{{[1,2,3]}}" wx:key="*this"></view>
-  </view>
+  <sr-skeleton wx:if="{{loading}}" type="card" rows="3" />
 
   <block wx:if="{{product && !loading}}">
     <!-- 商品摘要 -->
@@ -22,9 +20,9 @@
       <view class="row">
         <text class="row__label">购买数量</text>
         <view class="stepper">
-          <view class="stepper__btn {{quantity <= 1 ? 'stepper__btn--off' : ''}}" bindtap="onMinus">−</view>
+          <view class="stepper__btn {{quantity <= 1 ? 'stepper__btn--off' : ''}}" bindtap="onMinus"><sr-icon name="shop-minus" theme="light" size="sm" /></view>
           <text class="stepper__val sr-num">{{quantity}}</text>
-          <view class="stepper__btn {{quantity >= maxQuantity ? 'stepper__btn--off' : ''}}" bindtap="onPlus">+</view>
+          <view class="stepper__btn {{quantity >= maxQuantity ? 'stepper__btn--off' : ''}}" bindtap="onPlus"><sr-icon name="shop-add" theme="light" size="sm" /></view>
         </view>
       </view>
       <text class="row__hint">每单限购 {{maxQuantity}} 份</text>
@@ -62,11 +60,7 @@
     </view>
   </block>
 
-  <view class="state" wx:if="{{hasError && !loading}}">
-    <image class="state__icon" src="/assets/icons/status/status-warning.png" mode="aspectFit" />
-    <text class="state__text">商品加载失败</text>
-    <view class="state__btn" bindtap="onRetry">重新加载</view>
-  </view>
+  <sr-error-state wx:if="{{hasError && !loading}}" bind:retry="onRetry" />
 
   <!-- 底部提交栏 -->
   <view class="bar" wx:if="{{product && !loading}}">

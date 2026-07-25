@@ -352,3 +352,26 @@ new → contacted → qualified → proposal → won
 **图片**：最多 6 张，先传云存储再提交；**图片上传失败不阻断文字提交**（用户诉求比截图重要）。
 
 **建议索引**：`feedback` 集合 `_openid + createdAt`、`status + createdAt`
+
+## 17. 首页模块改动后必须同步云端（重要）
+
+首页模块在**三处**定义，改动后必须全部同步，否则新模块不会显示：
+
+| 位置 | 作用 |
+|---|---|
+| `cloudfunctions/seedPortalContent/seed-data.js` | 种子数据（单一真源）|
+| `cloudfunctions/getHomePortal/portal-core.js` | 云函数兜底（云端无配置时用）|
+| `miniprogram/pages/index/index.js` 的 `LOCAL_SECTIONS` | 前端兜底（弱网/云函数未部署时用）|
+| **云数据库 `home_configs`** | **实际生效的配置** ← 最容易漏 |
+
+**云端有配置时会覆盖所有兜底**，所以只改代码不改数据库，新模块不会出现。
+
+改完模块后跑：
+
+```bash
+export TCB_API_KEY='eyJ...'
+node scripts/tcb-api.mjs sync-home
+```
+
+> 2026-07-25 补差价升级入口就是因为漏了这步而“消失”的——本地三处都加了，云端还是旧的 15 个模块。
+> 前三处的一致性由 `tests/uiux/home-actions.test.js` 锁定；云端只能靠这条命令同步。

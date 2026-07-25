@@ -1,9 +1,7 @@
 <view class="sr-page sr-enter">
-  <view class="state" wx:if="{{checked && !allowed}}">
-    <image class="state__icon" src="/assets/icons/status/status-warning.png" mode="aspectFit" />
-    <text class="state__text">无线索处理权限</text>
-    <text class="state__sub">请用前台或管理员身份在「员工模式」登记</text>
-  </view>
+  <sr-empty-state wx:if="{{checked && !allowed}}"
+                  icon="help" title="无线索处理权限"
+                  desc="请用前台或管理员身份在「员工模式」登记" />
 
   <block wx:if="{{allowed}}">
     <scroll-view class="filters" scroll-x enable-flex show-scrollbar="{{false}}">

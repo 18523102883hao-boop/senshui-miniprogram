@@ -1,10 +1,7 @@
 <view class="sr-page sr-enter">
   <block wx:if="{{checked && !allowed}}">
-    <view class="state">
-      <image class="state__icon" src="/assets/icons/status/status-warning.png" mode="aspectFit" />
-      <text class="state__text">无检票权限</text>
-      <text class="state__sub">请用前台 / 溪降 / 管理员身份在「员工模式」登记</text>
-    </view>
+    <sr-empty-state icon="help" title="无检票权限"
+                    desc="请用前台 / 溪降 / 管理员身份在「员工模式」登记" />
   </block>
 
   <block wx:if="{{allowed}}">

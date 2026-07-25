@@ -13,9 +13,7 @@
   </view>
 
   <!-- 骨架 / 加载 -->
-  <view class="skeleton" wx:if="{{loading}}">
-    <view class="skeleton__item" wx:for="{{[1,2,3]}}" wx:key="*this"></view>
-  </view>
+  <sr-skeleton wx:if="{{loading}}" type="card" rows="3" />
 
   <!-- 列表 -->
   <view class="list" wx:if="{{!loading && list.length}}">
@@ -30,20 +28,12 @@
     </view>
   </view>
 
-  <!-- 空态 -->
-  <view class="state" wx:if="{{isEmpty && !loading && !hasError}}">
-    <image class="state__icon" src="/assets/icons/forest/map-info.png" mode="aspectFit" />
-    <text class="state__text">这个分类还没有内容</text>
-    <text class="state__sub">换个分类看看，或稍后再来</text>
-  </view>
+  <sr-empty-state wx:if="{{isEmpty && !loading && !hasError}}"
+                  icon="map-info" title="这个分类还没有内容"
+                  desc="换个分类看看，或稍后再来" />
 
   <!-- 错误态 -->
-  <view class="state" wx:if="{{hasError && !loading}}">
-    <image class="state__icon" src="/assets/icons/status/status-warning.png" mode="aspectFit" />
-    <text class="state__text">内容加载失败</text>
-    <text class="state__sub">检查网络后可重试</text>
-    <view class="state__btn sr-touch" hover-class="sr-touch--cta" hover-stay-time="60" bindtap="onRetry">重新加载</view>
-  </view>
+  <sr-error-state wx:if="{{hasError && !loading}}" bind:retry="onRetry" />
 
   <!-- 加载更多 -->
   <view class="more" wx:if="{{loadingMore}}">加载中…</view>
