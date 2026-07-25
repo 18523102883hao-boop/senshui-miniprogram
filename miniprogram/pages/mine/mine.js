@@ -25,7 +25,8 @@ Page({
       { key: 'ling', title: '长河令', sub: '', icon: '/assets/icons/forest/activity-token.png' },
       { key: 'lingcode', title: '我的令码', sub: '', icon: '/assets/icons/forest/activity-scan.png' },
       { key: 'lead', title: '我的咨询', sub: '', icon: '/assets/icons/forest/edit.png' },
-      { key: 'concierge', title: '联系管家', sub: '', icon: '/assets/icons/forest/customer-service.png' }
+      { key: 'concierge', title: '联系管家', sub: '', icon: '/assets/icons/forest/customer-service.png' },
+      { key: 'feedback', title: '投诉建议 · 失物招领', sub: '', icon: '/assets/icons/forest/help.png' }
     ]
   },
 
@@ -130,7 +131,8 @@ Page({
       coupon: '/pages/coupon/coupon',
       lingcode: '/pages/ling/mycode/mycode',
       lead: '/pages/service/mine/mine',
-      concierge: '/pages/concierge/concierge'
+      concierge: '/pages/concierge/concierge',
+      feedback: '/pages/feedback/list/list'
     }
     const url = ROUTES[key]
     if (!url) return

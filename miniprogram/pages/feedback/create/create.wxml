@@ -1,0 +1,75 @@
+<view class="sr-page fb-page sr-enter">
+  <!-- 成功态 -->
+  <view class="done" wx:if="{{submitted}}">
+    <sr-icon name="status-success" theme="status" size="96" />
+    <text class="done__title">已提交</text>
+    <text class="done__msg">我们会尽快核实处理，处理进展可在「我的反馈」查看。</text>
+    <view class="done__btn" bindtap="goList">查看我的反馈</view>
+    <view class="done__btn done__btn--ghost" bindtap="goHome">返回首页</view>
+    <view class="done__call" bindtap="onCallFront">
+      <sr-icon name="mine-phone" theme="light" size="sm" />
+      <text>紧急问题可直接致电前台 {{frontPhone}}</text>
+    </view>
+  </view>
+
+  <block wx:else>
+    <!-- 类型 -->
+    <view class="sr-card">
+      <text class="label">反馈类型</text>
+      <view class="types">
+        <view class="type {{form.type === item.key ? 'type--on' : ''}}"
+              wx:for="{{types}}" wx:key="key" data-key="{{item.key}}" bindtap="onTypeTap">{{item.title}}</view>
+      </view>
+    </view>
+
+    <!-- 内容 -->
+    <view class="sr-card">
+      <text class="label">具体内容<text class="req">*</text></text>
+      <textarea class="ta" placeholder="{{placeholder}}" maxlength="500"
+                value="{{form.content}}" bindinput="onContentInput" />
+      <text class="counter sr-num">{{form.content.length}}/500</text>
+    </view>
+
+    <!-- 图片 -->
+    <view class="sr-card">
+      <text class="label">图片（选填，最多 {{maxImages}} 张）</text>
+      <view class="imgs">
+        <view class="img" wx:for="{{form.images}}" wx:key="*this">
+          <image class="img__pic" src="{{item}}" mode="aspectFill" />
+          <view class="img__del" data-index="{{index}}" bindtap="onRemoveImage">
+            <sr-icon name="close" theme="light" size="sm" invert />
+          </view>
+        </view>
+        <view class="img img--add" wx:if="{{form.images.length < maxImages}}" bindtap="onChooseImage">
+          <sr-icon name="shop-add" theme="light" size="md" />
+        </view>
+      </view>
+    </view>
+
+    <!-- 联系方式 -->
+    <view class="sr-card">
+      <view class="check" bindtap="onAllowCallToggle">
+        <view class="check__box {{form.allowCall ? 'check__box--on' : ''}}">
+          <sr-icon wx:if="{{form.allowCall}}" name="status-success" theme="status" size="sm" />
+        </view>
+        <text class="check__text">可以电话联系我了解详情</text>
+      </view>
+      <view class="row" wx:if="{{form.allowCall}}">
+        <text class="row__label">手机号</text>
+        <input class="row__input" type="number" maxlength="11" placeholder="便于核实处理"
+               value="{{form.phone}}" bindinput="onPhoneInput" />
+      </view>
+    </view>
+
+    <view class="urgent" bindtap="onCallFront">
+      <sr-icon name="mine-phone" theme="light" size="sm" />
+      <text>紧急问题请直接致电前台 {{frontPhone}}</text>
+    </view>
+
+    <view class="bar">
+      <view class="bar__cta {{submitting ? 'bar__cta--off' : ''}}" bindtap="onSubmit">
+        {{submitting ? '提交中…' : '提交'}}
+      </view>
+    </view>
+  </block>
+</view>

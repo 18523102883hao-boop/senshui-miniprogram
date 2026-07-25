@@ -1,0 +1,25 @@
+<view class="sr-page sr-enter">
+  <sr-skeleton wx:if="{{loading}}" type="card" rows="3" />
+
+  <block wx:if="{{!loading && list.length}}">
+    <view class="fb" wx:for="{{list}}" wx:key="feedbackId">
+      <view class="fb__head">
+        <text class="fb__type">{{typeText[item.type] || '反馈'}}</text>
+        <text class="fb__status fb__status--{{item.status}}">{{statusText[item.status]}}</text>
+      </view>
+      <text class="fb__content">{{item.content}}</text>
+      <view class="fb__reply" wx:if="{{item.reply}}">
+        <text class="fb__reply-label">园区回复</text>
+        <text class="fb__reply-text">{{item.reply}}</text>
+      </view>
+    </view>
+    <view class="fb__new sr-touch" hover-class="sr-touch--cta" hover-stay-time="60" bindtap="goCreate">再提交一条</view>
+  </block>
+
+  <sr-empty-state wx:if="{{isEmpty && !loading && !hasError}}"
+                  icon="edit" title="还没有提交过反馈"
+                  desc="投诉、建议、表扬与失物招领都可以在这里提交"
+                  actionText="我要反馈" bind:action="goCreate" />
+
+  <sr-error-state wx:if="{{hasError && !loading}}" bind:retry="onRetry" />
+</view>
