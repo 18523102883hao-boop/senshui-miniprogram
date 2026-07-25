@@ -1,9 +1,16 @@
 <view class="sr-page sr-enter">
   <view class="head">
-    <text class="head__title">预约到园</text>
-    <text class="head__sub">团队到访请提前预约，散客购票后可直接入园</text>
+    <text class="head__title">团队到园预约</text>
+    <text class="head__sub">公司团建、学校研学、亲友聚会都可安排。加管家微信或直接来电，沟通更快更准。</text>
   </view>
 
+  <!-- 主行动：加企微 / 打电话（业主决策：优于让客户填表） -->
+  <sr-contact-card scene="{{contactScene}}"
+                   title="加管家微信，直接沟通"
+                   desc="人数、日期、餐食与活动安排，一次说清" />
+
+  <!-- 次要入口：自助表单与我的预约 -->
+  <sr-section-header title="也可以自助操作" />
   <view class="ent sr-touch" hover-class="sr-touch--card" hover-stay-time="60"
         wx:for="{{entries}}" wx:key="key" data-key="{{item.key}}" bindtap="onEntryTap">
     <image class="ent__icon" src="{{item.icon}}" mode="aspectFit" />
@@ -11,7 +18,7 @@
       <text class="ent__title">{{item.title}}</text>
       <text class="ent__desc">{{item.desc}}</text>
     </view>
-    <text class="ent__arrow">›</text>
+    <sr-icon name="chevron-right" theme="light" size="sm" />
   </view>
 
   <view class="tail">预约结果以管家确认为准，确认前请勿安排车辆与行程。</view>

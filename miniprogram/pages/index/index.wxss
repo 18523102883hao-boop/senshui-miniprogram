@@ -48,20 +48,6 @@
 .hero__status--on { background: rgba(54, 182, 106, 0.18); color: #8FE0AE; }
 .hero__status-icon { width: 28rpx; height: 28rpx; filter: brightness(0) invert(1); opacity: 0.85; }
 
-/* ===== 主转化卡：购票 / 预约 ===== */
-.primary { display: flex; flex-direction: column; gap: 20rpx; margin-bottom: 32rpx; }
-.primary__card {
-  display: flex; align-items: center;
-  background: var(--sr-bg-card); border-radius: var(--sr-radius);
-  box-shadow: var(--sr-shadow); padding: 32rpx 32rpx;
-  border-left: 8rpx solid var(--sr-seal);
-}
-.primary__card:nth-child(2) { border-left-color: var(--sr-primary); }
-.primary__icon { width: 64rpx; height: 64rpx; flex-shrink: 0; }
-.primary__body { flex: 1; display: flex; flex-direction: column; margin-left: 24rpx; }
-.primary__title { font-size: 32rpx; font-weight: 700; color: var(--sr-text); }
-.primary__sub { font-size: 23rpx; color: var(--sr-text-sub); margin-top: 6rpx; }
-.primary__arrow { font-size: 40rpx; color: var(--sr-text-weak); line-height: 1; }
 
 /* ===== 用户状态卡 ===== */
 .status-card {
@@ -228,3 +214,41 @@
 .newbie__body { display: flex; align-items: center; justify-content: space-between; }
 .newbie__title { flex: 1; font-size: 27rpx; font-weight: 600; color: #4A2F00; line-height: 1.5; margin-right: 16rpx; }
 .newbie__cta { font-size: 24rpx; font-weight: 700; color: #4A2F00; flex-shrink: 0; }
+
+/* ===== 三大主行动：购票 / 预约 / 补差价升级 =====
+   业主指定的高频核心功能，需一眼可辨。用色语义区分：
+     coral  交易（买票）· forest 服务（预约）· gold 增值（升级）
+   主卡大、次卡并排，避免三个等大导致没有重点 */
+.acts { margin-bottom: var(--sr-gap-5); }
+.acts__row { display: flex; justify-content: space-between; margin-top: 20rpx; }
+
+.act { position: relative; overflow: hidden; border-radius: var(--sr-radius); box-shadow: var(--sr-shadow); }
+.act__glow { position: absolute; right: -60rpx; top: -80rpx; width: 260rpx; height: 260rpx;
+  border-radius: 50%; background: radial-gradient(circle, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0) 70%);
+  pointer-events: none; }
+
+/* 主卡：横向大卡 */
+.act--lead { display: flex; align-items: center; padding: 36rpx 32rpx; }
+.act--lead .act__body { flex: 1; margin-left: 24rpx; min-width: 0; }
+.act__iconbox { width: 96rpx; height: 96rpx; border-radius: 50%; background: rgba(255,255,255,0.18);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.act__icon { width: 52rpx; height: 52rpx; filter: brightness(0) invert(1); }
+.act__titlerow { display: flex; align-items: center; }
+.act__title { font-size: 34rpx; font-weight: 700; color: #F7F3EA; }
+.act__badge { font-size: 19rpx; font-weight: 700; color: rgba(255,255,255,0.92);
+  background: rgba(255,255,255,0.22); padding: 4rpx 14rpx; border-radius: 8rpx; margin-left: 14rpx; }
+.act__sub { display: block; font-size: 23rpx; color: rgba(247,243,234,0.82); margin-top: 8rpx; }
+
+/* 次卡：两个并排，竖排内容 */
+.act--sub { width: 48.5%; box-sizing: border-box; padding: 30rpx 26rpx 28rpx;
+  display: flex; flex-direction: column; align-items: flex-start; }
+.act__iconbox--sm { width: 76rpx; height: 76rpx; }
+.act__iconbox--sm .act__icon { width: 42rpx; height: 42rpx; }
+.act__title--sm { font-size: 30rpx; margin-top: 18rpx; }
+.act__sub--sm { font-size: 20rpx; margin-top: 6rpx; line-height: 1.4;
+  overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+
+/* 三种配色语义 */
+.act--coral { background: linear-gradient(135deg, #F07055 0%, #D8543A 100%); }
+.act--forest { background: linear-gradient(135deg, var(--sr-primary) 0%, var(--sr-primary-deep) 100%); }
+.act--gold { background: linear-gradient(135deg, #D5A43A 0%, #B8862A 100%); }

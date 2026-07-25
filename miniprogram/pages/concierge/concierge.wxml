@@ -32,8 +32,9 @@
     </block>
   </view>
 
-  <!-- 企业微信管家二维码（env.qrcodes.concierge 配置后自动出现）-->
-  <sr-qrcode scene="concierge" title="添加园区管家" />
+  <!-- 企微 + 电话统一联系卡（二维码未配置或加载失败会自动降级为只留电话）-->
+  <sr-contact-card scene="concierge" title="添加园区管家"
+                   desc="行程、餐食、活动与特殊需求，加微信一次说清" />
 
   <view class="tail">如遇紧急情况请直接拨打前台电话，或就近联系园区工作人员。</view>
 </view>

@@ -80,7 +80,8 @@
     "sr-error-state": "/components/ui/sr-error-state/index",
     "sr-skeleton": "/components/ui/sr-skeleton/index",
     "sr-section-header": "/components/ui/sr-section-header/index",
-    "sr-qrcode": "/components/ui/sr-qrcode/index"
+    "sr-qrcode": "/components/ui/sr-qrcode/index",
+    "sr-contact-card": "/components/ui/sr-contact-card/index"
   },
   "sitemapLocation": "sitemap.json",
   "style": "v2",

@@ -17,6 +17,7 @@ const LOCAL_SECTIONS = [
   { key: 'quick_concierge', type: 'quick_entry', title: '管家服务', subtitle: '到园前后有人对接', route: '/pages/concierge/concierge', params: {}, visible: true, sort: 50 },
   { key: 'ticket_entry', type: 'primary_action', title: '门票购买', subtitle: '在线选票 · 入园扫码', route: '/pages/ticket/ticket', params: {}, visible: true, sort: 60 },
   { key: 'reservation_entry', type: 'primary_action', title: '立即预约', subtitle: '团队到园 · 研学 · 亲友聚会', route: '/pages/reservation/entry/entry', params: {}, visible: true, sort: 70 },
+  { key: 'upgrade_entry', type: 'primary_action', title: '补差价升级', subtitle: '单项票升套票 · 现场办理', route: '/pages/upgrade-info/upgrade-info', params: {}, visible: true, sort: 75 },
   { key: 'user_status', type: 'user_status', title: '我的行程', subtitle: '未使用门票与即将到来的预约', route: '', params: {}, visible: true, sort: 80 },
   { key: 'service_birthday', type: 'service_card', title: '生日宴请', subtitle: '在山水间过一个生日', route: '/pages/service/detail/detail', params: { type: 'birthday' }, visible: true, sort: 90 },
   { key: 'service_teambuilding', type: 'service_card', title: '公司团建', subtitle: '定制行程与场地', route: '/pages/service/detail/detail', params: { type: 'teambuilding' }, visible: true, sort: 100 },
@@ -35,11 +36,23 @@ const SECTION_ICONS = {
   quick_concierge: '/assets/icons/forest/customer-service.png',
   ticket_entry: '/assets/icons/forest/home-ticket.png',
   reservation_entry: '/assets/icons/forest/home-reservation.png',
+  upgrade_entry: '/assets/icons/forest/home-upgrade.png',
   service_birthday: '/assets/icons/forest/activity-reward.png',
   service_teambuilding: '/assets/icons/forest/booking-people.png',
   service_brand: '/assets/icons/forest/activity-badge.png',
   member_entry: '/assets/icons/forest/home-member.png'
 }
+
+// 三大主行动的视觉标识（业主要求：购票/预约/补差价要一眼可辨且醒目）
+// accent 决定配色语义：交易=珊瑚，服务=森林绿，增值=山野金
+// level 决定尺寸：primary 大卡（首屏主行动），secondary 并排次卡
+const ACTION_STYLE = {
+  ticket_entry: { accent: 'coral', level: 'primary', badge: '在线购买' },
+  reservation_entry: { accent: 'forest', level: 'secondary', badge: '' },
+  upgrade_entry: { accent: 'gold', level: 'secondary', badge: '' }
+}
+// 云端新增未知主行动时的兜底样式，保证不会渲染出没有配色的卡片
+const ACTION_STYLE_FALLBACK = { accent: 'forest', level: 'secondary', badge: '' }
 
 // tabBar 页必须用 switchTab，navigateTo 会直接失败
 const TAB_PAGES = ['/pages/index/index', '/pages/park/park', '/pages/ling/ling', '/pages/mine/mine']
@@ -69,12 +82,16 @@ function groupSections(sections) {
   const sectionMap = {}
   list.forEach((s) => { sectionMap[s.key] = s })
 
+  // 主行动附加视觉标识；云端下发的也会被补齐，避免缺样式
+  const primaryActions = byType('primary_action')
+    .map((s) => Object.assign({}, s, ACTION_STYLE[s.key] || ACTION_STYLE_FALLBACK))
+
   return {
     sections: list,
     sectionMap,
     hero: byType('hero')[0] || null,
     quickEntries: byType('quick_entry'),
-    primaryActions: byType('primary_action'),
+    primaryActions,
     serviceCards: byType('service_card'),
     memberSection: byType('member')[0] || null,
     footerSection: byType('footer')[0] || null,

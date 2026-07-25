@@ -1,12 +1,15 @@
-// 预约中心入口（功能扩展 Task 9）
-// PRD §9.1：聚合团队预约与溪降场次预约；溪降沿用既有 booking 页面。
+// 预约中心（Vibe UI v2.0 · 企微直连优先）
+// 业主 2026-07-25 决策：团队到园这类需求，加企微/打电话比让客户填表更高效准确。
+// 因此首屏是「联系管家」，自助表单退为次要入口（能力保留，不删）。
+const env = require('../../../utils/../env.js')
 const { haptic } = require('../../../utils/haptics.js')
+const { makePhoneCall } = require('../../../utils/util.js')
 
 const ENTRIES = [
   {
     key: 'team',
-    title: '团队 / 多人到园预约',
-    desc: '公司团建、学校研学、亲友聚会',
+    title: '自助提交预约需求',
+    desc: '填写日期、人数与联系方式，管家会回电确认',
     icon: '/assets/icons/forest/booking-people.png',
     route: '/pages/reservation/create/create'
   },
@@ -21,7 +24,16 @@ const ENTRIES = [
 
 Page({
   data: {
+    // 企微直连优先（业主决策）
+    contactFirst: true,
+    contactScene: 'concierge',
+    phone: env.frontDeskPhone,
     entries: ENTRIES
+  },
+
+  onCall() {
+    haptic('light')
+    makePhoneCall(this.data.phone)
   },
 
   onEntryTap(e) {
@@ -36,6 +48,6 @@ Page({
   },
 
   onShareAppMessage() {
-    return { title: '森水长河 · 预约到园', path: '/pages/reservation/entry/entry' }
+    return { title: '森水长河 · 团队预约', path: '/pages/reservation/entry/entry' }
   }
 })

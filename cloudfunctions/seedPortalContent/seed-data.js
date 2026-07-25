@@ -76,6 +76,16 @@ const DEFAULT_SECTIONS = [
     sort: 70
   },
   {
+    key: 'upgrade_entry',
+    type: 'primary_action',
+    title: '补差价升级',
+    subtitle: '单项票升套票 · 现场办理',
+    route: '/pages/upgrade-info/upgrade-info',
+    params: {},
+    visible: true,
+    sort: 75
+  },
+  {
     key: 'user_status',
     type: 'user_status',
     title: '我的行程',

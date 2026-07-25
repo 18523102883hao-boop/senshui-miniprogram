@@ -1,0 +1,24 @@
+<view class="cc cc--{{theme}}">
+  <text class="cc__title">{{title}}</text>
+  <text class="cc__desc">{{desc}}</text>
+
+  <!-- 二维码：未配置或加载失败都不渲染，避免裂图 -->
+  <view class="cc__qrbox" wx:if="{{qrEnabled}}">
+    <image class="cc__qr" src="{{qrUrl}}" mode="aspectFit"
+           bindtap="onPreview" binderror="onQrError" show-menu-by-longpress />
+    <text class="cc__qrtip">长按识别 · 点击放大</text>
+    <text class="cc__fallback" wx:if="{{qrFallback}}">由园区管家统一对接</text>
+  </view>
+
+  <!-- 电话始终可用（无障碍替代路径） -->
+  <view class="cc__call sr-touch" hover-class="sr-touch--cta" hover-stay-time="60" bindtap="onCall">
+    <sr-icon name="mine-phone" theme="light" size="md" invert />
+    <view class="cc__callbody">
+      <text class="cc__calltext">致电预约 · {{phone}}</text>
+      <text class="cc__hours" wx:if="{{serviceHours}}">{{serviceHours}}</text>
+    </view>
+  </view>
+
+  <!-- 表单降为次要入口，传了 formRoute 才出现 -->
+  <text class="cc__form" wx:if="{{formRoute}}" bindtap="onForm">{{formText}} ›</text>
+</view>

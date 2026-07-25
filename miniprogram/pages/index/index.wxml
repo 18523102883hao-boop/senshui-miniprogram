@@ -45,16 +45,39 @@
     </view>
   </view>
 
-  <!-- 4. 两个主转化卡：购票 / 预约 -->
-  <view class="primary" wx:if="{{primaryActions.length}}">
-    <view class="primary__card sr-touch" hover-class="sr-touch--cta" hover-stay-time="60"
-          wx:for="{{primaryActions}}" wx:key="key" data-key="{{item.key}}" bindtap="onSectionTap">
-      <image class="primary__icon" src="{{item.icon}}" mode="aspectFit" />
-      <view class="primary__body">
-        <text class="primary__title">{{item.title}}</text>
-        <text class="primary__sub">{{item.subtitle}}</text>
+  <!-- 4. 三大主行动：购票 / 预约 / 补差价升级（业主指定的高频核心功能） -->
+  <view class="acts" wx:if="{{primaryActions.length}}">
+    <block wx:for="{{primaryActions}}" wx:key="key">
+      <!-- 主卡：大尺寸，首屏第一转化 -->
+      <view wx:if="{{item.level === 'primary'}}"
+            class="act act--lead act--{{item.accent}} sr-touch"
+            hover-class="sr-touch--cta" hover-stay-time="60"
+            data-key="{{item.key}}" bindtap="onSectionTap">
+        <view class="act__glow"></view>
+        <view class="act__iconbox"><image class="act__icon" src="{{item.icon}}" mode="aspectFit" /></view>
+        <view class="act__body">
+          <view class="act__titlerow">
+            <text class="act__title">{{item.title}}</text>
+            <text class="act__badge" wx:if="{{item.badge}}">{{item.badge}}</text>
+          </view>
+          <text class="act__sub">{{item.subtitle}}</text>
+        </view>
+        <sr-icon name="nav-forward" theme="light" size="sm" invert />
       </view>
-      <text class="primary__arrow">›</text>
+    </block>
+
+    <!-- 次卡：两个并排 -->
+    <view class="acts__row">
+      <block wx:for="{{primaryActions}}" wx:key="key">
+        <view wx:if="{{item.level !== 'primary'}}"
+              class="act act--sub act--{{item.accent}} sr-touch"
+              hover-class="sr-touch--cta" hover-stay-time="60"
+              data-key="{{item.key}}" bindtap="onSectionTap">
+          <view class="act__iconbox act__iconbox--sm"><image class="act__icon" src="{{item.icon}}" mode="aspectFit" /></view>
+          <text class="act__title act__title--sm">{{item.title}}</text>
+          <text class="act__sub act__sub--sm">{{item.subtitle}}</text>
+        </view>
+      </block>
     </view>
   </view>
 

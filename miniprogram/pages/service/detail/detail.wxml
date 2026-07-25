@@ -35,16 +35,23 @@
     </view>
   </block>
 
-  <!-- 对应服务的企业微信顾问二维码（未配置则整块不渲染）-->
-  <sr-qrcode scene="{{qrScene}}" desc="长按识别添加顾问，沟通具体方案与档期" />
+  <!-- 主行动：加顾问企微 + 电话；表单作为次要选项（业主决策：少让客户填）-->
+  <sr-contact-card scene="{{qrScene}}"
+                   title="加顾问微信，说清需求"
+                   desc="方案、价格与档期一次沟通到位，比填表更快"
+                   formRoute="/pages/service/lead/lead?type={{type}}"
+                   formText="不方便加微信？填写需求表单" />
 
   <view class="tail">具体方案、价格与档期以管家沟通确认为准。</view>
 
+  <!-- 底部栏与页面主行动保持一致：电话 + 加顾问微信（不再以填表为主 CTA） -->
   <view class="bar">
-    <view class="bar__call" bindtap="onCallFront">
-      <image class="bar__icon" src="/assets/icons/forest/customer-service.png" mode="aspectFit" />
-      <text>电话</text>
+    <view class="bar__call sr-touch" hover-class="sr-touch--press" hover-stay-time="60" bindtap="onCallFront">
+      <sr-icon name="mine-phone" theme="light" size="md" />
+      <text>致电</text>
     </view>
-    <view class="bar__cta" bindtap="goLead">提交需求</view>
+    <view class="bar__cta sr-touch" hover-class="sr-touch--cta" hover-stay-time="60" bindtap="onContact">
+      加顾问微信
+    </view>
   </view>
 </view>

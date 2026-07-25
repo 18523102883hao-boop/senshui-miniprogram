@@ -4,6 +4,7 @@ const request = require('../../../utils/request.js')
 const env = require('../../../env.js')
 const { haptic } = require('../../../utils/haptics.js')
 const { makePhoneCall } = require('../../../utils/util.js')
+const { getQrcode } = require('../../../utils/qrcode.js')
 
 const BLOCK_TYPES = ['hero', 'text', 'image', 'gallery', 'list', 'notice', 'feature_grid', 'service_list', 'timeline', 'faq', 'cta']
 
@@ -45,6 +46,8 @@ Page({
     loading: false,
     hasError: false,
     qrScene: 'concierge',
+    // 企微直连优先（业主 2026-07-25）：加顾问微信比填表更高效
+    contactFirst: true,
     frontPhone: env.frontDeskPhone
   },
 
@@ -81,6 +84,14 @@ Page({
         // 云端没配文章不算错误，本地兜底内容已经可读
         this.setData({ loading: false, hasError: false, blocks: [] })
       })
+  },
+
+  // 底部主 CTA：滚到联系卡；二维码还没配时直接拨号，避免滚过去是空的
+  onContact() {
+    haptic('light')
+    const qr = getQrcode(this.data.qrScene)
+    if (!qr.enabled) return makePhoneCall(this.data.frontPhone)
+    wx.pageScrollTo({ selector: '.cc', duration: 300, fail: () => {} })
   },
 
   goLead() {

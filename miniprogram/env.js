@@ -42,11 +42,13 @@ module.exports = {
   // 取用统一走 utils/qrcode.js 的 getQrcode(scene)，不要在页面里散写路径。
   // ============================================================
   qrcodes: {
-    concierge: '',    // 通用管家（管家服务页、入园攻略兜底）
-    birthday: '',     // 生日宴请顾问
-    teamBuilding: '', // 公司团建顾问
-    brand: '',        // 品牌合作商务
-    welfare: '',      // 新客福利官
-    complaint: ''     // 投诉建议专员
+    // 周江 · 重庆嘿行行旅游开发有限公司（业主 2026-07-25 提供）
+    // ⚠️ 图片需存在于 miniprogram/images/qr-concierge.png，否则组件会自动隐藏二维码只留电话
+    concierge: '/images/qr-concierge.png',
+    birthday: '',     // 留空 = 回落到 concierge
+    teamBuilding: '',
+    brand: '',
+    welfare: '',
+    complaint: ''
   }
 }
