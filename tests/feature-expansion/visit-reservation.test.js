@@ -7,7 +7,6 @@ const test = require('node:test')
 const projectRoot = path.resolve(__dirname, '../..')
 const rcore = require(path.join(projectRoot, 'cloudfunctions/createVisitReservation/reservation-core.js'))
 const entryPath = path.join(projectRoot, 'miniprogram/pages/reservation/entry/entry.js')
-const createPath = path.join(projectRoot, 'miniprogram/pages/reservation/create/create.js')
 const detailPath = path.join(projectRoot, 'miniprogram/pages/reservation/detail/detail.js')
 const requestPath = path.join(projectRoot, 'miniprogram/utils/request.js')
 const hapticsPath = path.join(projectRoot, 'miniprogram/utils/haptics.js')
@@ -20,7 +19,7 @@ function mountPage(t, pagePath, options = {}) {
   const originalPage = global.Page
   const originalWx = global.wx
   const originals = {}
-  const calls = { request: [], navigate: [], redirect: [], toast: [], modal: [], clipboard: [] }
+  const calls = { request: [], navigate: [], redirect: [], toast: [], modal: [], clipboard: [], phone: [] }
   let pageConfig
 
   const stub = (p, exports) => {
@@ -45,6 +44,7 @@ function mountPage(t, pagePath, options = {}) {
     redirectTo(o) { calls.redirect.push(o.url) },
     switchTab(o) { calls.navigate.push(o.url) },
     showToast(o) { calls.toast.push(o) },
+    makePhoneCall(o) { calls.phone.push(o.phoneNumber) },
     showModal(o) { calls.modal.push(o); if (o.success) o.success({ confirm: options.modalConfirm !== false }) },
     showLoading() {}, hideLoading() {},
     setClipboardData(o) { calls.clipboard.push(o.data); if (o.success) o.success() },
@@ -240,86 +240,18 @@ test('可取消状态判断：待确认/已确认可取消，已完成不可', (
 
 // ============ 预约入口页 ============
 
-test('预约入口提供团队预约与我的预约，不再有溪降场次预约', (t) => {
+test('预约中心只走企微直连，不再提供自助表单', (t) => {
+  // 业主 2026-07-25：自助预约不好管理容易漏单，统一由管家登记
   const { page } = mountPage(t, entryPath)
-  const keys = page.data.entries.map((e) => e.key)
-  assert.ok(keys.includes('team'))
-  assert.ok(keys.includes('mine'))
-  // 溪降改为「无需预约、凭券码直接入园」，预约中心不再提供该入口
-  assert.equal(keys.includes('creek'), false)
+  assert.equal(page.data.contactFirst, true)
+  assert.equal(page.data.entries, undefined, '不再有自助入口列表')
+  assert.ok(page.data.scenes.length > 0, '仍需说明可安排哪些场景')
 })
 
-test('入口点击跳到对应页面，未上线时给提示', (t) => {
-  const { page, calls } = mountPage(t, entryPath, { navigateFail: true })
-  page.onEntryTap({ currentTarget: { dataset: { key: 'mine' } } })
-  assert.ok(calls.navigate.length === 1)
-  assert.equal(calls.toast.length, 1)
-})
-
-// ============ 创建页 ============
-
-test('创建页加载配置并给出可约日期范围', async (t) => {
-  const { page } = mountPage(t, createPath, {
-    responders: { getReservationConfig: () => Promise.resolve({ config: CONFIG }) }
-  })
-  await page.onLoad({})
-  assert.equal(page.data.config.minPartySize, 10)
-  assert.ok(page.data.minDate)
-  assert.ok(page.data.maxDate)
-})
-
-test('未同意隐私协议时提交被前端拦截', async (t) => {
-  const { page, calls } = mountPage(t, createPath, {
-    responders: { getReservationConfig: () => Promise.resolve({ config: CONFIG }) }
-  })
-  await page.onLoad({})
-  page.setData({ form: baseForm({ privacyAgreed: false }) })
-  await page.onSubmit()
-  assert.equal(calls.request.filter((c) => c.name === 'createVisitReservation').length, 0)
-  assert.equal(calls.toast.length, 1)
-})
-
-test('提交携带幂等键，重试复用同一个键', async (t) => {
-  const { page, calls } = mountPage(t, createPath, {
-    responders: {
-      getReservationConfig: () => Promise.resolve({ config: CONFIG }),
-      createVisitReservation: () => Promise.reject(new Error('网络异常'))
-    }
-  })
-  await page.onLoad({})
-  page.setData({ form: baseForm() })
-  await page.onSubmit()
-  await page.onSubmit()
-  const posts = calls.request.filter((c) => c.name === 'createVisitReservation')
-  assert.equal(posts.length, 2)
-  assert.equal(posts[0].data.idempotencyKey, posts[1].data.idempotencyKey)
-})
-
-test('提交成功跳详情页，转人工时提示等待管家联系', async (t) => {
-  const { page, calls } = mountPage(t, createPath, {
-    responders: {
-      getReservationConfig: () => Promise.resolve({ config: CONFIG }),
-      createVisitReservation: () => Promise.resolve({ reservationId: 'r1', needsManual: true, status: 'pending' })
-    }
-  })
-  await page.onLoad({})
-  page.setData({ form: baseForm({ visitDate: SAT }) })
-  await page.onSubmit()
-  assert.ok(calls.redirect[0].indexOf('/pages/reservation/detail/detail') === 0)
-  assert.ok(calls.redirect[0].includes('r1'))
-})
-
-test('提交中连点不会重复请求', async (t) => {
-  const { page, calls } = mountPage(t, createPath, {
-    responders: {
-      getReservationConfig: () => Promise.resolve({ config: CONFIG }),
-      createVisitReservation: () => new Promise((r) => setTimeout(() => r({ reservationId: 'r1' }), 10))
-    }
-  })
-  await page.onLoad({})
-  page.setData({ form: baseForm() })
-  await Promise.all([page.onSubmit(), page.onSubmit()])
-  assert.equal(calls.request.filter((c) => c.name === 'createVisitReservation').length, 1)
+test('预约中心可直接拨打预约电话', (t) => {
+  const { page, calls } = mountPage(t, entryPath)
+  page.onCall()
+  assert.deepEqual(calls.phone, ['19112040740'])
 })
 
 // ============ 详情页 ============

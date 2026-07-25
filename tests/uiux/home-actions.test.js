@@ -73,11 +73,13 @@ test('首页默认包含三个主行动：购票 / 预约 / 补差价升级', (t
   assert.deepEqual(keys, ['ticket_entry', 'reservation_entry', 'upgrade_entry'])
 })
 
-test('三个主行动各有独立视觉标识（accent），互不重复', (t) => {
+test('三个主行动都有明确层级（靠排版区分，不靠配色）', (t) => {
+  // 业主 2026-07-25 反馈：不需要特别标识，符合整体调性即可，靠排版体现轻重缓急
   const { page } = mountIndex(t)
-  const accents = page.data.primaryActions.map((a) => a.accent)
-  for (const a of accents) assert.ok(a, '每个主行动都要有 accent 标识')
-  assert.equal(new Set(accents).size, accents.length, 'accent 必须互不相同，才能一眼区分')
+  for (const a of page.data.primaryActions) {
+    assert.ok(['primary', 'secondary'].includes(a.level), a.key + ' 缺少层级定义')
+    assert.equal(a.accent, undefined, '不再按行动配不同颜色')
+  }
 })
 
 test('购票是主卡，预约与补差价为次卡（主次分明）', (t) => {
@@ -116,8 +118,8 @@ test('云端配置可覆盖三大行动的文案与排序', async (t) => {
   })
   await page.loadData()
   assert.deepEqual(page.data.primaryActions.map((a) => a.title), ['补差价', '买票'])
-  // 即使云端下发也要带上视觉标识，否则渲染会缺样式
-  for (const a of page.data.primaryActions) assert.ok(a.accent, a.key + ' 缺 accent')
+  // 云端下发的也要补齐层级，否则渲染会缺样式
+  for (const a of page.data.primaryActions) assert.ok(a.level, a.key + ' 缺 level')
 })
 
 test('种子配置与云函数兜底都含补差价入口，且两处一致', () => {

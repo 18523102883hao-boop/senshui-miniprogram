@@ -106,12 +106,12 @@ test('特色服务卡包含生日宴请、公司团建、品牌合作', (t) => {
   assert.deepEqual(titles(page.data.serviceCards), ['生日宴请', '公司团建', '品牌合作'])
 })
 
-test('会员卡、今日活动、园区地图三块原有内容仍保留', (t) => {
+test('会员卡仍在首页；今日活动与地图已移交园区 Tab', (t) => {
+  // 业主 2026-07-25：首页内容过多要滑两屏，园内信息归「园区」Tab
   const { page } = mountPage(t)
   assert.ok(page.data.memberSection, '会员卡入口丢失')
-  assert.ok(page.data.showActivities, '今日活动模块丢失')
-  assert.ok(page.data.showMap, '园区地图模块丢失')
-  assert.ok(page.data.activities.length > 0, '今日活动日程丢失')
+  assert.equal(page.data.activities, undefined, '今日活动应由园区 Tab 承载')
+  assert.equal(page.data.mapViewer, undefined, '地图应由园区 Tab 承载')
 })
 
 test('每个入口的路由+参数组合唯一，避免两个卡片跳到同一页却无法区分', (t) => {

@@ -37,3 +37,11 @@
 .qr__tip { font-size: 22rpx; color: var(--sr-text-weak); margin-top: 18rpx; }
 
 .tail { font-size: 21rpx; color: var(--sr-text-weak); text-align: center; padding: 36rpx 0 40rpx; line-height: 1.6; }
+
+/* 特色服务入口（从首页移入） */
+.svc-entry { display: flex; align-items: center; background: var(--sr-bg-card);
+  border-radius: var(--sr-radius); box-shadow: var(--sr-shadow); padding: 26rpx 32rpx; margin-bottom: 16rpx; }
+.svc-entry__icon { width: 48rpx; height: 48rpx; flex-shrink: 0; }
+.svc-entry__body { flex: 1; margin-left: 22rpx; min-width: 0; }
+.svc-entry__title { display: block; font-size: 29rpx; font-weight: 600; color: var(--sr-text); }
+.svc-entry__desc { display: block; font-size: 22rpx; color: var(--sr-text-sub); margin-top: 6rpx; }

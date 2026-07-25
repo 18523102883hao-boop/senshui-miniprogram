@@ -191,11 +191,10 @@ test('预约中心首屏是联系管家，不是让客户填表', (t) => {
   assert.equal(page.data.contactScene, 'concierge')
 })
 
-test('预约中心保留自助表单作为次要入口，不删能力', (t) => {
+test('预约中心已取消自助表单（业主：不好管理，易漏单）', (t) => {
   const { page } = mountPage(t, entryPath)
-  const keys = page.data.entries.map((e) => e.key)
-  assert.ok(keys.includes('team'), '自助预约表单仍保留')
-  assert.ok(keys.includes('mine'), '我的预约仍可查')
+  assert.equal(page.data.entries, undefined, '自助入口已移除')
+  assert.ok(Array.isArray(page.data.scenes), '改为说明可安排的场景')
 })
 
 test('预约中心可直接拨打预约电话', (t) => {

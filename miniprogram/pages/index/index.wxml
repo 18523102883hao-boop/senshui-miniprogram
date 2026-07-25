@@ -1,5 +1,5 @@
 <view class="sr-page sr-page--tab sr-enter">
-  <!-- 1. 公告横幅（高对比 · 户外强光可读 · 跑马灯避免截断） -->
+  <!-- 1. 公告（有才显示 · 户外强光高对比 · 跑马灯避免截断） -->
   <view class="notice" wx:if="{{notice}}">
     <view class="notice__tag">公告</view>
     <view class="notice__viewport">
@@ -10,7 +10,18 @@
     </view>
   </view>
 
-  <!-- 顶部快捷条（状态驱动）：有票→入园码，有预约→预约详情。无则不占位 -->
+  <!-- 2. 品牌 Hero + 今日营业状态 -->
+  <view class="hero" wx:if="{{hero}}">
+    <view class="hero__glow"></view>
+    <text class="hero__title">{{hero.title}}</text>
+    <text class="hero__sub">{{hero.subtitle}}</text>
+    <view class="hero__status {{openStatus.open ? 'hero__status--on' : ''}}">
+      <image class="hero__status-icon" src="/assets/icons/forest/home-open-status.png" mode="aspectFit" />
+      <text>{{openStatus.text}}</text>
+    </view>
+  </view>
+
+  <!-- 3. 顶部快捷条（状态驱动）：有票→入园码，有预约→预约详情。无则不占位 -->
   <view class="quickbar sr-touch" wx:if="{{quickBar}}" hover-class="sr-touch--press" hover-stay-time="60" bindtap="onQuickBar">
     <view class="quickbar__icon">
       <sr-icon name="{{quickBar.type === 'ticket' ? 'home-ticket' : 'home-reservation'}}" theme="light" size="md" invert />
@@ -22,18 +33,52 @@
     <text class="quickbar__cta">{{quickBar.cta}} ›</text>
   </view>
 
-  <!-- 2. 品牌 Hero + 营业状态 -->
-  <view class="hero" wx:if="{{hero}}">
-    <view class="hero__glow"></view>
-    <text class="hero__title">{{hero.title}}</text>
-    <text class="hero__sub">{{hero.subtitle}}</text>
-    <view class="hero__status {{openStatus.open ? 'hero__status--on' : ''}}">
-      <image class="hero__status-icon" src="/assets/icons/forest/home-open-status.png" mode="aspectFit" />
-      <text>{{openStatus.text}}</text>
+  <!-- 4. 三大主行动：购票 / 预约 / 补差价升级
+       层级靠排版而非配色：购票为唯一实心主卡，其余白底次卡 -->
+  <view class="acts" wx:if="{{primaryActions.length}}">
+    <block wx:for="{{primaryActions}}" wx:key="key">
+      <view wx:if="{{item.level === 'primary'}}"
+            class="act act--lead sr-touch" hover-class="sr-touch--cta" hover-stay-time="60"
+            data-key="{{item.key}}" bindtap="onSectionTap">
+        <view class="act__iconbox"><image class="act__icon" src="{{item.icon}}" mode="aspectFit" /></view>
+        <view class="act__body">
+          <text class="act__title">{{item.title}}</text>
+          <text class="act__sub">{{item.subtitle}}</text>
+        </view>
+        <sr-icon name="nav-forward" theme="light" size="sm" invert />
+      </view>
+    </block>
+
+    <view class="acts__row">
+      <block wx:for="{{primaryActions}}" wx:key="key">
+        <view wx:if="{{item.level !== 'primary'}}"
+              class="act act--sub sr-touch" hover-class="sr-touch--press" hover-stay-time="60"
+              data-key="{{item.key}}" bindtap="onSectionTap">
+          <view class="act__iconbox act__iconbox--sub"><image class="act__icon act__icon--sub" src="{{item.icon}}" mode="aspectFit" /></view>
+          <view class="act__body">
+            <text class="act__title act__title--sub">{{item.title}}</text>
+            <text class="act__sub act__sub--sub">{{item.subtitle}}</text>
+          </view>
+        </view>
+      </block>
     </view>
   </view>
 
-  <!-- 3. 四个次级快捷入口 -->
+  <!-- 5. 会员卡（非会员可见 · 新客福利文案已并入，不再单独一张卡） -->
+  <view class="promo sr-goldcard sr-gold-hairline sr-touch" wx:if="{{showMemberPromo}}"
+        hover-class="sr-touch--card" hover-stay-time="60" data-key="{{memberSection.key}}" bindtap="onSectionTap">
+    <view class="promo__left">
+      <text class="promo__badge">{{homeStage === 'first' ? '新客专享' : 'SVIP'}}</text>
+      <text class="promo__title">森水会员卡</text>
+      <text class="promo__desc">1000 长河令 · 生日 85 折 · 一年畅玩</text>
+    </view>
+    <view class="promo__right">
+      <text class="promo__price sr-num">¥9.9</text>
+      <text class="promo__cta">立即开卡 ›</text>
+    </view>
+  </view>
+
+  <!-- 6. 了解园区（四个入口 · 含特色服务咨询） -->
   <view class="quick" wx:if="{{quickEntries.length}}">
     <view class="quick__item sr-touch" hover-class="sr-touch--press" hover-stay-time="60"
           wx:for="{{quickEntries}}" wx:key="key" data-key="{{item.key}}" bindtap="onSectionTap">
@@ -45,138 +90,7 @@
     </view>
   </view>
 
-  <!-- 4. 三大主行动：购票 / 预约 / 补差价升级（业主指定的高频核心功能） -->
-  <view class="acts" wx:if="{{primaryActions.length}}">
-    <block wx:for="{{primaryActions}}" wx:key="key">
-      <!-- 主卡：大尺寸，首屏第一转化 -->
-      <view wx:if="{{item.level === 'primary'}}"
-            class="act act--lead act--{{item.accent}} sr-touch"
-            hover-class="sr-touch--cta" hover-stay-time="60"
-            data-key="{{item.key}}" bindtap="onSectionTap">
-        <view class="act__glow"></view>
-        <view class="act__iconbox"><image class="act__icon" src="{{item.icon}}" mode="aspectFit" /></view>
-        <view class="act__body">
-          <view class="act__titlerow">
-            <text class="act__title">{{item.title}}</text>
-            <text class="act__badge" wx:if="{{item.badge}}">{{item.badge}}</text>
-          </view>
-          <text class="act__sub">{{item.subtitle}}</text>
-        </view>
-        <sr-icon name="nav-forward" theme="light" size="sm" invert />
-      </view>
-    </block>
-
-    <!-- 次卡：两个并排 -->
-    <view class="acts__row">
-      <block wx:for="{{primaryActions}}" wx:key="key">
-        <view wx:if="{{item.level !== 'primary'}}"
-              class="act act--sub act--{{item.accent}} sr-touch"
-              hover-class="sr-touch--cta" hover-stay-time="60"
-              data-key="{{item.key}}" bindtap="onSectionTap">
-          <view class="act__iconbox act__iconbox--sm"><image class="act__icon" src="{{item.icon}}" mode="aspectFit" /></view>
-          <text class="act__title act__title--sm">{{item.title}}</text>
-          <text class="act__sub act__sub--sm">{{item.subtitle}}</text>
-        </view>
-      </block>
-    </view>
-  </view>
-
-  <!-- 5. 当前用户状态卡（无票无预约时不占位） -->
-  <view class="status-card" wx:if="{{showUserStatus}}">
-    <view class="sec-head status-card__head">
-      <view class="sec-head__bar"></view>
-      <text class="sr-subtitle">我的行程</text>
-    </view>
-    <view class="status-card__row sr-touch" wx:if="{{userSummary.unusedTicketCount > 0}}"
-          hover-class="sr-touch--press" hover-stay-time="60" bindtap="goMyTickets">
-      <image class="status-card__icon" src="/assets/icons/forest/home-ticket.png" mode="aspectFit" />
-      <text class="status-card__text">你有 <text class="sr-num status-card__num">{{userSummary.unusedTicketCount}}</text> 张未使用门票</text>
-      <text class="status-card__cta">查看入园码 ›</text>
-    </view>
-    <view class="status-card__row sr-touch" wx:if="{{userSummary.upcomingReservation}}"
-          hover-class="sr-touch--press" hover-stay-time="60" bindtap="goMyReservation">
-      <image class="status-card__icon" src="/assets/icons/forest/home-reservation.png" mode="aspectFit" />
-      <text class="status-card__text">
-        <text class="sr-num">{{userSummary.upcomingReservation.visitDate}}</text>
-        <text wx:if="{{userSummary.upcomingReservation.timeSlot}}"> {{userSummary.upcomingReservation.timeSlot}}</text>
-        · <text class="sr-num">{{userSummary.upcomingReservation.partySize}}</text> 人
-      </text>
-      <text class="status-card__cta">查看预约 ›</text>
-    </view>
-  </view>
-
-  <!-- 6. 三个特色服务卡 -->
-  <block wx:if="{{serviceCards.length}}">
-    <text class="sec-title">特色服务</text>
-    <scroll-view class="svc-scroll" scroll-x enable-flex show-scrollbar="{{false}}">
-      <view class="svc-card sr-touch" hover-class="sr-touch--card" hover-stay-time="60"
-            wx:for="{{serviceCards}}" wx:key="key" data-key="{{item.key}}" bindtap="onSectionTap">
-        <image class="svc-card__icon" src="{{item.icon}}" mode="aspectFit" />
-        <text class="svc-card__title">{{item.title}}</text>
-        <text class="svc-card__sub">{{item.subtitle}}</text>
-        <text class="svc-card__cta">咨询 ›</text>
-      </view>
-    </scroll-view>
-  </block>
-
-  <!-- 新客福利卡（仅从未交易的新客可见 · 原 Task 17） -->
-  <view class="newbie sr-touch" wx:if="{{showNewbieWelfare}}" hover-class="sr-touch--card" hover-stay-time="60" bindtap="onNewbieWelfare">
-    <view class="newbie__badge">新客专享</view>
-    <view class="newbie__body">
-      <text class="newbie__title">{{newbieWelfare.desc}}</text>
-      <text class="newbie__cta">{{newbieWelfare.cta}} ›</text>
-    </view>
-  </view>
-
-  <!-- 7. 会员卡（黑金主推 · 整卡可点 · 非会员才推） -->
-  <view class="promo sr-goldcard sr-gold-hairline sr-touch" wx:if="{{showMemberPromo}}"
-        hover-class="sr-touch--card" hover-stay-time="60" data-key="{{memberSection.key}}" bindtap="onSectionTap">
-    <view class="promo__left">
-      <text class="promo__badge">SVIP</text>
-      <text class="promo__title">森水会员卡</text>
-      <text class="promo__desc">1000 长河令 · 生日 85 折 · 一年畅玩</text>
-    </view>
-    <view class="promo__right">
-      <text class="promo__price sr-num">¥9.9</text>
-      <text class="promo__cta">立即开卡 ›</text>
-    </view>
-  </view>
-
-  <!-- 8. 今日江湖事（时间线） -->
-  <view class="sr-card" wx:if="{{showActivities}}">
-    <view class="sr-row-between">
-      <view class="sec-head">
-        <view class="sec-head__bar"></view>
-        <text class="sr-subtitle">今日江湖事</text>
-      </view>
-      <image class="sr-icon--sm sec-head__icon" src="/assets/icons/forest/activity-schedule.png" mode="aspectFit" />
-    </view>
-    <view class="tl">
-      <view class="tl__item" wx:for="{{activities}}" wx:key="id">
-        <view class="tl__dot"></view>
-        <view class="tl__body">
-          <text class="tl__time sr-num">{{item.time}}</text>
-          <text class="tl__name">{{item.name}}</text>
-          <text class="tl__note">{{item.note}}</text>
-        </view>
-      </view>
-    </view>
-    <view wx:if="{{!activities.length}}" class="empty">今日暂无活动安排</view>
-    <view class="act-note">活动会根据季节、主题和实际情况调整，具体以现场通知为准。</view>
-  </view>
-
-  <!-- 9. 园区导览入口（地图与现场服务已移到「园区」Tab，此处保持高可达） -->
-  <view class="park-entry sr-touch" wx:if="{{showMap}}" hover-class="sr-touch--card" hover-stay-time="60" bindtap="goPark">
-    <image class="park-entry__bg" src="{{campMapUrl || '/images/map-camp.jpg'}}" mode="aspectFill" />
-    <view class="park-entry__mask"></view>
-    <view class="park-entry__body">
-      <text class="park-entry__title">园区地图与现场服务</text>
-      <text class="park-entry__sub">地图 · 今日活动 · 酒水小卖部 · 补差价升级</text>
-    </view>
-    <text class="park-entry__go">进入园区 ›</text>
-  </view>
-
-  <!-- 10. 页脚：客服与协议 -->
+  <!-- 7. 页脚：客服与协议 -->
   <view class="foot" wx:if="{{footerSection}}">
     <view class="foot__call sr-touch" hover-class="sr-touch--press" hover-stay-time="60" bindtap="callFront">
       <image class="foot__icon" src="/assets/icons/forest/customer-service.png" mode="aspectFit" />
@@ -187,17 +101,5 @@
       <text class="foot__sep">·</text>
       <text class="foot__link" bindtap="goPrivacy">隐私政策</text>
     </view>
-  </view>
-
-  <!-- 全屏地图查看（双指缩放 + 拖动） -->
-  <view class="map-viewer" wx:if="{{mapViewer}}">
-    <movable-area class="mv-area" scale-area>
-      <movable-view class="mv-view" direction="all" scale scale-min="1" scale-max="4" scale-value="1"
-                    style="width:{{mapViewW}}px;height:{{mapViewH}}px;">
-        <image src="{{mapViewer}}" style="width:{{mapViewW}}px;height:{{mapViewH}}px;" mode="scaleToFill" />
-      </movable-view>
-    </movable-area>
-    <view class="mv-hint">双指缩放查看 · 拖动移动</view>
-    <view class="map-viewer__close" bindtap="closeMapViewer">✕ 关闭</view>
   </view>
 </view>

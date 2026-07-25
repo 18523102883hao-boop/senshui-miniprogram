@@ -45,8 +45,16 @@ function buildChannels(cfg) {
   return channels
 }
 
+// 特色服务（从首页移入：生日/团建/品牌合作属低频需求，不占首屏）
+const SERVICES = [
+  { key: 'birthday', title: '生日宴请', desc: '在山水间过一个生日', icon: '/assets/icons/forest/activity-reward.png' },
+  { key: 'team_building', title: '公司团建', desc: '定制行程与场地', icon: '/assets/icons/forest/booking-people.png' },
+  { key: 'brand', title: '品牌合作', desc: '场地拍摄与联名活动', icon: '/assets/icons/forest/activity-badge.png' }
+]
+
 Page({
   data: {
+    services: SERVICES,
     channels: buildChannels(env.concierge),
     qrcodeUrl: getQrcode('concierge').url,
     serviceHours: (env.concierge && env.concierge.serviceHours) || '',
@@ -66,6 +74,15 @@ Page({
       })
     }
     // wechat 渠道由 wxml 的 <button open-type="contact"> 直接触发，无需 JS 处理
+  },
+
+  onServiceTap(e) {
+    const type = e.currentTarget.dataset.type
+    haptic('light')
+    wx.navigateTo({
+      url: '/pages/service/detail/detail?type=' + encodeURIComponent(type),
+      fail: () => wx.showToast({ title: '该功能即将开放', icon: 'none' })
+    })
   },
 
   onPreviewQrcode() {

@@ -5,7 +5,7 @@ const request = require('../../utils/request.js')
 const env = require('../../env.js')
 const { haptic } = require('../../utils/haptics.js')
 const { makePhoneCall } = require('../../utils/util.js')
-const { resolveHomeState, NEWBIE_WELFARE } = require('../../utils/home-state.js')
+const { resolveHomeState } = require('../../utils/home-state.js')
 
 // 本地默认门户配置：弱网、云函数未部署或云端无配置时使用，保证首页永不白屏。
 // ⚠️ key 与 sort 必须与 cloudfunctions/seedPortalContent/seed-data.js 的 DEFAULT_SECTIONS 对应。
@@ -43,16 +43,15 @@ const SECTION_ICONS = {
   member_entry: '/assets/icons/forest/home-member.png'
 }
 
-// 三大主行动的视觉标识（业主要求：购票/预约/补差价要一眼可辨且醒目）
-// accent 决定配色语义：交易=珊瑚，服务=森林绿，增值=山野金
-// level 决定尺寸：primary 大卡（首屏主行动），secondary 并排次卡
+// 三大主行动的层级（业主反馈：不用特别标识，靠排版体现轻重缓急）
+// 只区分尺寸与位置：primary 实心大卡（唯一强调），secondary 白底并排次卡
 const ACTION_STYLE = {
-  ticket_entry: { accent: 'coral', level: 'primary', badge: '在线购买' },
-  reservation_entry: { accent: 'forest', level: 'secondary', badge: '' },
-  upgrade_entry: { accent: 'gold', level: 'secondary', badge: '' }
+  ticket_entry: { level: 'primary' },      // 唯一实心主卡
+  reservation_entry: { level: 'secondary' },
+  upgrade_entry: { level: 'secondary' }
 }
-// 云端新增未知主行动时的兜底样式，保证不会渲染出没有配色的卡片
-const ACTION_STYLE_FALLBACK = { accent: 'forest', level: 'secondary', badge: '' }
+// 云端新增未知主行动时按次卡渲染，保证不会出现没有层级定义的卡片
+const ACTION_STYLE_FALLBACK = { level: 'secondary' }
 
 // tabBar 页必须用 switchTab，navigateTo 会直接失败
 const TAB_PAGES = ['/pages/index/index', '/pages/park/park', '/pages/ling/ling', '/pages/mine/mine']
@@ -109,23 +108,9 @@ Page({
     // 状态驱动（阶段4）
     homeStage: 'first',
     quickBar: null,
-    showNewbieWelfare: true,
     showMemberPromo: true,
-    newbieWelfare: NEWBIE_WELFARE,
     openStatus: computeOpenStatus(),
-    frontPhone: env.frontDeskPhone,
-    // 固定日程（旺季）：前端直接控制，不被数据库历史活动覆盖；如需改活动跟我说
-    activities: [
-      { id: 1, time: '13:00-13:45', name: '侠客滩捕鱼', note: '巡游带客 · 捕鱼' },
-      { id: 2, time: '14:20-15:00', name: '侠客打擂乐园', note: '巡游带客 · 打擂台' },
-      { id: 3, time: '16:00-16:45', name: '侠客滩捕鱼', note: '巡游带客 · 捕鱼' },
-      { id: 4, time: '17:00-17:45', name: '海鲜大拍卖', note: '巡游 · 拍卖' }
-    ],
-    campMapUrl: '', // 营地游览图云端临时链接（管理员上传后覆盖本地图）
-    creekMapUrl: '', // 溪降游览图云端临时链接
-    mapViewer: '', // 全屏查看的地图 src（空=关闭）
-    mapViewW: 0,
-    mapViewH: 0
+    frontPhone: env.frontDeskPhone
   }, groupSections(LOCAL_SECTIONS)),
 
   onLoad() {
@@ -160,17 +145,14 @@ Page({
     this.setData(Object.assign({}, grouped, {
       notice: noticeText || FALLBACK_NOTICE,
       userSummary: summary,
-      // 状态驱动：顶部快捷条 + 新客福利 + 会员推广随用户状态变化
+      // 状态驱动：顶部快捷条与会员推广随用户状态变化
       homeStage: stateInfo.stage,
       quickBar: stateInfo.quickBar,
-      showNewbieWelfare: stateInfo.showNewbieWelfare,
       // 会员卡模块：非会员才推（已是会员则隐藏开卡卡）
       showMemberPromo: stateInfo.showMemberPromo && !!grouped.memberSection,
       // 无票无预约时状态卡不占位（PRD §7.2）
       showUserStatus: grouped.hasUserStatusSection && (summary.unusedTicketCount > 0 || !!summary.upcomingReservation)
     }))
-    // 今日活动沿用前端固定日程，不被数据库历史数据覆盖
-    this.loadMaps(d.maps || {})
   },
 
   // 旧接口降级：只补公告与地图，入口结构用本地默认配置
@@ -178,22 +160,8 @@ Page({
     return request.call('getHomeData', {})
       .then((d) => {
         this.setData({ notice: (d && d.notice) || FALLBACK_NOTICE })
-        this.loadMaps((d && d.maps) || {})
       })
       .catch(() => this.setData({ notice: FALLBACK_NOTICE }))
-  },
-
-  // 地图存云存储 fileID，换成临时链接用于展示与放大预览
-  loadMaps(maps) {
-    const fileList = [maps.camp, maps.creek].filter(Boolean)
-    if (!fileList.length) return
-    wx.cloud.getTempFileURL({ fileList })
-      .then((res) => {
-        const byId = {}
-        ;(res.fileList || []).forEach((f) => { byId[f.fileID] = f.tempFileURL })
-        this.setData({ campMapUrl: byId[maps.camp] || '', creekMapUrl: byId[maps.creek] || '' })
-      })
-      .catch(() => {})
   },
 
   buildUrl(route, params) {
@@ -227,11 +195,6 @@ Page({
   },
 
   // 状态卡：有票看入园码，有预约看预约详情
-  goPark() {
-    haptic('light')
-    wx.switchTab({ url: '/pages/park/park' })
-  },
-
   // 顶部快捷条：有票→入园码，有预约→预约详情
   onQuickBar() {
     const q = this.data.quickBar
@@ -239,11 +202,6 @@ Page({
     haptic('light')
     const url = q.param ? q.route + '?id=' + encodeURIComponent(q.param) : q.route
     wx.navigateTo({ url, fail: () => wx.showToast({ title: '请稍后重试', icon: 'none' }) })
-  },
-
-  onNewbieWelfare() {
-    haptic('light')
-    wx.navigateTo({ url: this.data.newbieWelfare.route, fail: () => wx.showToast({ title: '该功能即将开放', icon: 'none' }) })
   },
 
   goMyTickets() {
@@ -266,28 +224,6 @@ Page({
 
   goAgreement() {
     wx.navigateTo({ url: '/pages/legal/agreement/agreement' })
-  },
-
-  // 打开全屏地图查看（云端图优先，否则用本地打包图）；支持双指缩放
-  openMap(e) {
-    const key = e.currentTarget.dataset.key
-    const src = key === 'creek'
-      ? (this.data.creekMapUrl || '/images/map-creek.jpg')
-      : (this.data.campMapUrl || '/images/map-camp.jpg')
-    haptic('light')
-    const winW = (wx.getWindowInfo && wx.getWindowInfo().windowWidth) || 375
-    wx.getImageInfo({
-      src,
-      success: (info) => {
-        const h = Math.round(winW * info.height / info.width)
-        this.setData({ mapViewer: src, mapViewW: winW, mapViewH: h })
-      },
-      fail: () => this.setData({ mapViewer: src, mapViewW: winW, mapViewH: winW })
-    })
-  },
-
-  closeMapViewer() {
-    this.setData({ mapViewer: '', mapViewW: 0, mapViewH: 0 })
   },
 
   onShareAppMessage() {
