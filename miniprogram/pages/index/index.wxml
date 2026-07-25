@@ -10,16 +10,10 @@
     </view>
   </view>
 
-  <!-- 2. 品牌 Hero + 今日营业状态 -->
-  <view class="hero" wx:if="{{hero}}">
-    <view class="hero__glow"></view>
-    <text class="hero__title">{{hero.title}}</text>
-    <text class="hero__sub">{{hero.subtitle}}</text>
-    <view class="hero__status {{openStatus.open ? 'hero__status--on' : ''}}">
-      <image class="hero__status-icon" src="/assets/icons/forest/home-open-status.png" mode="aspectFit" />
-      <text>{{openStatus.text}}</text>
-    </view>
-  </view>
+  <!-- 2. 园区信息头：品牌 + 营业状态 + 地址导航 + 会员入口（业主要求合并为一个板块）-->
+  <sr-park-header show-member="{{showMemberPromo}}"
+                  member-badge="{{homeStage === 'first' ? '新客专享' : 'SVIP'}}"
+                  bind:member="onMemberTap" />
 
   <!-- 3. 顶部快捷条（状态驱动）：有票→入园码，有预约→预约详情。无则不占位 -->
   <view class="quickbar sr-touch" wx:if="{{quickBar}}" hover-class="sr-touch--press" hover-stay-time="60" bindtap="onQuickBar">
@@ -49,20 +43,6 @@
         <text class="act__sub">{{item.subtitle}}</text>
       </view>
       <sr-icon name="nav-forward" theme="light" size="sm" invert="{{item.level === 'primary'}}" />
-    </view>
-  </view>
-
-  <!-- 5. 会员卡（非会员可见 · 新客福利文案已并入，不再单独一张卡） -->
-  <view class="promo sr-goldcard sr-gold-hairline sr-touch" wx:if="{{showMemberPromo}}"
-        hover-class="sr-touch--card" hover-stay-time="60" data-key="{{memberSection.key}}" bindtap="onSectionTap">
-    <view class="promo__left">
-      <text class="promo__badge">{{homeStage === 'first' ? '新客专享' : 'SVIP'}}</text>
-      <text class="promo__title">森水会员卡</text>
-      <text class="promo__desc">1000 长河令 · 生日 85 折 · 一年畅玩</text>
-    </view>
-    <view class="promo__right">
-      <text class="promo__price sr-num">¥9.9</text>
-      <text class="promo__cta">立即开卡 ›</text>
     </view>
   </view>
 

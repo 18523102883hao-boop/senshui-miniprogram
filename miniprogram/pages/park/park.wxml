@@ -1,17 +1,6 @@
 <view class="sr-page sr-page--tab sr-enter">
-  <!-- 到园与导航（园区 Tab 顶部主行动） -->
-  <view class="nav-card">
-    <view class="nav-card__glow"></view>
-    <view class="nav-card__body">
-      <text class="nav-card__title">{{park.name || '森水长河'}}</text>
-      <text class="nav-card__addr">{{park.address}}</text>
-      <text class="nav-card__hours" wx:if="{{park.admissionHours}}">入园 {{park.admissionHours}}</text>
-    </view>
-    <view class="nav-card__btn sr-touch" hover-class="sr-touch--cta" hover-stay-time="60" bindtap="onNavigate">
-      <sr-icon name="map-navigation" theme="light" size="md" invert />
-      <text>{{canNavigate ? '导航' : '复制地址'}}</text>
-    </view>
-  </view>
+  <!-- 园区信息头（与首页同一组件，园区页不推销会员） -->
+  <sr-park-header show-member="{{false}}" />
 
   <!-- 园区地图（主视野） -->
   <sr-section-header title="园区地图" extra="点击看大图" />

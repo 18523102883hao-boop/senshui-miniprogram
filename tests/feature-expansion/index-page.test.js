@@ -152,7 +152,9 @@ test('有未使用票或即将到来的预约时显示状态卡', async (t) => {
     }
   })
   await page.loadData()
-  assert.equal(page.data.showUserStatus, true)
+  // 有票/预约改由顶部快捷条提示（更靠上更醒目），状态卡已下线
+  assert.ok(page.data.quickBar, '应出现快捷条')
+  assert.equal(page.data.quickBar.type, 'ticket', '有票时优先提示入园码')
   assert.equal(page.data.userSummary.unusedTicketCount, 2)
   assert.equal(page.data.userSummary.upcomingReservation.visitDate, '2026-08-09')
 })
@@ -162,7 +164,7 @@ test('无票无预约时状态卡不占位', async (t) => {
     portal: { sections: [], activities: [], userSummary: { unusedTicketCount: 0, upcomingReservation: null } }
   })
   await page.loadData()
-  assert.equal(page.data.showUserStatus, false)
+  assert.equal(page.data.quickBar, null, '无票无预约时快捷条不占位')
 })
 
 test('getHomePortal 尚未部署时回退旧接口，首页入口结构完整', async (t) => {

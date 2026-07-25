@@ -30,4 +30,7 @@
   </block>
 
   <view wx:else class="hint">扫描游客出示的会员码，核销其会员权益</view>
+
+  <!-- 隐私授权弹窗：扫码前由微信触发 -->
+  <privacy-popup />
 </view>

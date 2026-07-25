@@ -80,13 +80,28 @@ test('主行动仍有明确主次：一个主卡 + 两个次卡', (t) => {
 
 // ============ 内容精简 ============
 
-test('首页不再重复推会员：新客福利与会员卡合并为一处', () => {
-  assert.equal(indexWxml.includes('newbie__badge'), false, '独立的新客福利卡应并入会员卡')
-  // 只统计根节点（class="promo " 后接其他类），不含 promo__xxx 子元素
-  const memberBlocks = (indexWxml.match(/class="promo\s/g) || []).length
-  assert.equal(memberBlocks, 1, '会员卡只能出现一次')
-  // 新客身份改为会员卡上的徽标，不再单独占一张卡
-  assert.match(indexWxml, /新客专享/, '新客文案应并入会员卡徽标')
+test('首页不再重复推会员：会员入口并入园区信息头', () => {
+  // 业主 2026-07-25：Hero、会员卡、导航卡三块合并为一个板块放最顶端
+  assert.equal(indexWxml.includes('newbie__badge'), false, '独立的新客福利卡已移除')
+  assert.equal(indexWxml.includes('class="promo'), false, '独立会员卡已并入 sr-park-header')
+  assert.match(indexWxml, /<sr-park-header/, '应使用合并后的园区信息头组件')
+  assert.match(indexWxml, /show-member/, '会员入口由组件按状态显隐')
+})
+
+test('园区信息头同时承载品牌 / 营业状态 / 地址导航 / 会员入口', () => {
+  const dir = path.join(projectRoot, 'miniprogram/components/ui/sr-park-header')
+  const wxml = fs.readFileSync(path.join(dir, 'index.wxml'), 'utf8')
+  assert.match(wxml, /ph__name/, '缺品牌名')
+  assert.match(wxml, /status\.text/, '缺营业状态')
+  assert.match(wxml, /address/, '缺地址')
+  assert.match(wxml, /onNavigate/, '缺导航动作')
+  assert.match(wxml, /ph__member/, '缺会员入口')
+})
+
+test('首页与园区 Tab 复用同一个信息头，口径不会漂移', () => {
+  const park = fs.readFileSync(path.join(projectRoot, 'miniprogram/pages/park/park.wxml'), 'utf8')
+  assert.match(park, /<sr-park-header/, '园区 Tab 应复用同组件')
+  assert.match(park, /show-member="\{\{false\}\}"/, '园区 Tab 不推销会员')
 })
 
 test('今日活动已移至园区 Tab，首页不再重复', () => {
@@ -126,7 +141,9 @@ test('四个快捷入口保留', (t) => {
   assert.equal(page.data.quickEntries.length, 4)
 })
 
-test('用户状态卡逻辑保留（有票/预约时显示）', (t) => {
+test('有票/预约的提示由顶部快捷条承担，不再另设状态卡', (t) => {
+  // 快捷条更靠上更醒目，两者并存等于同一信息说两遍
   const { page } = mountIndex(t)
-  assert.equal(typeof page.data.showUserStatus, 'boolean')
+  assert.equal(page.data.showUserStatus, undefined, 'status-card 已下线')
+  assert.ok('quickBar' in page.data, '改由 quickBar 承担')
 })

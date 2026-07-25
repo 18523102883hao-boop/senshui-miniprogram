@@ -72,4 +72,7 @@
       </view>
     </view>
   </block>
+
+  <!-- 隐私授权弹窗：调用相册/摄像头等接口前由微信触发 -->
+  <privacy-popup />
 </view>

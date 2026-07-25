@@ -58,18 +58,6 @@ const TAB_PAGES = ['/pages/index/index', '/pages/park/park', '/pages/ling/ling',
 const FALLBACK_NOTICE = '欢迎来到森水长河 · 入园即入江湖'
 const EMPTY_SUMMARY = { unusedTicketCount: 0, upcomingReservation: null }
 
-// 营业状态（溪降开放 10:00-16:30，园区当日运营时段）
-const OPEN_FROM = 10 * 60
-const OPEN_TO = 16 * 60 + 30
-
-function computeOpenStatus(now) {
-  const d = now || new Date()
-  const mins = d.getHours() * 60 + d.getMinutes()
-  if (mins < OPEN_FROM) return { open: false, text: '今日 10:00 开园 · 溪降 10:00-16:30' }
-  if (mins <= OPEN_TO) return { open: true, text: '营业中 · 溪降 10:00-16:30' }
-  return { open: false, text: '今日已闭园 · 明日 10:00 见' }
-}
-
 // 把扁平的 sections 配置分组成页面可直接渲染的结构
 function groupSections(sections) {
   const list = (Array.isArray(sections) ? sections : [])
@@ -104,12 +92,10 @@ Page({
   data: Object.assign({
     notice: '',
     userSummary: EMPTY_SUMMARY,
-    showUserStatus: false,
     // 状态驱动（阶段4）
     homeStage: 'first',
     quickBar: null,
     showMemberPromo: true,
-    openStatus: computeOpenStatus(),
     frontPhone: env.frontDeskPhone
   }, groupSections(LOCAL_SECTIONS)),
 
@@ -118,7 +104,6 @@ Page({
   },
 
   onShow() {
-    this.setData({ openStatus: computeOpenStatus() })
     this.loadData() // 返回首页时刷新票券/预约摘要
     if (typeof this.getTabBar === 'function' && this.getTabBar()) {
       this.getTabBar().setData({ selected: 0, theme: 'light' })
@@ -149,9 +134,7 @@ Page({
       homeStage: stateInfo.stage,
       quickBar: stateInfo.quickBar,
       // 会员卡模块：非会员才推（已是会员则隐藏开卡卡）
-      showMemberPromo: stateInfo.showMemberPromo && !!grouped.memberSection,
-      // 无票无预约时状态卡不占位（PRD §7.2）
-      showUserStatus: grouped.hasUserStatusSection && (summary.unusedTicketCount > 0 || !!summary.upcomingReservation)
+      showMemberPromo: stateInfo.showMemberPromo && !!grouped.memberSection
     }))
   },
 
@@ -196,6 +179,16 @@ Page({
 
   // 状态卡：有票看入园码，有预约看预约详情
   // 顶部快捷条：有票→入园码，有预约→预约详情
+  // 会员条来自 sr-park-header 组件的事件
+  onMemberTap() {
+    const sec = this.data.sectionMap && this.data.sectionMap.member_entry
+    haptic('light')
+    wx.navigateTo({
+      url: (sec && sec.route) || '/pages/member/detail/detail',
+      fail: () => wx.showToast({ title: '请稍后重试', icon: 'none' })
+    })
+  },
+
   onQuickBar() {
     const q = this.data.quickBar
     if (!q) return

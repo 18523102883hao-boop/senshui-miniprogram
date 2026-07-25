@@ -15,7 +15,6 @@ const SERVICES = [
 
 Page({
   data: {
-    park: env.park || {},
     services: SERVICES.map((s) => Object.assign({}, s, { iconPath: '/assets/icons/forest/' + s.icon + '.png' })),
     // 今日活动沿用首页固定日程口径，园内客人看时间表用
     activities: [
@@ -27,8 +26,7 @@ Page({
     creekMapUrl: '',
     mapViewer: '',
     mapViewW: 0,
-    mapViewH: 0,
-    canNavigate: !!(env.park && env.park.latitude && env.park.longitude)
+    mapViewH: 0
   },
 
   onShow() {
@@ -54,24 +52,6 @@ Page({
         this.setData({ campMapUrl: byId[maps.camp] || '', creekMapUrl: byId[maps.creek] || '' })
       })
       .catch(() => {})
-  },
-
-  // 微信内置地图导航：坐标已配则 openLocation（可一键转高德/苹果地图导航）；否则复制地址
-  onNavigate() {
-    haptic('light')
-    const p = this.data.park || {}
-    if (!p.latitude || !p.longitude) {
-      wx.setClipboardData({ data: p.address || '' })
-      wx.showToast({ title: '地址已复制，可粘贴到地图 App', icon: 'none' })
-      return
-    }
-    wx.openLocation({
-      latitude: Number(p.latitude),
-      longitude: Number(p.longitude),
-      name: p.name || '森水长河',
-      address: p.address || '',
-      scale: 16
-    })
   },
 
   onServiceTap(e) {

@@ -1,0 +1,49 @@
+/* 园区信息头：品牌 + 营业状态 + 地址导航 + 会员入口，一卡解决 */
+.ph {
+  position: relative; overflow: hidden;
+  background: linear-gradient(135deg, var(--sr-primary) 0%, var(--sr-primary-deep) 100%);
+  border-radius: var(--sr-radius-lg);
+  padding: 36rpx 32rpx 0;
+  margin-bottom: var(--sr-gap-5);
+  box-shadow: var(--sr-shadow);
+}
+.ph__glow {
+  position: absolute; right: -70rpx; top: -90rpx; width: 320rpx; height: 320rpx; border-radius: 50%;
+  background: radial-gradient(circle, rgba(213,164,58,0.26) 0%, rgba(213,164,58,0) 70%);
+  pointer-events: none;
+}
+
+.ph__top { position: relative; display: flex; align-items: flex-start; justify-content: space-between; }
+.ph__brand { flex: 1; min-width: 0; }
+.ph__name { display: block; font-size: 44rpx; font-weight: 800; color: #F7F3EA; letter-spacing: 2rpx; }
+.ph__tagline { display: block; font-size: 23rpx; color: rgba(247,243,234,0.72); margin-top: 10rpx; }
+
+/* 导航按钮：金色圆钮，是这张卡上唯一的高亮动作 */
+.ph__nav {
+  flex-shrink: 0; margin-left: 20rpx;
+  width: 108rpx; height: 108rpx; border-radius: 50%;
+  background: var(--sr-gold);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+}
+.ph__navtext { font-size: 21rpx; font-weight: 700; color: #4A2F00; margin-top: 2rpx; }
+
+.ph__meta { position: relative; margin-top: 24rpx; }
+.ph__row { display: flex; align-items: center; padding: 8rpx 0; }
+.ph__rowtext { font-size: 23rpx; color: rgba(247,243,234,0.82); margin-left: 12rpx; flex: 1; }
+.ph__rowtext--addr { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.ph__row--status.is-open .ph__rowtext { color: #8FE0AE; font-weight: 600; }
+
+/* 会员条：与主体同卡但独立分区，金色细边区分 */
+.ph__member {
+  position: relative; display: flex; align-items: center;
+  margin: 24rpx -32rpx 0; padding: 22rpx 32rpx;
+  background: rgba(213,164,58,0.14);
+  border-top: 1rpx solid rgba(213,164,58,0.3);
+}
+.ph__badge {
+  flex-shrink: 0; font-size: 19rpx; font-weight: 700; color: #4A2F00;
+  background: var(--sr-gold); border-radius: 6rpx; padding: 4rpx 12rpx;
+}
+.ph__memtext { flex: 1; font-size: 22rpx; color: var(--sr-gold-light); margin-left: 14rpx;
+  overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.ph__memcta { flex-shrink: 0; font-size: 22rpx; font-weight: 700; color: var(--sr-gold-light); margin-left: 10rpx; }
