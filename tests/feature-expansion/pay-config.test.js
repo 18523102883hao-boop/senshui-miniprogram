@@ -16,7 +16,7 @@ function loadFresh() {
   return require(CONFIG_PATH)
 }
 
-// 最小的 db 替身：只实现 collection().doc().get()
+// db 替身：get 用于回落读取，set/createCollection 是自举镜像会用到的
 function fakeDb(doc, onGet) {
   return {
     collection: (name) => ({
@@ -24,9 +24,11 @@ function fakeDb(doc, onGet) {
         get: () => {
           if (onGet) onGet(name, id)
           return doc ? Promise.resolve({ data: doc }) : Promise.reject(new Error('not found'))
-        }
+        },
+        set: () => Promise.resolve({})
       })
-    })
+    }),
+    createCollection: () => Promise.resolve({})
   }
 }
 
@@ -106,5 +108,86 @@ test('所有走微信支付的云函数都用同一份配置读取，不再各�
     assert.match(src, /payConfig\.getSubMchId\(db\)/, fn + ' 应通过共享模块取子商户号')
     assert.ok(!/const SUB_MCH_ID = process\.env\.SUB_MCH_ID/.test(src),
       fn + ' 不应再在模块顶层直接读环境变量（配置改了要等容器回收才生效）')
+  }
+})
+
+// 业主 2026-07-26 明确不想给 7 个函数逐个配环境变量：
+// 只要任意一个函数读到了环境变量，就镜像一份到数据库，其余函数随后都能读到。
+test('读到环境变量时把值镜像到 configs/pay，省掉逐个配置', async () => {
+  const cfg = loadFresh()
+  const original = process.env.SUB_MCH_ID
+  process.env.SUB_MCH_ID = '1900000112'
+  try {
+    let written = null
+    const db = {
+      collection: () => ({
+        doc: () => ({
+          set: (payload) => { written = payload.data; return Promise.resolve({}) },
+          get: () => Promise.reject(new Error('n/a'))
+        })
+      }),
+      createCollection: () => Promise.resolve({})
+    }
+    await cfg.getSubMchId(db)
+    await new Promise((r) => setImmediate(r)) // 镜像是 fire-and-forget
+    assert.ok(written, '应把子商户号镜像到数据库')
+    assert.equal(written.subMchId, '1900000112')
+  } finally {
+    if (original === undefined) delete process.env.SUB_MCH_ID
+    else process.env.SUB_MCH_ID = original
+  }
+})
+
+test('镜像写库失败绝不影响支付', async () => {
+  const cfg = loadFresh()
+  const original = process.env.SUB_MCH_ID
+  process.env.SUB_MCH_ID = '1900000113'
+  try {
+    const db = {
+      collection: () => ({ doc: () => ({ set: () => Promise.reject(new Error('无权限')) }) }),
+      createCollection: () => Promise.reject(new Error('无权限'))
+    }
+    const v = await cfg.getSubMchId(db)
+    await new Promise((r) => setImmediate(r))
+    assert.equal(v, '1900000113', '写库失败也必须正常返回子商户号')
+  } finally {
+    if (original === undefined) delete process.env.SUB_MCH_ID
+    else process.env.SUB_MCH_ID = original
+  }
+})
+
+test('镜像每个容器只写一次，不给每次下单加写库开销', async () => {
+  const cfg = loadFresh()
+  const original = process.env.SUB_MCH_ID
+  process.env.SUB_MCH_ID = '1900000114'
+  try {
+    let writes = 0
+    const db = {
+      collection: () => ({ doc: () => ({ set: () => { writes++; return Promise.resolve({}) } }) }),
+      createCollection: () => Promise.resolve({})
+    }
+    await cfg.getSubMchId(db)
+    await cfg.getSubMchId(db)
+    await cfg.getSubMchId(db)
+    await new Promise((r) => setImmediate(r))
+    assert.equal(writes, 1, '同一容器内只该镜像一次')
+  } finally {
+    if (original === undefined) delete process.env.SUB_MCH_ID
+    else process.env.SUB_MCH_ID = original
+  }
+})
+
+test('db 对象结构异常时镜像必须静默失败，不能带崩支付', async () => {
+  const cfg = loadFresh()
+  const original = process.env.SUB_MCH_ID
+  process.env.SUB_MCH_ID = '1900000115'
+  try {
+    // collection() 返回的对象连 doc 都没有——镜像会同步抛错
+    const brokenDb = { collection: () => ({}) }
+    const v = await cfg.getSubMchId(brokenDb)
+    assert.equal(v, '1900000115', '镜像挂了也必须正常返回子商户号')
+  } finally {
+    if (original === undefined) delete process.env.SUB_MCH_ID
+    else process.env.SUB_MCH_ID = original
   }
 })

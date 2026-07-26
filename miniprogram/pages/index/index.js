@@ -66,11 +66,40 @@ const TAB_PAGES = ['/pages/index/index', '/pages/park/park', '/pages/ling/ling',
 const FALLBACK_NOTICE = '欢迎来到森水长河 · 入园即入江湖'
 const EMPTY_SUMMARY = { unusedTicketCount: 0, upcomingReservation: null }
 
+// 内容迁移映射（业主 2026-07-26）
+// 园区介绍与精彩活动的内容已经搬到公众号和视频号，站内二级列表页对这两个分类
+// 不再有内容。但云端 home_configs 存的仍是旧 route，而云端配置会整体覆盖本地
+// 兜底（见 applyPortal），所以这里按 key 重定向一次，不必等云端配置同步。
+//
+// 只接管仍指向站内内容列表页的旧配置：云端一旦改成别的（含同步后的外链）就
+// 尊重云端。这条映射是幂等的，云端同步完成后删掉即可。
+const CONTENT_MIGRATED = {
+  quick_park_intro: {
+    route: externalLink.ARTICLE,
+    params: { url: env.links.parkIntroArticle, title: '园区介绍' },
+    subtitle: '图文详解'
+  },
+  quick_activities: {
+    route: externalLink.CHANNELS,
+    params: {},
+    subtitle: '视频号直击'
+  }
+}
+const MIGRATED_FROM = '/pages/content/list/list'
+
+function migrateSection(section) {
+  const next = CONTENT_MIGRATED[section.key]
+  if (!next) return section
+  if (section.route && section.route.indexOf(MIGRATED_FROM) !== 0) return section
+  return Object.assign({}, section, next)
+}
+
 // 把扁平的 sections 配置分组成页面可直接渲染的结构
 function groupSections(sections) {
   const list = (Array.isArray(sections) ? sections : [])
     .filter((s) => s && s.visible !== false)
     .sort((a, b) => (a.sort || 0) - (b.sort || 0))
+    .map(migrateSection)
     .map((s) => Object.assign({}, s, { params: s.params || {}, icon: SECTION_ICONS[s.key] || '' }))
 
   const byType = (type) => list.filter((s) => s.type === type)

@@ -228,3 +228,45 @@ test('无 route 的展示型模块点击不跳转', (t) => {
   assert.equal(calls.navigate.length, 0)
   assert.equal(calls.switchTab.length, 0)
 })
+
+// 云端 home_configs 里存的仍是搬迁前的 route，而云端配置会整体覆盖本地兜底，
+// 所以客户端要做一次迁移重定向，否则业主看到的还是旧的二级列表页
+test('云端配置仍指向旧内容列表页时，客户端重定向到公众号/视频号', async (t) => {
+  const { page, calls } = mountPage(t, {
+    portal: {
+      notice: { content: '测试' },
+      sections: [
+        { key: 'quick_park_intro', type: 'quick_entry', title: '园区介绍', subtitle: '一分钟看懂森水长河', route: '/pages/content/list/list', params: { category: 'park_intro' }, visible: true, sort: 20 },
+        { key: 'quick_activities', type: 'quick_entry', title: '精彩活动', subtitle: '今日场次与擂台', route: '/pages/content/list/list', params: { category: 'activity_story' }, visible: true, sort: 30 }
+      ],
+      activities: [],
+      userSummary: null
+    }
+  })
+  await page.loadData()
+  // 先确认确实吃到了云端配置，否则这条测试会被本地兜底假通过
+  assert.equal(page.data.quickEntries.length, 2, '应采用云端下发的两个入口')
+
+  page.onSectionTap({ currentTarget: { dataset: { key: 'quick_park_intro' } } })
+  assert.ok(/^\/pages\/webview\/webview\?url=/.test(calls.navigate[0]),
+    '园区介绍应重定向到公众号文章，实际：' + calls.navigate[0])
+  assert.ok(calls.navigate.every((u) => u.indexOf('/pages/content/list/list') === -1),
+    '不应再落到已搬空的二级列表页')
+})
+
+test('云端已改成别的页面时尊重云端，迁移映射不越权接管', async (t) => {
+  const { page, calls } = mountPage(t, {
+    portal: {
+      notice: { content: '测试' },
+      sections: [
+        { key: 'quick_park_intro', type: 'quick_entry', title: '园区介绍', subtitle: '', route: '/pages/guide/guide', params: {}, visible: true, sort: 20 }
+      ],
+      activities: [],
+      userSummary: null
+    }
+  })
+  await page.loadData()
+
+  page.onSectionTap({ currentTarget: { dataset: { key: 'quick_park_intro' } } })
+  assert.equal(calls.navigate[0], '/pages/guide/guide', '云端明确配了别的页面就该跳那里')
+})
