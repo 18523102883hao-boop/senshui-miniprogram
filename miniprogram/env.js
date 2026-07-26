@@ -45,7 +45,10 @@ module.exports = {
   // 小程序里不再维护一份副本，避免两边不一致。
   // ============================================================
   links: {
-    parkIntroArticle: 'https://mp.weixin.qq.com/s/hQGfn7c55rXqPVuXWhLgNQ'
+    // ⚠️ 必须是**已与本小程序关联的公众号**发的文章，否则 web-view 打不开
+    //    （2026-07-26 第一版填了未关联公众号的文章，真机 binderror）。
+    //    换文章时确认来源公众号已在小程序后台「关联设置」里关联。
+    parkIntroArticle: 'https://mp.weixin.qq.com/s/Kf_RPpyeM1uBLrAexV1mIA'
   },
   channels: {
     // ⚠️ 2026-07-26 真机验证：下面这个 id 是从主页短链推导的，**不可用**

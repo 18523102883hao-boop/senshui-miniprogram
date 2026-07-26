@@ -22,7 +22,7 @@ const DEFAULT_SECTIONS = [
     subtitle: '图文详解',
     // 内容在公众号上随时更新，小程序不再维护副本（业主 2026-07-26）
     route: 'external:article',
-    params: { url: 'https://mp.weixin.qq.com/s/hQGfn7c55rXqPVuXWhLgNQ', title: '园区介绍' },
+    params: { url: 'https://mp.weixin.qq.com/s/Kf_RPpyeM1uBLrAexV1mIA', title: '园区介绍' },
     visible: true,
     sort: 20
   },

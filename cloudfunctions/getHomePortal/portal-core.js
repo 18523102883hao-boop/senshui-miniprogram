@@ -7,7 +7,7 @@
 const DEFAULT_SECTIONS = [
   { key: 'hero', type: 'hero', title: '森水长河', subtitle: '峡谷溯溪 · 山野露营 · 长河令江湖', imageFileId: '', route: '', params: {}, visible: true, sort: 10 },
   // 园区介绍 / 精彩活动直接跳公众号与视频号，不再进二级列表（业主 2026-07-26）
-  { key: 'quick_park_intro', type: 'quick_entry', title: '园区介绍', subtitle: '图文详解', route: 'external:article', params: { url: 'https://mp.weixin.qq.com/s/hQGfn7c55rXqPVuXWhLgNQ', title: '园区介绍' }, visible: true, sort: 20 },
+  { key: 'quick_park_intro', type: 'quick_entry', title: '园区介绍', subtitle: '图文详解', route: 'external:article', params: { url: 'https://mp.weixin.qq.com/s/Kf_RPpyeM1uBLrAexV1mIA', title: '园区介绍' }, visible: true, sort: 20 },
   { key: 'quick_activities', type: 'quick_entry', title: '精彩活动', subtitle: '视频号直击', route: 'external:channels', params: {}, visible: true, sort: 30 },
   { key: 'quick_guide', type: 'quick_entry', title: '入园攻略', subtitle: '交通与装备', route: '/pages/guide/guide', params: {}, visible: true, sort: 40 },
   { key: 'quick_concierge', type: 'quick_entry', title: '管家服务', subtitle: '有人对接', route: '/pages/concierge/concierge', params: {}, visible: true, sort: 50 },

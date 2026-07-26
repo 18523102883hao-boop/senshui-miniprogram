@@ -326,3 +326,43 @@ test('视频号 ID 未验证时不调微信接口，直接给复制链接引导'
   assert.equal(calls.modal.length, 1, '应给出自己的引导弹窗')
   assert.match(calls.modal[0].confirmText, /复制/, '主按钮应是复制链接')
 })
+
+// 2026-07-26：第一篇文章来自未关联的公众号，web-view 打不开；换成已关联公众号的文章后，
+// 云端 params.url 还是旧的。链接必须以本地为准，否则要等云端同步才生效。
+test('云端已是外链但链接过时，仍以本地配置的文章链接为准', async (t) => {
+  const env = require(path.join(projectRoot, 'miniprogram/env.js'))
+  const { page, calls } = mountPage(t, {
+    portal: {
+      notice: { content: '测试' },
+      sections: [
+        {
+          key: 'quick_park_intro', type: 'quick_entry', title: '园区介绍', subtitle: '图文详解',
+          route: 'external:article',
+          params: { url: 'https://mp.weixin.qq.com/s/OUTDATED_OLD_LINK', title: '园区介绍' },
+          visible: true, sort: 20
+        }
+      ],
+      activities: [],
+      userSummary: null
+    }
+  })
+  await page.loadData()
+
+  page.onSectionTap({ currentTarget: { dataset: { key: 'quick_park_intro' } } })
+  const url = calls.navigate[0] || ''
+  assert.ok(url.indexOf('OUTDATED_OLD_LINK') === -1, '不应再用云端的过时链接')
+  assert.ok(url.indexOf(encodeURIComponent(env.links.parkIntroArticle)) > -1,
+    '应使用本地配置的文章链接，实际：' + url)
+})
+
+test('文章链接指向已关联公众号（换链接时容易漏掉这条约束）', () => {
+  const env = require(path.join(projectRoot, 'miniprogram/env.js'))
+  assert.match(env.links.parkIntroArticle, /^https:\/\/mp\.weixin\.qq\.com\/s\//,
+    '必须是公众号文章链接')
+  const seed = require(path.join(projectRoot, 'cloudfunctions/seedPortalContent/seed-data.js')).DEFAULT_SECTIONS
+  const portal = require(path.join(projectRoot, 'cloudfunctions/getHomePortal/portal-core.js')).DEFAULT_SECTIONS
+  for (const [name, list] of [['seed-data', seed], ['portal-core', portal]]) {
+    const s = list.find((x) => x.key === 'quick_park_intro')
+    assert.equal(s.params.url, env.links.parkIntroArticle, name + ' 的文章链接与 env.js 不一致')
+  }
+})

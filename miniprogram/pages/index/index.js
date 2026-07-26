@@ -90,6 +90,15 @@ const MIGRATED_FROM = '/pages/content/list/list'
 function migrateSection(section) {
   const next = CONTENT_MIGRATED[section.key]
   if (!next) return section
+
+  // 已经是外链的：保留云端的标题与显隐，但**链接以本地为准**。
+  // 文章换了（比如换成已关联公众号发的那篇）要能立刻生效，
+  // 不该卡在「等云端配置同步」上。
+  if (section.route === next.route) {
+    return Object.assign({}, section, { params: next.params })
+  }
+
+  // 仍指向已搬空的站内列表页：整条替换为外链
   if (section.route && section.route.indexOf(MIGRATED_FROM) !== 0) return section
   return Object.assign({}, section, next)
 }
