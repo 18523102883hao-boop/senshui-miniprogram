@@ -292,3 +292,37 @@ test('三处首页配置对外链入口保持一致，避免同步脚本把云�
   assert.ok(!/quick_park_intro[^}]*content\/list\/list/.test(localSrc), '前端本地 quick_park_intro 仍指向旧列表页')
   assert.ok(!/quick_activities[^}]*content\/list\/list/.test(localSrc), '前端本地 quick_activities 仍指向旧列表页')
 })
+
+// 2026-07-26 真机：finderUserName 填错时微信会先弹自己的「暂时打不开，请联系商家」，
+// 用户连看两个错误提示。ID 没验证通过就不该调那个接口。
+test('视频号 ID 未验证时不调微信接口，直接给复制链接引导', (t) => {
+  const linkPath = path.join(projectRoot, 'miniprogram/utils/external-link.js')
+  const envPath = path.join(projectRoot, 'miniprogram/env.js')
+  delete require.cache[linkPath]
+  delete require.cache[envPath]
+
+  const calls = { channels: 0, modal: [] }
+  const originalWx = global.wx
+  global.wx = {
+    openChannelsUserProfile: () => { calls.channels++ },
+    showModal: (o) => { calls.modal.push(o) },
+    showToast: () => {},
+    setClipboardData: () => {}
+  }
+  t.after(() => {
+    global.wx = originalWx
+    delete require.cache[linkPath]
+    delete require.cache[envPath]
+  })
+
+  const env = require(envPath)
+  assert.equal(env.channels.verified, false, 'ID 尚未真机验证通过，verified 必须是 false')
+
+  const externalLink = require(linkPath)
+  const handled = externalLink.open(externalLink.CHANNELS, {})
+
+  assert.equal(handled, true, '外链应被接管')
+  assert.equal(calls.channels, 0, 'verified 为 false 时绝不能调 openChannelsUserProfile')
+  assert.equal(calls.modal.length, 1, '应给出自己的引导弹窗')
+  assert.match(calls.modal[0].confirmText, /复制/, '主按钮应是复制链接')
+})

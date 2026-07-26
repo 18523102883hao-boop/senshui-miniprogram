@@ -4,6 +4,7 @@
 Page({
   data: {
     url: '',
+    loaded: false,
     failed: false
   },
 
@@ -17,6 +18,20 @@ Page({
       return
     }
     this.setData({ url })
+    // 域名不在白名单时 web-view 可能既不渲染也不报错，只留一片空白。
+    // 给一个超时兜底，别让用户对着白屏干等。
+    this._timer = setTimeout(() => {
+      if (!this.data.loaded) this.setData({ failed: true })
+    }, 4000)
+  },
+
+  onUnload() {
+    if (this._timer) clearTimeout(this._timer)
+  },
+
+  onLoadSuccess() {
+    this.setData({ loaded: true })
+    if (this._timer) clearTimeout(this._timer)
   },
 
   // web-view 加载失败：给用户一条复制链接、去微信里打开的出路
@@ -28,7 +43,14 @@ Page({
     if (!this.data.url) return
     wx.setClipboardData({
       data: this.data.url,
-      success: () => wx.showToast({ title: '链接已复制', icon: 'none' })
+      success: () => wx.showToast({ title: '已复制，去微信里粘贴打开', icon: 'none' })
+    })
+  },
+
+  goConcierge() {
+    wx.navigateTo({
+      url: '/pages/concierge/concierge',
+      fail: () => wx.showToast({ title: '请联系前台', icon: 'none' })
     })
   }
 })

@@ -48,9 +48,16 @@ module.exports = {
     parkIntroArticle: 'https://mp.weixin.qq.com/s/hQGfn7c55rXqPVuXWhLgNQ'
   },
   channels: {
-    // ⚠️ finderUserName 需要「以 sph 开头的视频号 id」，可在视频号助手 →
-    //    账号信息里查到。这里按主页短链 https://weixin.qq.com/sph/AebBKr8Cyy
-    //    推导，若真机点击打不开（会自动降级为复制链接），把助手里的准确 id 填这里。
+    // ⚠️ 2026-07-26 真机验证：下面这个 id 是从主页短链推导的，**不可用**
+    //    （微信弹「暂时打不开，请联系商家」）。
+    //
+    //    正确做法：视频号助手 channels.weixin.qq.com → 登录 → 账号信息 →
+    //    复制「视频号ID」（sph 开头的一串），填到 finderUserName，
+    //    然后把 verified 改成 true。
+    //
+    //    verified 为 false 时小程序**不会**调用微信跳转接口，
+    //    直接给「复制链接去微信打开」的引导，避免用户撞上微信的系统报错。
+    verified: false,
     finderUserName: 'sphAebBKr8Cyy',
     homepage: 'https://weixin.qq.com/sph/AebBKr8Cyy'
   },

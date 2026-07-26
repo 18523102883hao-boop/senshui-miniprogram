@@ -1,1 +1,23 @@
-.fail { padding: 120rpx 40rpx; }
+.fail {
+  display: flex; flex-direction: column; align-items: center;
+  padding: 140rpx 60rpx 0;
+}
+.fail__iconbox {
+  width: 128rpx; height: 128rpx; border-radius: 50%;
+  background: var(--sr-primary-weak);
+  display: flex; align-items: center; justify-content: center;
+}
+.fail__title { font-size: 34rpx; font-weight: 700; color: var(--sr-text); margin-top: 36rpx; }
+.fail__desc {
+  font-size: 25rpx; color: var(--sr-text-sub); line-height: 1.6;
+  text-align: center; margin-top: 16rpx;
+}
+.fail__btn {
+  margin-top: 48rpx; padding: 26rpx 72rpx; border-radius: 44rpx;
+  background: var(--sr-primary); color: #fff; font-size: 30rpx; font-weight: 700;
+}
+.fail__alt {
+  display: flex; align-items: center; gap: 10rpx;
+  margin-top: 28rpx; padding: 16rpx 32rpx; border-radius: 40rpx;
+  font-size: 26rpx; color: var(--sr-primary); background: var(--sr-primary-weak);
+}

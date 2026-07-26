@@ -1,7 +1,17 @@
-<web-view wx:if="{{url && !failed}}" src="{{url}}" binderror="onLoadError" />
+<web-view wx:if="{{url && !failed}}" src="{{url}}" binderror="onLoadError" bindload="onLoadSuccess" />
 
+<!-- 打不开时不要只说「打不开」——给一条能立刻走通的路。
+     公众号文章要在小程序里直接展示，前提是小程序后台关联了该公众号；
+     没关联时这里就是唯一出口，所以必须说清楚接下来怎么做。 -->
 <view class="fail" wx:if="{{failed}}">
-  <sr-empty-state icon="mine-orders" title="内容打不开了"
-                  desc="可以复制链接后在微信里直接打开"
-                  actionText="复制链接" bind:action="copyUrl" />
+  <view class="fail__iconbox">
+    <sr-icon name="home-activity" theme="light" size="lg" />
+  </view>
+  <text class="fail__title">在微信里打开这篇文章</text>
+  <text class="fail__desc">复制链接后，在微信任意聊天窗口粘贴即可打开</text>
+  <view class="fail__btn sr-touch" hover-class="sr-touch--cta" hover-stay-time="60" bindtap="copyUrl">复制文章链接</view>
+  <view class="fail__alt sr-touch" hover-class="sr-touch--press" hover-stay-time="60" bindtap="goConcierge">
+    <sr-icon name="customer-service" theme="light" size="sm" />
+    <text>问管家</text>
+  </view>
 </view>

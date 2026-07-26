@@ -42,18 +42,33 @@ function openArticle(params) {
   return true
 }
 
+// 视频号打不开时的引导：比微信自己弹的「暂时打不开，请联系商家」清楚得多
+function guideToChannels(cfg) {
+  wx.showModal({
+    title: '森水长河视频号',
+    content: '复制链接后在微信里打开，就能看到最新的活动视频',
+    confirmText: '复制链接',
+    cancelText: '知道了',
+    success: (res) => { if (res.confirm) copyFallback(cfg.homepage) }
+  })
+}
+
 function openChannels() {
   const cfg = env.channels || {}
   const finderUserName = cfg.finderUserName || ''
-  // 基础库 2.21.2 以下没有这个能力，直接走复制兜底
-  if (!finderUserName || typeof wx.openChannelsUserProfile !== 'function') {
-    copyFallback(cfg.homepage, '视频号暂未配置')
+
+  // verified 为 false 时**不调**微信 API：
+  // finderUserName 填错的话，微信会先弹自己的「暂时打不开，请联系商家」，
+  // 我们的 fail 回调再补一个提示，用户连着看两个错误更懵。
+  // 拿到视频号助手里的准确 ID、真机验证通过后，把 env.channels.verified 改成 true。
+  if (!cfg.verified || !finderUserName || typeof wx.openChannelsUserProfile !== 'function') {
+    guideToChannels(cfg)
     return true
   }
+
   wx.openChannelsUserProfile({
     finderUserName,
-    // ID 不对或用户没关注视频号权限时会 fail，此时给复制链接的出路
-    fail: () => copyFallback(cfg.homepage)
+    fail: () => guideToChannels(cfg)
   })
   return true
 }
