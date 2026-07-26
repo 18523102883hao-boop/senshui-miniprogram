@@ -1,0 +1,7 @@
+<web-view wx:if="{{url && !failed}}" src="{{url}}" binderror="onLoadError" />
+
+<view class="fail" wx:if="{{failed}}">
+  <sr-empty-state icon="mine-orders" title="内容打不开了"
+                  desc="可以复制链接后在微信里直接打开"
+                  actionText="复制链接" bind:action="copyUrl" />
+</view>

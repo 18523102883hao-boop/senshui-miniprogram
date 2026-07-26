@@ -119,7 +119,11 @@ test('每个入口的路由+参数组合唯一，避免两个卡片跳到同一�
   const routed = page.data.sections.filter((s) => s.route)
   const urls = routed.map((s) => page.buildUrl(s.route, s.params))
   assert.equal(new Set(urls).size, urls.length, '入口路由重复：' + urls.join(', '))
-  for (const url of urls) assert.ok(url.startsWith('/pages/'), '路由必须是绝对路径：' + url)
+  for (const url of urls) {
+    // external: 前缀走微信生态外链（公众号文章 / 视频号），不是小程序页面路由
+    assert.ok(url.startsWith('/pages/') || url.startsWith('external:'),
+      '路由必须是绝对路径或 external: 外链：' + url)
+  }
 })
 
 test('云端配置可以隐藏模块、改标题、改排序', async (t) => {
@@ -187,8 +191,21 @@ test('两个接口都失败时仍显示本地默认门户，不白屏', async (t
 
 test('点击入口按配置跳转，参数拼接到 url', (t) => {
   const { page, calls } = mountPage(t)
+  page.onSectionTap({ currentTarget: { dataset: { key: 'quick_guide' } } })
+  assert.equal(calls.navigate[0], '/pages/guide/guide')
+})
+
+// 业主 2026-07-26：园区介绍与精彩活动的内容在公众号/视频号上随时更新，
+// 小程序里不再维护副本，点一下直接跳过去，不要二级列表页
+test('园区介绍直接打开公众号文章，不进二级列表', (t) => {
+  const { page, calls } = mountPage(t)
   page.onSectionTap({ currentTarget: { dataset: { key: 'quick_park_intro' } } })
-  assert.equal(calls.navigate[0], '/pages/content/list/list?category=park_intro')
+  assert.ok(/^\/pages\/webview\/webview\?url=/.test(calls.navigate[0]),
+    '应跳 web-view 承载页，实际：' + calls.navigate[0])
+  assert.ok(calls.navigate[0].indexOf(encodeURIComponent('https://mp.weixin.qq.com/s/')) > -1,
+    'url 参数应是公众号文章链接')
+  assert.ok(calls.navigate.every((u) => u.indexOf('/pages/content/list/list') === -1),
+    '不应再经过内容列表页')
 })
 
 test('目标页面尚未上线时给出提示，不允许点了无反应', (t) => {

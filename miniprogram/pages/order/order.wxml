@@ -21,9 +21,9 @@
         <text class="ord__amount sr-num">{{item.amountText}}</text>
       </view>
       <view class="ord__acts">
-        <view class="ord__btn ord__btn--pay sr-touch" wx:if="{{item.canPay}}"
+        <view class="ord__btn ord__btn--pay sr-touch {{paying ? 'is-busy' : ''}}" wx:if="{{item.canPay}}"
               hover-class="sr-touch--cta" hover-stay-time="60"
-              data-no="{{item.outTradeNo}}" catchtap="onPay">继续支付</view>
+              data-no="{{item.outTradeNo}}" data-type="{{item.type}}" catchtap="onPay">{{paying ? '处理中' : '继续支付'}}</view>
         <view class="ord__btn sr-touch" wx:if="{{item.canRefund}}"
               hover-class="sr-touch--press" hover-stay-time="60"
               data-no="{{item.outTradeNo}}" catchtap="onRefund">申请退款</view>

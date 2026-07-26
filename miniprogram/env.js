@@ -39,6 +39,22 @@ module.exports = {
     heightLimit: '成人限制身高 150 厘米（含）以上'
   },
 
+  // ============================================================
+  // 微信生态外链（业主 2026-07-26 提供）
+  // 园区介绍走公众号文章，精彩活动走视频号——都是随时更新的内容，
+  // 小程序里不再维护一份副本，避免两边不一致。
+  // ============================================================
+  links: {
+    parkIntroArticle: 'https://mp.weixin.qq.com/s/hQGfn7c55rXqPVuXWhLgNQ'
+  },
+  channels: {
+    // ⚠️ finderUserName 需要「以 sph 开头的视频号 id」，可在视频号助手 →
+    //    账号信息里查到。这里按主页短链 https://weixin.qq.com/sph/AebBKr8Cyy
+    //    推导，若真机点击打不开（会自动降级为复制链接），把助手里的准确 id 填这里。
+    finderUserName: 'sphAebBKr8Cyy',
+    homepage: 'https://weixin.qq.com/sph/AebBKr8Cyy'
+  },
+
   // 订阅消息模板 ID（小程序后台 → 订阅消息 申请后填入）
   // 留空则不弹授权，不影响主流程；填入后预约成功会申请一次授权
   subscribeTmplIds: {

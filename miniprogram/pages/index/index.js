@@ -3,6 +3,7 @@
 // 数据链路：getHomePortal（新）→ getHomeData（旧，兼容未部署新函数的环境）→ 本地默认配置。
 const request = require('../../utils/request.js')
 const env = require('../../env.js')
+const externalLink = require('../../utils/external-link.js')
 const { haptic } = require('../../utils/haptics.js')
 const { makePhoneCall } = require('../../utils/util.js')
 const { resolveHomeState } = require('../../utils/home-state.js')
@@ -11,10 +12,11 @@ const { resolveHomeState } = require('../../utils/home-state.js')
 // ⚠️ key 与 sort 必须与 cloudfunctions/seedPortalContent/seed-data.js 的 DEFAULT_SECTIONS 对应。
 const LOCAL_SECTIONS = [
   { key: 'hero', type: 'hero', title: '森水长河', subtitle: '峡谷溯溪 · 山野露营 · 长河令江湖', route: '', params: {}, visible: true, sort: 10 },
-  { key: 'quick_park_intro', type: 'quick_entry', title: '园区介绍', subtitle: '一分钟看懂森水长河', route: '/pages/content/list/list', params: { category: 'park_intro' }, visible: true, sort: 20 },
-  { key: 'quick_activities', type: 'quick_entry', title: '精彩活动', subtitle: '今日场次与擂台', route: '/pages/content/list/list', params: { category: 'activity_story' }, visible: true, sort: 30 },
-  { key: 'quick_guide', type: 'quick_entry', title: '入园攻略', subtitle: '交通 · 装备 · 注意事项', route: '/pages/guide/guide', params: {}, visible: true, sort: 40 },
-  { key: 'quick_concierge', type: 'quick_entry', title: '管家服务', subtitle: '到园前后有人对接', route: '/pages/concierge/concierge', params: {}, visible: true, sort: 50 },
+  // 园区介绍 / 精彩活动直接跳公众号文章与视频号，不再进二级列表（业主 2026-07-26）
+  { key: 'quick_park_intro', type: 'quick_entry', title: '园区介绍', subtitle: '图文详解', route: 'external:article', params: { url: env.links.parkIntroArticle, title: '园区介绍' }, visible: true, sort: 20 },
+  { key: 'quick_activities', type: 'quick_entry', title: '精彩活动', subtitle: '视频号直击', route: 'external:channels', params: {}, visible: true, sort: 30 },
+  { key: 'quick_guide', type: 'quick_entry', title: '入园攻略', subtitle: '交通与装备', route: '/pages/guide/guide', params: {}, visible: true, sort: 40 },
+  { key: 'quick_concierge', type: 'quick_entry', title: '管家服务', subtitle: '有人对接', route: '/pages/concierge/concierge', params: {}, visible: true, sort: 50 },
   { key: 'ticket_entry', type: 'primary_action', title: '门票购买', subtitle: '在线选票 · 入园扫码', route: '/pages/ticket/ticket', params: {}, visible: true, sort: 60 },
   { key: 'reservation_entry', type: 'primary_action', title: '立即预约', subtitle: '团队到园 · 研学 · 亲友聚会', route: '/pages/reservation/entry/entry', params: {}, visible: true, sort: 70 },
   { key: 'upgrade_entry', type: 'primary_action', title: '补差价升级', subtitle: '单项票升套票 · 现场办理', route: '/pages/upgrade-info/upgrade-info', params: {}, visible: true, sort: 75 },
@@ -169,6 +171,8 @@ Page({
   goRoute(route, params) {
     if (!route) return
     haptic('light')
+    // 公众号文章 / 视频号不走页面路由
+    if (externalLink.open(route, params)) return
     if (TAB_PAGES.indexOf(route) >= 0) {
       wx.switchTab({ url: route })
       return

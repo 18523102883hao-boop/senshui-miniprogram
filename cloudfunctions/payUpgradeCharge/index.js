@@ -8,10 +8,12 @@ const cloud = require('wx-server-sdk')
 cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV })
 const db = cloud.database()
 
-const SUB_MCH_ID = process.env.SUB_MCH_ID || '' // 与会员卡同一子商户号
+const payConfig = require('./pay-config.js')
 const CALLBACK_FN = 'payCallback'
 
 exports.main = async (event) => {
+  const SUB_MCH_ID = await payConfig.getSubMchId(db)
+  if (!SUB_MCH_ID) return { code: 500, msg: payConfig.NOT_CONFIGURED_MSG }
   const wxContext = cloud.getWXContext()
   const OPENID = wxContext.OPENID
   if (!OPENID) return { code: 401, msg: '未登录' }

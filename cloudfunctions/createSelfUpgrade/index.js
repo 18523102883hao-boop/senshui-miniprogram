@@ -10,7 +10,7 @@ cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV })
 const db = cloud.database()
 const _ = db.command
 
-const SUB_MCH_ID = process.env.SUB_MCH_ID || ''
+const payConfig = require('./pay-config.js')
 const CALLBACK_FN = 'payCallback'
 
 function genOutTradeNo() {
@@ -18,6 +18,8 @@ function genOutTradeNo() {
 }
 
 exports.main = async (event) => {
+  const SUB_MCH_ID = await payConfig.getSubMchId(db)
+  if (!SUB_MCH_ID) return { code: 500, msg: payConfig.NOT_CONFIGURED_MSG }
   const wxContext = cloud.getWXContext()
   const OPENID = wxContext.OPENID
   if (!OPENID) return { code: 401, msg: '未登录' }

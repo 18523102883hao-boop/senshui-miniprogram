@@ -17,7 +17,8 @@ Page({
     list: [],
     loading: true,
     isEmpty: false,
-    hasError: false
+    hasError: false,
+    paying: false
   },
 
   onShow() {
@@ -50,14 +51,41 @@ Page({
     return this.load()
   },
 
-  // 待支付的门票订单可继续支付
+  // 待支付订单继续支付：重新调起微信支付
+  // 注意不能跳支付结果页——那页是「已付款、等回调」的场景，轮询的还是门票；
+  // 待支付订单从没付过钱，跳过去只会永远停在「支付确认中」。
   onPay(e) {
+    if (this.data.paying) return Promise.resolve()
     const no = e.currentTarget.dataset.no
+    const type = e.currentTarget.dataset.type
     haptic('light')
-    wx.navigateTo({
-      url: '/pages/ticket/result/result?outTradeNo=' + encodeURIComponent(no),
-      fail: () => wx.showToast({ title: '请稍后重试', icon: 'none' })
-    })
+    this.setData({ paying: true })
+
+    return request.call('repayOrder', { outTradeNo: no })
+      .then((d) => new Promise((resolve, reject) => {
+        wx.requestPayment(Object.assign({}, d.payment, { success: resolve, fail: reject }))
+      }))
+      .then(() => {
+        this.setData({ paying: false })
+        // 门票支付后要等出票，进结果页轮询；其余类型直接刷新列表即可
+        if (type === 'ticket_order') {
+          wx.navigateTo({
+            url: '/pages/ticket/result/result?outTradeNo=' + encodeURIComponent(no),
+            fail: () => this.load()
+          })
+          return
+        }
+        wx.showToast({ title: '支付成功', icon: 'success' })
+        return this.load()
+      })
+      .catch((err) => {
+        this.setData({ paying: false })
+        // 用户主动取消支付：静默，不弹失败
+        if (err && err.errMsg && err.errMsg.indexOf('cancel') > -1) return
+        wx.showToast({ title: (err && err.message) || '支付失败，请稍后重试', icon: 'none' })
+        // 订单状态已变（已支付/已关闭）时刷新列表，避免按钮还停在「继续支付」
+        if (err && err.code === 409) return this.load()
+      })
   },
 
   onRefund(e) {

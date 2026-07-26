@@ -39,7 +39,8 @@
     "pages/staff/leads/leads",
     "pages/service/mine/mine",
     "pages/feedback/create/create",
-    "pages/feedback/list/list"
+    "pages/feedback/list/list",
+    "pages/webview/webview"
   ],
   "window": {
     "backgroundTextStyle": "dark",

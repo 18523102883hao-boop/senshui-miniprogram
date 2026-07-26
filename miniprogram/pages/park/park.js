@@ -1,6 +1,7 @@
 // 园区 Tab —— 园内一站式（Vibe UI v2.0）
 // 定位：客人已经在园区（或正赶来）时打开就能用的东西。
-// 顺序按园内使用频次排：今日安排 → 地图 → 现场服务 → 到园与求助。
+// 顺序（业主 2026-07-26 调整）：营业时间 → 地图 → 现场服务 → 今日活动 → 到园与求助。
+// 地图与现场服务是园内最高频的刚需，排在最前；活动因为每天变动，只作参考放最后。
 // 品牌信息头已在首页，此处不重复（业主 2026-07-25 反馈）。
 const request = require('../../utils/request.js')
 const env = require('../../env.js')
@@ -16,31 +17,17 @@ const SERVICES = [
   { key: 'guide', title: '入园攻略', desc: '交通 · 设施 · 咨询', icon: 'map-route', route: '/pages/guide/guide' }
 ]
 
-// 固定日程（旺季）；如需改活动跟我说
-const SCHEDULE = [
-  { id: 1, time: '13:00', name: '侠客滩捕鱼', loc: '侠客滩' },
-  { id: 2, time: '14:20', name: '侠客打擂乐园', loc: '打擂台' },
-  { id: 3, time: '16:00', name: '侠客滩捕鱼', loc: '侠客滩' },
-  { id: 4, time: '17:00', name: '海鲜大拍卖', loc: '主舞台' }
+// 常规活动项目（只列名称）。
+// 业主 2026-07-26：每天的场次时间和具体内容都在变，小程序里写死时间会让客人白等，
+// 因此这里只告诉客人「园区有哪些玩法」，具体时间一律以现场广播和公告为准。
+const ACTIVITIES = [
+  { id: 1, name: '侠客滩捕鱼' },
+  { id: 2, name: '侠客打擂乐园' },
+  { id: 3, name: '海鲜大拍卖' }
 ]
 
-function toMinutes(hhmm) {
-  const m = String(hhmm).match(/^(\d{1,2}):(\d{2})$/)
-  return m ? Number(m[1]) * 60 + Number(m[2]) : 0
-}
-
-// 标记已过场次与「下一场」——园内客人最关心的就是下一场几点
-function markSchedule(now) {
-  const mins = now.getHours() * 60 + now.getMinutes()
-  let nextFound = false
-  return SCHEDULE.map((a) => {
-    const start = toMinutes(a.time)
-    const passed = mins > start + 45 // 场次约 45 分钟
-    const next = !passed && !nextFound && mins <= start
-    if (next) nextFound = true
-    return Object.assign({}, a, { passed, next })
-  })
-}
+// 时间以现场为准的提醒文案，页面上要显眼展示，避免客人按小程序的时间安排行程
+const ACTIVITY_DISCLAIMER = '活动场次时间与具体内容每日不同，请以现场广播和公告为准'
 
 function todayText(now) {
   const w = ['日', '一', '二', '三', '四', '五', '六'][now.getDay()]
@@ -52,7 +39,8 @@ Page({
     todayText: '',
     hours: [],
     campNote: '',
-    activities: [],
+    activities: ACTIVITIES,
+    activityDisclaimer: ACTIVITY_DISCLAIMER,
     services: SERVICES.map((s) => Object.assign({}, s, { iconPath: '/assets/icons/forest/' + s.icon + '.png' })),
     frontPhone: env.frontDeskPhone,
     canNavigate: !!(env.park && env.park.latitude && env.park.longitude),
@@ -80,8 +68,7 @@ Page({
     this.setData({
       todayText: todayText(now),
       hours: status.items,
-      campNote: camp && camp.note ? '营地 ' + camp.note : '',
-      activities: markSchedule(now)
+      campNote: camp && camp.note ? '营地 ' + camp.note : ''
     })
   },
 
@@ -155,6 +142,6 @@ Page({
   },
 
   onShareAppMessage() {
-    return { title: '森水长河 · 园区地图与今日安排', path: '/pages/park/park' }
+    return { title: '森水长河 · 园区地图与现场服务', path: '/pages/park/park' }
   }
 })

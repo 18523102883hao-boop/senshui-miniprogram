@@ -1,43 +1,50 @@
-/* 园区 Tab：按园内使用频次排布 */
+/* 园区 Tab：按园内使用频次排布
+   营业时间 → 地图 → 现场服务 → 园区活动 → 到园求助（业主 2026-07-26 定） */
 
-/* ===== 1. 今日安排 ===== */
-.today {
+/* ===== 今日营业（营地与溪降时间不同，分列展示）===== */
+.hours {
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap;
   background: var(--sr-bg-card); border-radius: var(--sr-radius);
-  box-shadow: var(--sr-shadow); padding: 28rpx 32rpx; margin-bottom: var(--sr-gap-5);
+  box-shadow: var(--sr-shadow); padding: 24rpx 28rpx; margin-bottom: 12rpx;
 }
-.today__head { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; }
-.today__date { font-size: 30rpx; font-weight: 700; color: var(--sr-text); }
-.today__hours { display: flex; }
-/* 营地与溪降时间不同，分别标注避免误解 */
-.today__hour {
-  font-size: 20rpx; color: var(--sr-text-weak);
-  background: var(--sr-bg-sunken); border-radius: var(--sr-radius-sm);
-  padding: 6rpx 14rpx; margin-left: 10rpx;
+.hours__date { font-size: 30rpx; font-weight: 700; color: var(--sr-text); }
+.hours__list { display: flex; }
+.hours__item {
+  font-size: 21rpx; color: var(--sr-text-sub); background: var(--sr-bg-sunken);
+  border-radius: 8rpx; padding: 6rpx 14rpx; margin-left: 10rpx;
 }
-.today__hour.is-open { background: rgba(54,182,106,0.14); color: #2E9E5B; font-weight: 600; }
-.today__hour.is-partial { background: rgba(213,164,58,0.16); color: #A67C1F; font-weight: 600; }
+.hours__item.is-open { background: rgba(54,182,106,0.14); color: #2E9E5B; font-weight: 600; }
+.hours__item.is-partial { background: rgba(213,164,58,0.16); color: #A67C1F; font-weight: 600; }
+.hours__note {
+  display: block; font-size: 20rpx; color: var(--sr-text-weak);
+  margin: 0 4rpx 28rpx; 
+}
 
-.today__acts { margin-top: 20rpx; }
-.act-item {
-  display: flex; align-items: center;
-  padding: 18rpx 0; border-bottom: 1rpx solid var(--sr-line);
+/* ===== 园区活动（只列名称，时间以现场为准）===== */
+.acts {
+  background: var(--sr-bg-card); border-radius: var(--sr-radius);
+  box-shadow: var(--sr-shadow); padding: 24rpx 28rpx; margin-bottom: 32rpx;
 }
-.act-item:last-child { border-bottom: none; padding-bottom: 4rpx; }
-.act-item__time { width: 110rpx; flex-shrink: 0; font-size: 28rpx; font-weight: 700; color: var(--sr-primary); }
-.act-item__body { flex: 1; display: flex; flex-direction: column; }
-.act-item__name { font-size: 27rpx; font-weight: 600; color: var(--sr-text); }
-.act-item__loc { font-size: 21rpx; color: var(--sr-text-weak); margin-top: 4rpx; }
-.act-item__tag {
-  flex-shrink: 0; font-size: 19rpx; font-weight: 700; color: #fff;
-  background: var(--sr-seal); border-radius: 20rpx; padding: 6rpx 16rpx;
+/* 提示条排在列表之前且用暖色底：客人必须先看到「时间以现场为准」再看玩法，
+   否则又会把这里当成时刻表 */
+.acts__notice {
+  display: flex; align-items: flex-start;
+  background: rgba(213,164,58,0.14); border-radius: var(--sr-radius-xs);
+  padding: 18rpx 20rpx; margin-bottom: 8rpx;
 }
-/* 已过场次弱化，下一场高亮 —— 园内客人一眼看到接下来去哪 */
-.act-item.is-passed .act-item__time,
-.act-item.is-passed .act-item__name { color: var(--sr-text-weak); }
-.act-item.is-next { background: rgba(240,112,85,0.06); border-radius: var(--sr-radius-xs); margin: 0 -12rpx; padding-left: 12rpx; padding-right: 12rpx; }
-.act-item.is-next .act-item__time { color: var(--sr-seal); }
+.acts__notice-text {
+  flex: 1; margin-left: 12rpx;
+  font-size: 23rpx; line-height: 1.5; font-weight: 600; color: #8A6410;
+}
+.acts__list { padding-top: 8rpx; }
+.acts__item { display: flex; align-items: center; padding: 18rpx 4rpx; border-bottom: 1rpx solid var(--sr-line); }
+.acts__item:last-child { border-bottom: none; }
+.acts__dot {
+  width: 10rpx; height: 10rpx; border-radius: 50%; flex-shrink: 0;
+  background: var(--sr-primary); margin-right: 18rpx;
+}
+.acts__name { font-size: 27rpx; font-weight: 600; color: var(--sr-text); }
 
-.today__note { display: block; font-size: 20rpx; color: var(--sr-text-weak); margin-top: 16rpx; }
 
 /* ===== 2. 园区地图 ===== */
 .maps { display: flex; justify-content: space-between; margin-bottom: var(--sr-gap-5); }

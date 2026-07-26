@@ -11,7 +11,7 @@ const db = cloud.database()
 const _ = db.command
 
 const MEMBER_PRICE = 990 // 分（9.9 元）
-const SUB_MCH_ID = process.env.SUB_MCH_ID || '' // 微信支付子商户号
+const payConfig = require('./pay-config.js')
 const CALLBACK_FN = 'payCallback' // 支付成功回调云函数
 const REUSE_WINDOW = 5 * 60 * 1000 // 未支付订单复用窗口
 
@@ -29,6 +29,8 @@ function normalizeBirthday(input) {
 }
 
 exports.main = async (event) => {
+  const SUB_MCH_ID = await payConfig.getSubMchId(db)
+  if (!SUB_MCH_ID) return { code: 500, msg: payConfig.NOT_CONFIGURED_MSG }
   const wxContext = cloud.getWXContext()
   const OPENID = wxContext.OPENID
   if (!OPENID) return { code: 401, msg: '未登录' }

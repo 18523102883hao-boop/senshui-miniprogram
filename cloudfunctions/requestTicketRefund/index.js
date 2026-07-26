@@ -6,10 +6,12 @@ const db = cloud.database()
 const _ = db.command
 const core = require('./refund-core.js')
 
-const SUB_MCH_ID = process.env.SUB_MCH_ID || ''
-const PAY_REFUND_ENABLED = !!SUB_MCH_ID && process.env.PAY_REFUND_ENABLED !== 'false'
+const payConfig = require('./pay-config.js')
 
 exports.main = async (event) => {
+  // 子商户号可能来自数据库，只能在运行时求值（原本在模块顶层算，配置改了要等容器回收才生效）
+  const SUB_MCH_ID = await payConfig.getSubMchId(db)
+  const PAY_REFUND_ENABLED = !!SUB_MCH_ID && process.env.PAY_REFUND_ENABLED !== 'false'
   const OPENID = cloud.getWXContext().OPENID
   if (!OPENID) return { code: 401, msg: '请先登录' }
 

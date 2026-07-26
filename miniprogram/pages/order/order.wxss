@@ -29,3 +29,6 @@
 
 /* 常驻底部导航避让 */
 .sr-page { padding-bottom: calc(150rpx + env(safe-area-inset-bottom)) !important; }
+
+/* 支付调起中：避免连点重复拉起微信支付面板 */
+.ord__btn--pay.is-busy { opacity: 0.6; }

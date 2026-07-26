@@ -104,31 +104,46 @@ test('园区 Tab 不重复首页的品牌信息头', () => {
   assert.equal(/<sr-park-header/.test(park), false, '品牌头只在首页出现一次')
 })
 
-test('园区 Tab 按园内使用场景排布：今日安排在最前', () => {
+// 业主 2026-07-26：地图和现场服务是园内最高频的刚需，必须排在最前；
+// 活动因为每天变动，只作参考放后面
+test('园区 Tab 排布：地图与现场服务在前，活动在后', () => {
   const park = fs.readFileSync(path.join(projectRoot, 'miniprogram/pages/park/park.wxml'), 'utf8')
-  const order = ['today', 'maps', 'svc-grid', 'help']
+  const order = ['hours', 'maps', 'svc-grid', 'acts', 'help']
   let last = -1
   for (const cls of order) {
     const i = park.indexOf('class="' + cls)
     assert.ok(i > 0, '缺区块：' + cls)
-    assert.ok(i > last, cls + ' 顺序不对，园内客人先看今日安排再找路')
+    assert.ok(i > last, cls + ' 顺序不对：园内客人先找路、再看服务，活动排最后')
     last = i
   }
 })
 
 test('园区页营业时间也分营地与溪降', () => {
   const park = fs.readFileSync(path.join(projectRoot, 'miniprogram/pages/park/park.wxml'), 'utf8')
-  assert.match(park, /today__hour/, '缺分项目营业时间')
+  assert.match(park, /hours__item/, '缺分项目营业时间')
   const js = fs.readFileSync(path.join(projectRoot, 'miniprogram/pages/park/park.js'), 'utf8')
   assert.match(js, /computeOpenStatus/, '应复用共享的营业状态计算')
 })
 
-test('园区页标出下一场活动，已过场次弱化', () => {
+// 业主 2026-07-26：每日场次时间与内容都在变，小程序写死时间会让客人白等
+test('园区活动只列名称，不出现具体时间', () => {
   const js = fs.readFileSync(path.join(projectRoot, 'miniprogram/pages/park/park.js'), 'utf8')
-  assert.match(js, /markSchedule/, '缺场次标记逻辑')
+  const block = js.slice(js.indexOf('const ACTIVITIES'), js.indexOf(']', js.indexOf('const ACTIVITIES')))
+  assert.ok(block.length > 0, '缺活动名称列表')
+  assert.ok(!/\d{1,2}:\d{2}/.test(block), '活动项不得写死时间，实际：' + block)
+  assert.ok(!/markSchedule/.test(js), '不应再有按时间标记场次的逻辑')
+})
+
+test('活动区必须显眼标注「以现场广播和公告为准」', () => {
+  const js = fs.readFileSync(path.join(projectRoot, 'miniprogram/pages/park/park.js'), 'utf8')
+  assert.match(js, /现场广播/, '缺以现场为准的提示文案')
+  const park = fs.readFileSync(path.join(projectRoot, 'miniprogram/pages/park/park.wxml'), 'utf8')
+  const noticeAt = park.indexOf('acts__notice')
+  const listAt = park.indexOf('acts__list')
+  assert.ok(noticeAt > 0 && listAt > 0, '缺提示条或活动列表')
+  assert.ok(noticeAt < listAt, '提示条必须排在活动列表之前，否则客人先看到玩法又当成时刻表')
   const css = fs.readFileSync(path.join(projectRoot, 'miniprogram/pages/park/park.wxss'), 'utf8')
-  assert.match(css, /\.act-item\.is-next/, '缺下一场高亮样式')
-  assert.match(css, /\.act-item\.is-passed/, '缺已过场次弱化样式')
+  assert.match(css, /\.acts__notice \{[^}]*background:/s, '提示条需有底色，纯文字不够显眼')
 })
 
 test('今日活动已移至园区 Tab，首页不再重复', () => {

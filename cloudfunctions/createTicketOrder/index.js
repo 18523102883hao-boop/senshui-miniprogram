@@ -8,7 +8,7 @@ cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV })
 const db = cloud.database()
 const core = require('./order-core.js')
 
-const SUB_MCH_ID = process.env.SUB_MCH_ID || ''
+const payConfig = require('./pay-config.js')
 const NATIVE_PAY_READY = process.env.NATIVE_PAY_READY !== 'false'
 
 exports.main = async (event) => {
@@ -16,7 +16,8 @@ exports.main = async (event) => {
   const OPENID = wxContext.OPENID
   if (!OPENID) return { code: 401, msg: '请先登录' }
   if (!NATIVE_PAY_READY) return { code: 503, msg: '在线购票暂未开放，请联系管家' }
-  if (!SUB_MCH_ID) return { code: 500, msg: '支付未配置，请联系管理员' }
+  const SUB_MCH_ID = await payConfig.getSubMchId(db)
+  if (!SUB_MCH_ID) return { code: 500, msg: payConfig.NOT_CONFIGURED_MSG }
 
   const productId = String(event.productId || '').trim().slice(0, 64)
   const idempotencyKey = core.normalizeIdempotencyKey(event.idempotencyKey)

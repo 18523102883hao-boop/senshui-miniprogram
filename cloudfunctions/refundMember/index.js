@@ -5,9 +5,11 @@ cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV })
 const db = cloud.database()
 
 const SEVEN_DAYS = 7 * 24 * 3600 * 1000
-const SUB_MCH_ID = process.env.SUB_MCH_ID || ''
+const payConfig = require('./pay-config.js')
 
 exports.main = async () => {
+  const SUB_MCH_ID = await payConfig.getSubMchId(db)
+  if (!SUB_MCH_ID) return { code: 500, msg: payConfig.NOT_CONFIGURED_MSG }
   const { OPENID } = cloud.getWXContext()
   const r = await db.collection('members').where({ _openid: OPENID, status: 'active' }).limit(1).get()
   if (r.data.length === 0) return { code: 404, msg: '无有效会员卡' }

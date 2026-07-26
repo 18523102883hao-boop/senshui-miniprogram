@@ -17,12 +17,15 @@
 
 .stepper { display: flex; align-items: center; }
 .stepper__btn {
-  width: 64rpx; height: 64rpx; line-height: 60rpx; text-align: center;
+  width: 64rpx; height: 64rpx;
+  /* 内容是 <sr-icon>（image，块级），line-height/text-align 对它无效——
+     必须用 flex 居中，否则图标在圆里偏上 */
+  display: flex; align-items: center; justify-content: center;
   border-radius: 50%; background: var(--sr-bg-sunken);
-  font-size: 36rpx; color: var(--sr-text);
+  color: var(--sr-text);
 }
 .stepper__btn--off { color: var(--sr-text-weak); opacity: 0.5; }
-.stepper__val { min-width: 80rpx; text-align: center; font-size: 32rpx; font-weight: 700; color: var(--sr-text); }
+.stepper__val { min-width: 88rpx; text-align: center; margin: 0 4rpx; font-size: 32rpx; font-weight: 700; color: var(--sr-text); }
 
 .para { display: block; font-size: 24rpx; color: var(--sr-text-sub); line-height: 1.7; margin-top: 10rpx; }
 

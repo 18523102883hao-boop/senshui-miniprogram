@@ -38,13 +38,21 @@
   padding: 18rpx 28rpx calc(18rpx + env(safe-area-inset-bottom));
   background: var(--sr-bg-card); box-shadow: 0 -4rpx 24rpx rgba(0, 0, 0, 0.06);
 }
-.bar__call { display: flex; flex-direction: column; align-items: center; font-size: 20rpx; color: var(--sr-text-sub); margin-right: 28rpx; }
-.bar__icon { width: 40rpx; height: 40rpx; margin-bottom: 4rpx; }
+/* 底栏三块（客服 / 价格 / 按钮）内容高度天然不等，
+   统一给一个行高再各自居中，避免视觉上高低错落 */
+.bar__call {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  height: 84rpx; font-size: 20rpx; line-height: 1.2;
+  color: var(--sr-text-sub); margin-right: 28rpx;
+}
+.bar__icon { width: 40rpx; height: 40rpx; margin-bottom: 6rpx; }
+/* 价格块保持自然高度（¥ 与数字 baseline 对齐），由底栏的 align-items:center 居中 */
 .bar__price { flex: 1; display: flex; align-items: baseline; }
 .bar__cur { font-size: 24rpx; color: var(--sr-seal); font-weight: 700; }
 .bar__num { font-size: 44rpx; font-weight: 800; color: var(--sr-seal); line-height: 1; }
 .bar__cta {
-  padding: 24rpx 60rpx; border-radius: 44rpx;
+  display: flex; align-items: center; justify-content: center;
+  height: 84rpx; padding: 0 60rpx; border-radius: 44rpx;
   background: var(--sr-primary); color: #fff; font-size: 30rpx; font-weight: 700;
 }
 
