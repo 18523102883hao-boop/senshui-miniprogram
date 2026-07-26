@@ -6,10 +6,11 @@
 // （云函数各自独立打包无法共享文件，一致性由 tests/feature-expansion/portal-cloud.test.js 锁定）。
 const DEFAULT_SECTIONS = [
   { key: 'hero', type: 'hero', title: '森水长河', subtitle: '峡谷溯溪 · 山野露营 · 长河令江湖', imageFileId: '', route: '', params: {}, visible: true, sort: 10 },
-  { key: 'quick_park_intro', type: 'quick_entry', title: '园区介绍', subtitle: '一分钟看懂森水长河', route: '/pages/content/list/list', params: { category: 'park_intro' }, visible: true, sort: 20 },
-  { key: 'quick_activities', type: 'quick_entry', title: '精彩活动', subtitle: '今日场次与擂台', route: '/pages/content/list/list', params: { category: 'activity_story' }, visible: true, sort: 30 },
-  { key: 'quick_guide', type: 'quick_entry', title: '入园攻略', subtitle: '交通 · 装备 · 注意事项', route: '/pages/guide/guide', params: {}, visible: true, sort: 40 },
-  { key: 'quick_concierge', type: 'quick_entry', title: '管家服务', subtitle: '到园前后有人对接', route: '/pages/concierge/concierge', params: {}, visible: true, sort: 50 },
+  // 园区介绍 / 精彩活动直接跳公众号与视频号，不再进二级列表（业主 2026-07-26）
+  { key: 'quick_park_intro', type: 'quick_entry', title: '园区介绍', subtitle: '图文详解', route: 'external:article', params: { url: 'https://mp.weixin.qq.com/s/hQGfn7c55rXqPVuXWhLgNQ', title: '园区介绍' }, visible: true, sort: 20 },
+  { key: 'quick_activities', type: 'quick_entry', title: '精彩活动', subtitle: '视频号直击', route: 'external:channels', params: {}, visible: true, sort: 30 },
+  { key: 'quick_guide', type: 'quick_entry', title: '入园攻略', subtitle: '交通与装备', route: '/pages/guide/guide', params: {}, visible: true, sort: 40 },
+  { key: 'quick_concierge', type: 'quick_entry', title: '管家服务', subtitle: '有人对接', route: '/pages/concierge/concierge', params: {}, visible: true, sort: 50 },
   { key: 'ticket_entry', type: 'primary_action', title: '门票购买', subtitle: '在线选票 · 入园扫码', route: '/pages/ticket/ticket', params: {}, visible: true, sort: 60 },
   { key: 'reservation_entry', type: 'primary_action', title: '立即预约', subtitle: '团队到园 · 研学 · 亲友聚会', route: '/pages/reservation/entry/entry', params: {}, visible: true, sort: 70 },
   { key: 'upgrade_entry', type: 'primary_action', title: '补差价升级', subtitle: '单项票升套票 · 现场办理', route: '/pages/upgrade-info/upgrade-info', params: {}, visible: true, sort: 75 },

@@ -1,5 +1,6 @@
 // Task 3 首页门户测试（PRD §7 首页 / §20 UX 与状态要求）
 const assert = require('node:assert/strict')
+const fs = require('node:fs')
 const path = require('node:path')
 const test = require('node:test')
 
@@ -269,4 +270,25 @@ test('云端已改成别的页面时尊重云端，迁移映射不越权接管',
 
   page.onSectionTap({ currentTarget: { dataset: { key: 'quick_park_intro' } } })
   assert.equal(calls.navigate[0], '/pages/guide/guide', '云端明确配了别的页面就该跳那里')
+})
+
+// 首页模块在三处定义：种子数据 / 云函数兜底 / 前端本地。
+// 2026-07-25 补差价入口「消失」就是三处不同步造成的，这里锁死一致性。
+test('三处首页配置对外链入口保持一致，避免同步脚本把云端改回旧路由', () => {
+  const seed = require(path.join(projectRoot, 'cloudfunctions/seedPortalContent/seed-data.js')).DEFAULT_SECTIONS
+  const portal = require(path.join(projectRoot, 'cloudfunctions/getHomePortal/portal-core.js')).DEFAULT_SECTIONS
+  const localSrc = fs.readFileSync(indexPath, 'utf8')
+
+  const EXPECT = {
+    quick_park_intro: 'external:article',
+    quick_activities: 'external:channels'
+  }
+  for (const [key, route] of Object.entries(EXPECT)) {
+    assert.equal(seed.find((s) => s.key === key).route, route, 'seed-data 的 ' + key + ' 路由不对')
+    assert.equal(portal.find((s) => s.key === key).route, route, 'portal-core 的 ' + key + ' 路由不对')
+    assert.ok(localSrc.includes("key: '" + key + "'"), '前端本地缺 ' + key)
+  }
+  // 前端本地也不该再有指向已搬空列表页的这两个入口
+  assert.ok(!/quick_park_intro[^}]*content\/list\/list/.test(localSrc), '前端本地 quick_park_intro 仍指向旧列表页')
+  assert.ok(!/quick_activities[^}]*content\/list\/list/.test(localSrc), '前端本地 quick_activities 仍指向旧列表页')
 })

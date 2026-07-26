@@ -19,9 +19,10 @@ const DEFAULT_SECTIONS = [
     key: 'quick_park_intro',
     type: 'quick_entry',
     title: '园区介绍',
-    subtitle: '一分钟看懂森水长河',
-    route: '/pages/content/list/list',
-    params: { category: 'park_intro' },
+    subtitle: '图文详解',
+    // 内容在公众号上随时更新，小程序不再维护副本（业主 2026-07-26）
+    route: 'external:article',
+    params: { url: 'https://mp.weixin.qq.com/s/hQGfn7c55rXqPVuXWhLgNQ', title: '园区介绍' },
     visible: true,
     sort: 20
   },
@@ -29,9 +30,9 @@ const DEFAULT_SECTIONS = [
     key: 'quick_activities',
     type: 'quick_entry',
     title: '精彩活动',
-    subtitle: '今日场次与擂台',
-    route: '/pages/content/list/list',
-    params: { category: 'activity_story' },
+    subtitle: '视频号直击',
+    route: 'external:channels',
+    params: {},
     visible: true,
     sort: 30
   },

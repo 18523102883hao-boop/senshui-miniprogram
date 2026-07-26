@@ -4,8 +4,13 @@
 // 为什么需要它：cloudbase CLI 存的是 2 小时有效期的临时密钥，动不动就「无有效身份信息」；
 // 服务端 API Key 永不过期，配合 HTTP API 可以直接读写数据库、调用云函数。
 //
-// ⚠️ API Key 是 system admin 权限，绝不能写进仓库。用环境变量传：
-//   export TCB_API_KEY='eyJ...'
+// ⚠️ API Key 是 system admin 权限，绝不能写进仓库。两种传法（任选）：
+//   1. 环境变量：export TCB_API_KEY='eyJ...'
+//   2. 本地文件：~/.config/.cloudbase/senshui-api-key（推荐，跨会话有效）
+//      建立方式：
+//        printf '%s' 'eyJ...' > ~/.config/.cloudbase/senshui-api-key
+//        chmod 600 ~/.config/.cloudbase/senshui-api-key
+//      文件在 home 下而不是仓库里，不会被 git 收进去。
 //
 // 用法：
 //   node scripts/tcb-api.mjs collections                    列出关键集合与文档数
@@ -20,16 +25,37 @@
 //   - 响应是 Strict EJSON：整数读出来是 {"$numberInt":"5800"}，云函数侧读到的是普通数字
 import { createRequire } from 'node:module'
 import path from 'node:path'
+import fs from 'node:fs'
+import os from 'node:os'
 import { fileURLToPath } from 'node:url'
 
 const require = createRequire(import.meta.url)
 const PROJ = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const ENV_ID = process.env.TCB_ENV_ID || 'cloud1-d4gzkwy3w150d2fd2'
-const KEY = process.env.TCB_API_KEY
+
+// 环境变量优先；否则读 home 下的密钥文件（环境变量在新开的 shell 里会丢，文件不会）
+const KEY_FILE = path.join(os.homedir(), '.config/.cloudbase/senshui-api-key')
+
+function loadKey() {
+  if (process.env.TCB_API_KEY) return process.env.TCB_API_KEY.trim()
+  try {
+    const v = fs.readFileSync(KEY_FILE, 'utf8').trim()
+    if (v) return v
+  } catch (e) {
+    // 文件不存在或读不了，走下面的报错提示
+  }
+  return ''
+}
+
+const KEY = loadKey()
 
 if (!KEY) {
-  console.error('✖ 缺少 TCB_API_KEY 环境变量')
-  console.error('  云开发控制台 → 环境 → 服务端 API Key，然后：export TCB_API_KEY=\'eyJ...\'')
+  console.error('✖ 未找到 API Key')
+  console.error('  方式一（推荐，跨会话有效）：')
+  console.error(`    printf '%s' 'eyJ...' > ${KEY_FILE}`)
+  console.error(`    chmod 600 ${KEY_FILE}`)
+  console.error('  方式二：export TCB_API_KEY=\'eyJ...\'')
+  console.error('  Key 来源：云开发控制台 → 环境 → 服务端 API Key')
   process.exit(1)
 }
 

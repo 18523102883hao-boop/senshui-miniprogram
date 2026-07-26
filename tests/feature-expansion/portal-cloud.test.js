@@ -149,7 +149,11 @@ test('默认首页模块 key 唯一、sort 唯一，且都配了跳转目标', (
   for (const s of sections) {
     assert.equal(typeof s.type, 'string')
     assert.ok(s.title, `${s.key} 缺少标题`)
-    if (s.route) assert.ok(s.route.startsWith('/pages/'), `${s.key} 的 route 必须是绝对页面路径`)
+    // external: 前缀走微信生态外链（公众号文章 / 视频号），不是小程序页面路由
+    if (s.route) {
+      assert.ok(s.route.startsWith('/pages/') || s.route.startsWith('external:'),
+        `${s.key} 的 route 必须是绝对页面路径或 external: 外链`)
+    }
   }
 })
 
