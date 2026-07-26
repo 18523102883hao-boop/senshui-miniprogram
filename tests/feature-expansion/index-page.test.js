@@ -277,7 +277,7 @@ test('云端已改成别的页面时尊重云端，迁移映射不越权接管',
 test('三处首页配置对外链入口保持一致，避免同步脚本把云端改回旧路由', () => {
   const seed = require(path.join(projectRoot, 'cloudfunctions/seedPortalContent/seed-data.js')).DEFAULT_SECTIONS
   const portal = require(path.join(projectRoot, 'cloudfunctions/getHomePortal/portal-core.js')).DEFAULT_SECTIONS
-  const localSrc = fs.readFileSync(indexPath, 'utf8')
+  const localSrc = fs.readFileSync(pagePath, 'utf8')
 
   const EXPECT = {
     quick_park_intro: 'external:article',
