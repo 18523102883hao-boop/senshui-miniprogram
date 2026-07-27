@@ -1,6 +1,8 @@
 // 入园攻略（功能扩展 Task 5）
 // PRD §10.3。已确认信息按业主口径展示；未确认设施一律「请咨询管家」，不编造。
-// 数据分两层：本地默认分组（永远可用）+ 云端 visit-guide 文章（可覆盖补充）。
+// 数据分两层：本地默认分组（永远可用）+ 云端 visit-guide 文章（可选补充）。
+// 业主 2026-07-26 起攻略内容全部固化在本地分组，种子不再预置这篇文章；
+// 运营若要追加内容，在 articles 里新建 slug=visit-guide 即可自动出现在页尾。
 const request = require('../../utils/request.js')
 const env = require('../../env.js')
 const { haptic } = require('../../utils/haptics.js')

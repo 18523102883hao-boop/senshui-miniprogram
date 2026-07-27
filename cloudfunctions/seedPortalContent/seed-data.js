@@ -184,19 +184,6 @@ const DEFAULT_ARTICLES = [
     ]
   },
   {
-    slug: 'visit-guide',
-    category: 'guide',
-    title: '第一次来森水长河怎么玩',
-    summary: '交通、装备、时间安排与注意事项',
-    coverFileId: '',
-    status: 'published',
-    blocks: [
-      { type: 'list', data: { title: '建议携带', items: ['速干衣裤与备用衣物', '溯溪鞋或防滑鞋', '防晒与驱蚊', '身份证件'] } },
-      { type: 'list', data: { title: '一天怎么安排', items: ['10:00 入园换装', '10:30 溪降峡谷', '13:00 侠客滩捕鱼', '17:00 海鲜大拍卖'] } },
-      { type: 'notice', data: { text: '溪降项目对年龄、身高和身体状况有要求，具体以现场须知和工作人员判断为准。' } }
-    ]
-  },
-  {
     slug: 'concierge-service',
     category: 'service',
     title: '管家服务能帮你做什么',

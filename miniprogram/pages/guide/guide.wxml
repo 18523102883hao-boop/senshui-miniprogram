@@ -65,7 +65,7 @@
     <sr-icon name="chevron-right" theme="light" size="sm" />
   </view>
 
-  <view class="tail">园区信息以现场公示和工作人员说明为准。</view>
+  <view class="tail">园区信息以现场公示为准。</view>
 
   <!-- 常驻底部导航：二级页面也能直接切 Tab -->
   <sr-tabbar theme="light" />
