@@ -22,6 +22,14 @@
       <text class="grp__title">{{item.title}}</text>
     </view>
     <view class="grp__body">
+      <!-- 带圆点的清单（目前用于「建议携带」） -->
+      <view class="tips" wx:if="{{item.tips.length}}">
+        <text class="tips__title" wx:if="{{item.tipsTitle}}">{{item.tipsTitle}}</text>
+        <view class="tips__item" wx:for="{{item.tips}}" wx:key="*this" wx:for-item="tip">
+          <view class="tips__dot"></view>
+          <text class="tips__text">{{tip}}</text>
+        </view>
+      </view>
       <view class="row" wx:for="{{item.items}}" wx:key="title" wx:for-item="row">
         <text class="row__title">{{row.title}}</text>
         <text class="row__desc {{row.status === 'ask' ? 'row__desc--ask' : ''}}">{{row.desc}}</text>

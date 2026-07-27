@@ -1,6 +1,7 @@
 // Task 5 入园攻略与管家服务测试
 // PRD §10.3 入园攻略（15 项）、§11.1 管家入口、§28.7 未确认设施不得发布
 const assert = require('node:assert/strict')
+const fs = require('node:fs')
 const path = require('node:path')
 const test = require('node:test')
 
@@ -89,8 +90,11 @@ const BASE_ENV = {
     address: '重庆市綦江区黑山镇招呼站（公交站）东南 10 米',
     latitude: 0,
     longitude: 0,
-    openHours: '10:00-18:00',
-    admissionHours: '10:00-16:30'
+    // 营地与溪降时段不同，攻略页的营业/入园时间由此推导
+    hours: {
+      camp: { label: '营地', open: '10:00', close: '21:00', cutoff: '19:00', cutoffLabel: '停止供餐' },
+      creek: { label: '溪降', open: '10:00', close: '16:30', closeLabel: '停止检票' }
+    }
   },
   concierge: { phone: '19112040740', qrcodeUrl: '', serviceHours: '每日 10:00-18:00' }
 }
@@ -118,17 +122,29 @@ test('已确认的信息按业主提供的口径展示', (t) => {
   assert.ok(text.includes('150'), '身高限制必须展示')
 })
 
-test('未确认的设施项一律显示「请咨询管家」，不得伪造设施承诺', (t) => {
+test('未确认项文案统一，已确认项不得残留「请咨询管家」', (t) => {
   const { page } = mountPage(t, guidePath, { env: BASE_ENV })
   const all = page.data.groups.reduce((acc, g) => acc.concat(g.items), [])
-  const pending = all.filter((i) => i.status === 'ask')
-  assert.ok(pending.length > 0, '应存在待确认项（停车/母婴/宠物等）')
-  for (const item of pending) {
+
+  // 业主 2026-07-26 已逐项确认，待确认项可以为 0；
+  // 但只要还有，文案就必须统一，不能各写各的
+  for (const item of all.filter((i) => i.status === 'ask')) {
     assert.equal(item.desc, '请咨询管家', '未确认项文案必须统一为「请咨询管家」')
   }
-  // 不得出现凭空捏造的设施承诺
-  const text = JSON.stringify(all)
-  for (const word of ['免费停车', '个车位', '免费提供']) {
+  // 反向保证：标了 confirmed 的不能整条只写「请咨询管家」。
+  // 句中提到某个子项待确认是允许的（例如身高限制已定，但儿童适用范围仍需咨询）。
+  for (const item of all.filter((i) => i.status === 'confirmed')) {
+    assert.notEqual(item.desc.trim(), '请咨询管家',
+      item.title + ' 标为已确认却只写了「请咨询管家」')
+  }
+})
+
+test('设施承诺只能来自业主确认的口径，不得凭空扩写', (t) => {
+  const { page } = mountPage(t, guidePath, { env: BASE_ENV })
+  const text = JSON.stringify(page.data.groups.reduce((acc, g) => acc.concat(g.items), []))
+  // 业主确认过的：免费停车位、淋浴与更衣间。除此之外的设施承诺一律不许出现，
+  // 尤其是带数量、面积、品牌这类看起来很具体、实则编造的表述。
+  for (const word of ['个车位', '平方米', '五星', '免费提供', '24 小时', '母婴室', '轮椅']) {
     assert.equal(text.includes(word), false, '不得伪造设施信息：' + word)
   }
 })
@@ -187,27 +203,32 @@ test('攻略页拨号走确认过的前台电话', (t) => {
 
 // ============ 管家服务 ============
 
-test('管家页提供电话与表单两条无障碍替代路径', (t) => {
+// 业主 2026-07-26：去掉微信客服与咨询表单，客户直接加管家企微。
+// 联系方式统一由 sr-contact-card 承载，页面不再自己维护渠道列表。
+test('管家页不再有渠道列表，联系方式交给统一联系卡', (t) => {
   const { page } = mountPage(t, conciergePath, { env: BASE_ENV })
-  const types = page.data.channels.map((c) => c.type)
-  assert.ok(types.includes('phone'), '必须能拨电话')
-  assert.ok(types.includes('form'), '必须能提交咨询表单')
-  assert.ok(types.includes('wechat'), '优先提供微信客服')
+  assert.equal(page.data.channels, undefined, '渠道列表应已移除')
+  const wxml = fs.readFileSync(conciergePath.replace(/\.js$/, '.wxml'), 'utf8')
+  assert.ok(wxml.includes('sr-contact-card'), '必须保留统一联系卡')
+  assert.ok(!wxml.includes('open-type="contact"'), '微信客服入口应已删除')
+  assert.ok(!/service\/lead\/lead/.test(wxml), '咨询表单入口应已删除')
 })
 
-test('未配置二维码时不渲染二维码渠道，避免空图', (t) => {
+test('管家页仍保有电话兜底，加不上微信的人不能没有出路', (t) => {
   const { page } = mountPage(t, conciergePath, { env: BASE_ENV })
-  const types = page.data.channels.map((c) => c.type)
-  assert.equal(types.includes('qrcode'), false, '二维码未配置就不能出现在渠道里')
+  assert.equal(page.data.phone, '19112040740', '电话必须可用')
+})
+
+test('二维码未配置时不渲染，避免空图', (t) => {
+  const { page } = mountPage(t, conciergePath, { env: BASE_ENV })
   assert.equal(page.data.qrcodeUrl, '')
 })
 
-test('配置二维码后才出现二维码渠道且可预览', (t) => {
+test('配置二维码后可预览大图', (t) => {
   const { page, calls } = mountPage(t, conciergePath, {
     env: envWith({ qrcodes: { concierge: 'https://cdn/qr.png' } })
   })
-  const qr = page.data.channels.filter((c) => c.type === 'qrcode')[0]
-  assert.ok(qr, '配置后应出现二维码渠道')
+  assert.equal(page.data.qrcodeUrl, 'https://cdn/qr.png')
   page.onPreviewQrcode()
   assert.equal(calls.preview[0].urls[0], 'https://cdn/qr.png')
 })
@@ -219,19 +240,4 @@ test('管家页展示营业时间，不承诺未确认的响应时限', (t) => {
   for (const word of ['5 分钟内', '30 分钟内', '秒回', '7×24']) {
     assert.equal(text.includes(word), false, '不得承诺未确认的响应时限：' + word)
   }
-})
-
-test('点击渠道按类型分发：电话拨号、表单跳线索页', (t) => {
-  const { page, calls } = mountPage(t, conciergePath, { env: BASE_ENV })
-  page.onChannelTap({ currentTarget: { dataset: { type: 'phone' } } })
-  assert.deepEqual(calls.phone, ['19112040740'])
-
-  page.onChannelTap({ currentTarget: { dataset: { type: 'form' } } })
-  assert.ok(calls.navigate[0].indexOf('/pages/service/lead/lead') === 0)
-})
-
-test('表单页尚未上线时给出提示而不是静默失败', (t) => {
-  const { page, calls } = mountPage(t, conciergePath, { env: BASE_ENV, navigateFail: true })
-  page.onChannelTap({ currentTarget: { dataset: { type: 'form' } } })
-  assert.equal(calls.toast.length, 1)
 })

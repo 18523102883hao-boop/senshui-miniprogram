@@ -213,19 +213,12 @@ test('服务详情页主行动是加企微顾问而非填表', (t) => {
   assert.equal(page.data.contactFirst, true)
 })
 
-test('服务详情页保留表单入口作为次要选项', (t) => {
-  const { page, calls } = mountPage(t, detailPath, {
-    responders: { getArticle: () => Promise.reject(new Error('x')) }
-  })
-  page.setData({ type: 'brand' })
-  page.goLead()
-  assert.ok(calls.navigate[0].includes('type=brand'), '仍可走表单')
-})
-
-test('服务详情页可直接拨号', (t) => {
-  const { page, calls } = mountPage(t, detailPath, {
-    responders: { getArticle: () => Promise.reject(new Error('x')) }
-  })
-  page.onCallFront()
-  assert.equal(calls.phone.length, 1)
+// 业主 2026-07-26：详情页只留「加管家企微」一条主路径，
+// 填表与底部拨号栏都去掉——联系卡里已经有二维码和致电按钮
+test('服务详情页只保留统一联系卡这一条联系路径', (t) => {
+  const fs = require('node:fs')
+  const wxml = fs.readFileSync(detailPath.replace(/\.js$/, '.wxml'), 'utf8')
+  assert.ok(wxml.includes('sr-contact-card'), '必须保留联系卡')
+  assert.ok(!/formRoute/.test(wxml), '不该再有填表入口')
+  assert.ok(!/bar__cta/.test(wxml), '不该再有底部 CTA 栏')
 })

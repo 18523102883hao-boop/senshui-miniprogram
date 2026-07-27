@@ -1,4 +1,4 @@
-.svc-page { padding-bottom: calc(180rpx + env(safe-area-inset-bottom)); }
+.svc-page { padding-bottom: calc(40rpx + env(safe-area-inset-bottom)); }
 .hero {
   position: relative; overflow: hidden;
   background: linear-gradient(135deg, var(--sr-primary) 0%, #173628 100%);
@@ -26,17 +26,8 @@
 
 .tail { font-size: 21rpx; color: var(--sr-text-weak); text-align: center; padding: 20rpx 0 24rpx; }
 
-.bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 50; display: flex; align-items: center;
-  padding: 18rpx 28rpx calc(18rpx + env(safe-area-inset-bottom));
-  background: var(--sr-bg-card); box-shadow: 0 -4rpx 24rpx rgba(0,0,0,0.06); }
-.bar__call { display: flex; flex-direction: column; align-items: center; font-size: 20rpx; color: var(--sr-text-sub); margin-right: 32rpx; }
-.bar__icon { width: 40rpx; height: 40rpx; margin-bottom: 4rpx; }
-.bar__cta { flex: 1; text-align: center; padding: 26rpx 0; border-radius: 44rpx; background: var(--sr-primary); color: #fff; font-size: 30rpx; font-weight: 700; }
-
-/* 常驻底部导航避让 */
+/* 常驻底部导航避让。
+   底部操作栏已移除（业主 2026-07-26：联系方式统一由 sr-contact-card 承载，
+   底部再放一条「加顾问微信」是重复），因此这里只需给 sr-tabbar 留位，
+   不再叠加操作栏的那份高度，否则页尾会空出一大片。 */
 .sr-page { padding-bottom: calc(150rpx + env(safe-area-inset-bottom)) !important; }
-
-/* 底部操作栏 + 常驻导航同时存在：操作栏上移，页面留双份空间 */
-.bar { bottom: calc(130rpx + env(safe-area-inset-bottom)); }
-.svc-page { padding-bottom: calc(310rpx + env(safe-area-inset-bottom)) !important; }
-/* sr-tabbar 避让 */

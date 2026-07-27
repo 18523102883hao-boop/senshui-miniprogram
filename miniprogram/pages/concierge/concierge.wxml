@@ -8,30 +8,6 @@
     </view>
   </view>
 
-  <view class="ch-list">
-    <block wx:for="{{channels}}" wx:key="type">
-      <!-- 微信客服必须用 button open-type=contact 触发 -->
-      <button wx:if="{{item.type === 'wechat'}}" class="ch ch--btn {{item.primary ? 'ch--primary' : ''}}" open-type="contact">
-        <image class="ch__icon" src="{{item.icon}}" mode="aspectFit" />
-        <view class="ch__body">
-          <text class="ch__title">{{item.title}}</text>
-          <text class="ch__desc">{{item.desc}}</text>
-        </view>
-        <sr-icon name="chevron-right" theme="light" size="sm" />
-      </button>
-
-      <view wx:else class="ch sr-touch" hover-class="sr-touch--press" hover-stay-time="60"
-            data-type="{{item.type}}" bindtap="onChannelTap">
-        <image class="ch__icon" src="{{item.icon}}" mode="aspectFit" />
-        <view class="ch__body">
-          <text class="ch__title">{{item.title}}</text>
-          <text class="ch__desc">{{item.desc}}</text>
-        </view>
-        <sr-icon name="chevron-right" theme="light" size="sm" />
-      </view>
-    </block>
-  </view>
-
   <!-- 企微 + 电话统一联系卡（二维码未配置或加载失败会自动降级为只留电话）-->
   <sr-contact-card scene="concierge" title="添加园区管家"
                    desc="行程、餐食、活动与特殊需求，加微信一次说清" />

@@ -7,6 +7,32 @@ const { haptic } = require('../../utils/haptics.js')
 const { makePhoneCall } = require('../../utils/util.js')
 
 const ASK = '请咨询管家' // 未确认项统一文案（PRD §28.7）
+
+// 营业与入园时间由 env.park.hours 推导，避免和首页/园区页写成两套口径。
+// 营地与溪降时段不同，必须分开写，否则客人会按溪降时间理解整个园区。
+function businessHoursText(hours) {
+  const h = hours || {}
+  const camp = h.camp, creek = h.creek
+  if (!camp || !creek) return ASK
+  const campPart = camp.label + ' ' + camp.open + '-' + camp.close +
+    (camp.cutoff ? '（' + camp.cutoff + ' ' + camp.cutoffLabel + '）' : '')
+  return campPart + '；' + creek.label + ' ' + creek.open + '-' + creek.close
+}
+
+function admissionHoursText(hours) {
+  const h = hours || {}
+  const camp = h.camp, creek = h.creek
+  if (!camp || !creek) return ASK
+  return creek.label + ' ' + creek.close + ' ' + (creek.closeLabel || '停止检票') +
+    '；' + camp.label + '营业时间内可入园'
+}
+
+// 溪降游玩注意事项（业主 2026-07-26：与原「运营补充」合并，放在园区设施之后）
+const CREEK_TIPS = [
+  '速干衣裤与备用衣物',
+  '溯溪鞋或防滑鞋',
+  '防晒与驱蚊'
+]
 const BLOCK_TYPES = ['hero', 'text', 'image', 'gallery', 'list', 'notice', 'feature_grid', 'service_list', 'timeline', 'faq', 'cta']
 
 // status: 'confirmed' = 业主已确认；'ask' = 待确认，显示「请咨询管家」
@@ -21,7 +47,7 @@ function buildGroups(park) {
         { title: '园区地址', desc: p.address || ASK, status: p.address ? 'confirmed' : 'ask' },
         { title: '公共交通', desc: '黑山镇招呼站（公交站）下车，步行约 10 米', status: 'confirmed' },
         { title: '自驾导航', desc: p.latitude && p.longitude ? '点击下方「一键导航」' : '搜索「森水长河」或复制地址导航', status: 'confirmed' },
-        { title: '停车信息', desc: ASK, status: 'ask' },
+        { title: '停车信息', desc: '园区提供免费停车位', status: 'confirmed' },
         { title: '接驳与摆渡车', desc: '溪降票含摆渡车，具体班次以现场安排为准', status: 'confirmed' }
       ]
     },
@@ -30,12 +56,9 @@ function buildGroups(park) {
       title: '营业与入园',
       icon: '/assets/icons/forest/home-open-status.png',
       items: [
-        { title: '营业时间', desc: p.openHours || ASK, status: p.openHours ? 'confirmed' : 'ask' },
-        { title: '入园时间', desc: p.admissionHours || ASK, status: p.admissionHours ? 'confirmed' : 'ask' },
-        { title: '是否需要预约', desc: '无需预约，高峰期可能需要排队', status: 'confirmed' },
-        { title: '取票方式', desc: '无需取票，凭券码或券号直接入园', status: 'confirmed' },
-        { title: '入园次数', desc: '所选日期当日有效，仅可入园 1 次', status: 'confirmed' },
-        { title: '老人 / 儿童优待', desc: '设有儿童票与 65 岁以上老人票，凭有效证件购买', status: 'confirmed' }
+        { title: '营业时间', desc: businessHoursText(p.hours), status: 'confirmed' },
+        { title: '入园时间', desc: admissionHoursText(p.hours), status: 'confirmed' },
+        { title: '是否需要预约', desc: '无需预约，高峰期可能需要排队', status: 'confirmed' }
       ]
     },
     {
@@ -45,11 +68,19 @@ function buildGroups(park) {
       items: [
         { title: '餐饮', desc: '营地票含自助火锅 / 烧烤 / 鸡汤饭', status: 'confirmed' },
         { title: '装备与安全设备', desc: '溪降票含安全设备与救生衣', status: 'confirmed' },
-        { title: '淋浴与更衣', desc: ASK, status: 'ask' },
-        { title: '母婴室', desc: ASK, status: 'ask' },
-        { title: '无障碍与轮椅', desc: ASK, status: 'ask' },
-        { title: '充电与充电宝', desc: ASK, status: 'ask' },
-        { title: '宠物规则', desc: ASK, status: 'ask' }
+        { title: '淋浴与更衣', desc: '提供淋浴与更衣间', status: 'confirmed' }
+      ]
+    },
+    {
+      // 业主 2026-07-26：原「运营补充」与页尾的溪降提醒合并成一项，紧跟园区设施
+      key: 'creek_notice',
+      title: '溪降游玩注意事项',
+      icon: '/assets/icons/forest/booking-safety.png',
+      tipsTitle: '建议携带',
+      tips: CREEK_TIPS,
+      items: [
+        // 不写「以工作人员判断为准」——判定口径统一指向票详情页的须知，避免两处说法不一
+        { title: '参与条件', desc: '溪降项目对年龄、身高和身体状况有要求，以溪降票详情页的须知为准', status: 'confirmed' }
       ]
     },
     {
@@ -60,9 +91,8 @@ function buildGroups(park) {
         // 身高与强度是已确认的安全规则，写死默认值，env 可覆盖
         { title: '身高限制', desc: p.heightLimit || '成人限制身高 150 厘米（含）以上；儿童票适用范围请咨询管家', status: 'confirmed' },
         { title: '溪降强度', desc: p.creekNote || '溪降全程约 2 公里，游玩时长约 1.5 小时', status: 'confirmed' },
-        { title: '身体状况', desc: '孕妇、心脑血管疾病及其他不适宜剧烈运动者请勿参加，以现场工作人员判断为准', status: 'confirmed' },
-        { title: '天气与水位', desc: '遇强降雨或上游涨水会临时停运，以现场公告为准', status: 'confirmed' },
-        { title: '医疗与急救', desc: ASK, status: 'ask' }
+        { title: '身体状况', desc: '孕妇、心脑血管疾病及其他不适宜剧烈运动者请勿参加', status: 'confirmed' },
+        { title: '天气与水位', desc: '遇强降雨或上游涨水会临时停运，以现场公告为准', status: 'confirmed' }
       ]
     },
     {
@@ -79,9 +109,22 @@ function buildGroups(park) {
   ]
 }
 
+// 这几块内容已固化到本地「溪降游玩注意事项」分组，云端旧 article 里还留着同名区块，
+// 一起渲染就会出现两份。按标题/内容过滤掉，云端以后新增别的区块仍会正常显示。
+const LOCALIZED_LIST_TITLES = ['建议携带', '一天怎么安排']
+const LOCALIZED_NOTICE = /溪降项目对年龄/
+
+function isLocalized(block) {
+  const data = block.data || {}
+  if (block.type === 'list') return LOCALIZED_LIST_TITLES.indexOf(data.title) >= 0
+  if (block.type === 'notice') return LOCALIZED_NOTICE.test(data.text || '')
+  return false
+}
+
 function sanitizeBlocks(blocks) {
   return (Array.isArray(blocks) ? blocks : [])
     .filter((b) => b && BLOCK_TYPES.indexOf(b.type) >= 0)
+    .filter((b) => !isLocalized(b))
     .map((b) => ({ type: b.type, data: b.data || {} }))
 }
 

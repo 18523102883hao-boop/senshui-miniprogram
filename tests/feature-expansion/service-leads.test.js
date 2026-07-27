@@ -197,13 +197,17 @@ test('详情内容缺失时仍展示本地兜底介绍，不白屏', async (t) =
   assert.equal(page.data.hasError, false)
 })
 
-test('详情页 CTA 跳到对应类型的线索表单', (t) => {
-  const { page, calls } = mountPage(t, detailPath, {
-    responders: { getArticle: () => Promise.resolve({ article: null }) }
-  })
-  page.setData({ type: 'brand' })
-  page.goLead()
-  assert.ok(calls.navigate[0].includes('type=brand'))
+// 业主 2026-07-26：服务详情页去掉填表入口与底部 CTA 栏，
+// 客户直接加管家企微（联系方式由 sr-contact-card 承载）
+test('详情页不再有填表入口与底部操作栏', (t) => {
+  const fs = require('node:fs')
+  const wxml = fs.readFileSync(detailPath.replace(/\.js$/, '.wxml'), 'utf8')
+  assert.ok(!/formRoute|formText/.test(wxml), '联系卡不应再挂表单入口')
+  assert.ok(!/class="bar"/.test(wxml), '底部操作栏应已移除')
+  assert.ok(wxml.includes('sr-contact-card'), '联系方式仍由统一联系卡承载')
+
+  const js = fs.readFileSync(detailPath, 'utf8')
+  assert.ok(!/goLead\s*\(/.test(js), 'goLead 已无引用，不该留着')
 })
 
 test('未知类型进入详情页时回退到服务总览而不是报错', async (t) => {

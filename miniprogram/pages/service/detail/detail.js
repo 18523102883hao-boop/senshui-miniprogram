@@ -2,9 +2,6 @@
 // PRD §12.1-12.3：三种服务共用一个页面，内容走结构化文章区块，拉不到用本地兜底介绍。
 const request = require('../../../utils/request.js')
 const env = require('../../../env.js')
-const { haptic } = require('../../../utils/haptics.js')
-const { makePhoneCall } = require('../../../utils/util.js')
-const { getQrcode } = require('../../../utils/qrcode.js')
 
 const BLOCK_TYPES = ['hero', 'text', 'image', 'gallery', 'list', 'notice', 'feature_grid', 'service_list', 'timeline', 'faq', 'cta']
 
@@ -87,20 +84,7 @@ Page({
   },
 
   // 底部主 CTA：滚到联系卡；二维码还没配时直接拨号，避免滚过去是空的
-  onContact() {
-    haptic('light')
-    const qr = getQrcode(this.data.qrScene)
-    if (!qr.enabled) return makePhoneCall(this.data.frontPhone)
-    wx.pageScrollTo({ selector: '.cc', duration: 300, fail: () => {} })
-  },
 
-  goLead() {
-    haptic('light')
-    wx.navigateTo({
-      url: '/pages/service/lead/lead?type=' + encodeURIComponent(this.data.type),
-      fail: () => wx.showToast({ title: '该功能即将开放', icon: 'none' })
-    })
-  },
 
   goConcierge() {
     wx.navigateTo({
@@ -109,9 +93,6 @@ Page({
     })
   },
 
-  onCallFront() {
-    makePhoneCall(this.data.frontPhone)
-  },
 
   onShareAppMessage() {
     return {

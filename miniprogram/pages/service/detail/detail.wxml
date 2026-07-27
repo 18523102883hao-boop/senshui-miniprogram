@@ -35,25 +35,13 @@
     </view>
   </block>
 
-  <!-- 主行动：加顾问企微 + 电话；表单作为次要选项（业主决策：少让客户填）-->
+  <!-- 业主 2026-07-26：去掉填表入口，客户直接加管家企微；
+       卡片内已含二维码与致电，底部不再重复一条 CTA 栏 -->
   <sr-contact-card scene="{{qrScene}}"
                    title="加顾问微信，说清需求"
-                   desc="方案、价格与档期一次沟通到位，比填表更快"
-                   formRoute="/pages/service/lead/lead?type={{type}}"
-                   formText="不方便加微信？填写需求表单" />
+                   desc="方案、价格与档期一次沟通到位" />
 
   <view class="tail">具体方案、价格与档期以管家沟通确认为准。</view>
-
-  <!-- 底部栏与页面主行动保持一致：电话 + 加顾问微信（不再以填表为主 CTA） -->
-  <view class="bar">
-    <view class="bar__call sr-touch" hover-class="sr-touch--press" hover-stay-time="60" bindtap="onCallFront">
-      <sr-icon name="mine-phone" theme="light" size="md" />
-      <text>致电</text>
-    </view>
-    <view class="bar__cta sr-touch" hover-class="sr-touch--cta" hover-stay-time="60" bindtap="onContact">
-      加顾问微信
-    </view>
-  </view>
 
   <!-- 常驻底部导航：二级页面也能直接切 Tab -->
   <sr-tabbar theme="light" />
