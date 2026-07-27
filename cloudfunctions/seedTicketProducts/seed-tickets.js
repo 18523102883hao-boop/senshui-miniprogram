@@ -57,7 +57,7 @@ function product(overrides) {
 const TICKET_PRODUCTS = [
   product({
     sku: 'creek_single', name: '单人溪降票', category: 'creek', audience: '成人 1 名',
-    salePrice: 5800, marketPrice: 33806,
+    salePrice: 6800, marketPrice: 33806,
     benefits: CREEK_BENEFITS, restrictions: CREEK_RESTRICTIONS,
     exclusions: ['餐食', '个人消费'],
     highlight: '全程约 2 公里，游玩时长约 1.5 小时',
@@ -65,7 +65,7 @@ const TICKET_PRODUCTS = [
   }),
   product({
     sku: 'creek_double', name: '双人溪降票', category: 'creek', audience: '2 名（成人或符合身高的同行者）',
-    salePrice: 8800, marketPrice: 67805,
+    salePrice: 12800, marketPrice: 67805,
     benefits: CREEK_BENEFITS, restrictions: CREEK_RESTRICTIONS,
     exclusions: ['餐食', '个人消费'],
     highlight: '两人同行更划算',

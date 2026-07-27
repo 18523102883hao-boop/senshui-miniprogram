@@ -14,7 +14,7 @@ const GROUPS = [
     description: '保留原营地权益，再解锁溪降体验',
     items: [
       { itemId: 'camp_adult_to_creek', name: '成人单营地', orig: '158', add: '+¥20', benefit: '等同 178 套票：营地全部权益 + 溪降体验' },
-      { itemId: 'camp_family_to_creek_adult', name: '亲子单营地 · 大人', orig: '198', add: '+¥58', benefit: '大人可玩溪降' },
+      { itemId: 'camp_family_to_creek_adult', name: '亲子单营地 · 大人', orig: '198', add: '+¥68', benefit: '大人可玩溪降' },
       { itemId: 'camp_family_to_creek_child', name: '亲子单营地 · 儿童', orig: '198', add: '+¥29.9', benefit: '儿童须符合年龄 / 身高安全条件' },
       { itemId: 'camp_child_to_creek', name: '儿童单营地', orig: '98', add: '+¥29.9', benefit: '加玩溪降（须符合年龄 / 身高条件）' }
     ]
@@ -27,8 +27,8 @@ const GROUPS = [
     dir: '溪降票 → 营地',
     description: '在溪降之外，补齐营地全天权益',
     items: [
-      { itemId: 'creek_adult_to_camp', name: '成人单溪降', orig: '58', add: '+¥120', benefit: '自助烧烤火锅畅吃、饮品畅饮、60 长河令、全天活动' },
-      { itemId: 'creek_double_to_camp', name: '双人单溪降 · 每人', orig: '88', add: '+¥134', benefit: '两人各支付一笔，均升级为 178 套票全权益' },
+      { itemId: 'creek_adult_to_camp', name: '成人单溪降', orig: '68', add: '+¥110', benefit: '自助烧烤火锅畅吃、饮品畅饮、60 长河令、全天活动' },
+      { itemId: 'creek_double_to_camp', name: '双人单溪降 · 每人', orig: '128', add: '+¥114', benefit: '两人各支付一笔，均升级为 178 套票全权益' },
       { itemId: 'creek_child_to_camp', name: '儿童单溪降', orig: '29.9', add: '+¥98', benefit: '儿童营地全权益' }
     ]
   }

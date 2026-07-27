@@ -1,4 +1,4 @@
-<web-view wx:if="{{url && !failed}}" src="{{url}}" binderror="onLoadError" bindload="onLoadSuccess" />
+<web-view wx:if="{{url && !failed}}" src="{{url}}" binderror="onLoadError" />
 
 <!-- 打不开时不要只说「打不开」——给一条能立刻走通的路。
      公众号文章要在小程序里直接展示，前提是小程序后台关联了该公众号；

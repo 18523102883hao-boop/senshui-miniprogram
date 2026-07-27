@@ -140,7 +140,7 @@ test('种子价格与 docs/业务参数.md 一致（整数分）', () => {
   const bySku = {}
   seedData.TICKET_PRODUCTS.forEach((p) => { bySku[p.sku] = p })
   const expected = {
-    creek_single: 5800, creek_double: 8800, creek_child: 2990,
+    creek_single: 6800, creek_double: 12800, creek_child: 2990,
     camp_adult: 15800, camp_child: 9800, camp_senior: 11800, combo_single: 17800
   }
   for (const sku of Object.keys(expected)) {

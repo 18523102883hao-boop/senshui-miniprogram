@@ -13,13 +13,16 @@ const cloud = require('wx-server-sdk')
 cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV })
 const db = cloud.database()
 
+// 定价不变量：单项票价 + 升级差价 = 对应套票价（成人 178）。
+// 溪降 2026-07-26 调价（单人 58→68，双人 88→128，每人 44→64）后，
+// 「溪降→营地」的差价必须同步下调，否则先买溪降再升级会比直接买套票还贵。
 const UPGRADE_ITEMS = [
   { id: 'camp_adult_to_creek',        label: '成人单营地 → 升溪降',        price: 2000,  note: '等同178套票：营地全部权益+溪降体验',            enabled: true },
-  { id: 'camp_family_to_creek_adult', label: '亲子单营地 → 升溪降（大人）', price: 5800,  note: '大人可玩溪降',                                enabled: true },
+  { id: 'camp_family_to_creek_adult', label: '亲子单营地 → 升溪降（大人）', price: 6800,  note: '大人可玩溪降（= 单人溪降票价）',              enabled: true },
   { id: 'camp_family_to_creek_child', label: '亲子单营地 → 升溪降（儿童）', price: 2990,  note: '儿童须符合年龄/身高安全条件',                 enabled: true },
   { id: 'camp_child_to_creek',        label: '儿童单营地 → 升溪降',        price: 2990,  note: '加玩溪降（须符合年龄/身高条件）',             enabled: true },
-  { id: 'creek_adult_to_camp',        label: '成人单溪降 → 升营地',        price: 12000, note: '自助烧烤火锅畅吃、饮品畅饮、60长河令、全天活动', enabled: true },
-  { id: 'creek_double_to_camp',       label: '双人单溪降 → 升营地（每人）', price: 13400, note: '每人升级为178套票全权益；两人各收一笔',       enabled: true },
+  { id: 'creek_adult_to_camp',        label: '成人单溪降 → 升营地',        price: 11000, note: '自助烧烤火锅畅吃、饮品畅饮、60长河令、全天活动', enabled: true },
+  { id: 'creek_double_to_camp',       label: '双人单溪降 → 升营地（每人）', price: 11400, note: '每人升级为178套票全权益；两人各收一笔',       enabled: true },
   { id: 'creek_child_to_camp',        label: '儿童单溪降 → 升营地',        price: 9800,  note: '儿童营地全权益',                             enabled: true }
 ]
 

@@ -1,10 +1,13 @@
 // 外链承载页（web-view）
-// 目前只用于打开森水长河公众号文章。微信对 mp.weixin.qq.com 下的公众号文章
-// 有特殊放行，但如果后台限制了业务域名仍可能打不开，因此保留失败兜底。
+// 目前只用于打开森水长河公众号文章（必须来自已与本小程序关联的公众号）。
+//
+// ⚠️ 失败判定只认 binderror，不要再加超时兜底：
+//    web-view 的 bindload 在真机上未必触发（2026-07-26 实测：文章正常显示，
+//    但 4 秒后超时兜底把内容盖成了失败页）。而 binderror 在域名不被放行时
+//    会立刻触发，足够可靠。
 Page({
   data: {
     url: '',
-    loaded: false,
     failed: false
   },
 
@@ -18,20 +21,6 @@ Page({
       return
     }
     this.setData({ url })
-    // 域名不在白名单时 web-view 可能既不渲染也不报错，只留一片空白。
-    // 给一个超时兜底，别让用户对着白屏干等。
-    this._timer = setTimeout(() => {
-      if (!this.data.loaded) this.setData({ failed: true })
-    }, 4000)
-  },
-
-  onUnload() {
-    if (this._timer) clearTimeout(this._timer)
-  },
-
-  onLoadSuccess() {
-    this.setData({ loaded: true })
-    if (this._timer) clearTimeout(this._timer)
   },
 
   // web-view 加载失败：给用户一条复制链接、去微信里打开的出路

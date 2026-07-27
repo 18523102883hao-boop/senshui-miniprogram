@@ -126,7 +126,7 @@ test('点击当前方向项目时打开对应的支付确认面板', (t) => {
   page.onItemTap({ currentTarget: { dataset: { ii: 1 } } })
 
   assert.equal(page.data.buy.itemId, 'creek_double_to_camp')
-  assert.equal(page.data.buy.add, '+¥134')
+  assert.equal(page.data.buy.add, '+¥114')
 })
 
 test('接待员工输入区默认收起并可按需展开', (t) => {
@@ -147,11 +147,11 @@ test('七个云端升级 itemId 与展示补差金额保持原映射', (t) => {
 
   assert.deepEqual(mapping, [
     ['camp_adult_to_creek', '+¥20'],
-    ['camp_family_to_creek_adult', '+¥58'],
+    ['camp_family_to_creek_adult', '+¥68'],
     ['camp_family_to_creek_child', '+¥29.9'],
     ['camp_child_to_creek', '+¥29.9'],
-    ['creek_adult_to_camp', '+¥120'],
-    ['creek_double_to_camp', '+¥134'],
+    ['creek_adult_to_camp', '+¥110'],
+    ['creek_double_to_camp', '+¥114'],
     ['creek_child_to_camp', '+¥98']
   ])
   assert.equal(new Set(mapping.map(([itemId]) => itemId)).size, 7)
