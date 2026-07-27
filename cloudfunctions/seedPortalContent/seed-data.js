@@ -22,7 +22,7 @@ const DEFAULT_SECTIONS = [
     subtitle: '图文详解',
     // 内容在公众号上随时更新，小程序不再维护副本（业主 2026-07-26）
     route: 'external:article',
-    params: { url: 'https://mp.weixin.qq.com/s/Kf_RPpyeM1uBLrAexV1mIA', title: '园区介绍' },
+    params: { url: 'https://mp.weixin.qq.com/s/2xr8EjCVa1MUOkFEeIMC9A', title: '园区介绍' },
     visible: true,
     sort: 20
   },
@@ -30,9 +30,9 @@ const DEFAULT_SECTIONS = [
     key: 'quick_activities',
     type: 'quick_entry',
     title: '精彩活动',
-    subtitle: '视频号直击',
-    route: 'external:channels',
-    params: {},
+    subtitle: '图文详解',
+    route: 'external:article',
+    params: { url: 'https://mp.weixin.qq.com/s/LHxIYlwBJi3QqC1bxaa5LA', title: '精彩活动' },
     visible: true,
     sort: 30
   },

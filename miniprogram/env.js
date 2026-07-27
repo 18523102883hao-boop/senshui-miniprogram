@@ -48,7 +48,9 @@ module.exports = {
     // ⚠️ 必须是**已与本小程序关联的公众号**发的文章，否则 web-view 打不开
     //    （2026-07-26 第一版填了未关联公众号的文章，真机 binderror）。
     //    换文章时确认来源公众号已在小程序后台「关联设置」里关联。
-    parkIntroArticle: 'https://mp.weixin.qq.com/s/Kf_RPpyeM1uBLrAexV1mIA'
+    parkIntroArticle: 'https://mp.weixin.qq.com/s/2xr8EjCVa1MUOkFEeIMC9A',
+    // 精彩活动也走公众号文章（业主 2026-07-26 改用图文，不再跳视频号）
+    activitiesArticle: 'https://mp.weixin.qq.com/s/LHxIYlwBJi3QqC1bxaa5LA'
   },
   channels: {
     // ⚠️ 2026-07-26 真机验证：下面这个 id 是从主页短链推导的，**不可用**

@@ -281,7 +281,7 @@ test('三处首页配置对外链入口保持一致，避免同步脚本把云�
 
   const EXPECT = {
     quick_park_intro: 'external:article',
-    quick_activities: 'external:channels'
+    quick_activities: 'external:article'
   }
   for (const [key, route] of Object.entries(EXPECT)) {
     assert.equal(seed.find((s) => s.key === key).route, route, 'seed-data 的 ' + key + ' 路由不对')
@@ -361,8 +361,41 @@ test('文章链接指向已关联公众号（换链接时容易漏掉这条约�
     '必须是公众号文章链接')
   const seed = require(path.join(projectRoot, 'cloudfunctions/seedPortalContent/seed-data.js')).DEFAULT_SECTIONS
   const portal = require(path.join(projectRoot, 'cloudfunctions/getHomePortal/portal-core.js')).DEFAULT_SECTIONS
-  for (const [name, list] of [['seed-data', seed], ['portal-core', portal]]) {
-    const s = list.find((x) => x.key === 'quick_park_intro')
-    assert.equal(s.params.url, env.links.parkIntroArticle, name + ' 的文章链接与 env.js 不一致')
+  assert.match(env.links.activitiesArticle, /^https:\/\/mp\.weixin\.qq\.com\/s\//,
+    '精彩活动也必须是公众号文章链接')
+  const EXPECT_URL = {
+    quick_park_intro: env.links.parkIntroArticle,
+    quick_activities: env.links.activitiesArticle
   }
+  for (const [name, list] of [['seed-data', seed], ['portal-core', portal]]) {
+    for (const [key, url] of Object.entries(EXPECT_URL)) {
+      const s = list.find((x) => x.key === key)
+      assert.equal(s.params.url, url, name + ' 的 ' + key + ' 链接与 env.js 不一致')
+    }
+  }
+  assert.notEqual(env.links.parkIntroArticle, env.links.activitiesArticle,
+    '两个入口不该指向同一篇文章')
+})
+
+// 业主 2026-07-26 改用公众号图文，云端配置里 quick_activities 还是视频号跳转，
+// 这类「搬家途中的旧目标」也要被迁移接管，否则点了还是走视频号
+test('云端仍配视频号跳转时，精彩活动改走公众号文章', async (t) => {
+  const env = require(path.join(projectRoot, 'miniprogram/env.js'))
+  const { page, calls } = mountPage(t, {
+    portal: {
+      notice: { content: '测试' },
+      sections: [
+        { key: 'quick_activities', type: 'quick_entry', title: '精彩活动', subtitle: '视频号直击', route: 'external:channels', params: {}, visible: true, sort: 30 }
+      ],
+      activities: [],
+      userSummary: null
+    }
+  })
+  await page.loadData()
+
+  page.onSectionTap({ currentTarget: { dataset: { key: 'quick_activities' } } })
+  const url = calls.navigate[0] || ''
+  assert.ok(/^\/pages\/webview\/webview\?url=/.test(url), '应改走公众号文章，实际：' + url)
+  assert.ok(url.indexOf(encodeURIComponent(env.links.activitiesArticle)) > -1,
+    '应使用本地配置的活动文章链接')
 })

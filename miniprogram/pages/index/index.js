@@ -12,9 +12,9 @@ const { resolveHomeState } = require('../../utils/home-state.js')
 // ⚠️ key 与 sort 必须与 cloudfunctions/seedPortalContent/seed-data.js 的 DEFAULT_SECTIONS 对应。
 const LOCAL_SECTIONS = [
   { key: 'hero', type: 'hero', title: '森水长河', subtitle: '峡谷溯溪 · 山野露营 · 长河令江湖', route: '', params: {}, visible: true, sort: 10 },
-  // 园区介绍 / 精彩活动直接跳公众号文章与视频号，不再进二级列表（业主 2026-07-26）
+  // 园区介绍 / 精彩活动都直接跳公众号文章，不再进二级列表（业主 2026-07-26）
   { key: 'quick_park_intro', type: 'quick_entry', title: '园区介绍', subtitle: '图文详解', route: 'external:article', params: { url: env.links.parkIntroArticle, title: '园区介绍' }, visible: true, sort: 20 },
-  { key: 'quick_activities', type: 'quick_entry', title: '精彩活动', subtitle: '视频号直击', route: 'external:channels', params: {}, visible: true, sort: 30 },
+  { key: 'quick_activities', type: 'quick_entry', title: '精彩活动', subtitle: '图文详解', route: 'external:article', params: { url: env.links.activitiesArticle, title: '精彩活动' }, visible: true, sort: 30 },
   { key: 'quick_guide', type: 'quick_entry', title: '入园攻略', subtitle: '交通与装备', route: '/pages/guide/guide', params: {}, visible: true, sort: 40 },
   { key: 'quick_concierge', type: 'quick_entry', title: '管家服务', subtitle: '有人对接', route: '/pages/concierge/concierge', params: {}, visible: true, sort: 50 },
   { key: 'ticket_entry', type: 'primary_action', title: '门票购买', subtitle: '在线选票 · 入园扫码', route: '/pages/ticket/ticket', params: {}, visible: true, sort: 60 },
@@ -67,12 +67,11 @@ const FALLBACK_NOTICE = '欢迎来到森水长河 · 入园即入江湖'
 const EMPTY_SUMMARY = { unusedTicketCount: 0, upcomingReservation: null }
 
 // 内容迁移映射（业主 2026-07-26）
-// 园区介绍与精彩活动的内容已经搬到公众号和视频号，站内二级列表页对这两个分类
-// 不再有内容。但云端 home_configs 存的仍是旧 route，而云端配置会整体覆盖本地
-// 兜底（见 applyPortal），所以这里按 key 重定向一次，不必等云端配置同步。
+// 园区介绍与精彩活动的内容都搬到了公众号，站内二级列表页对这两个分类不再有内容。
+// 但云端 home_configs 存的还是搬家途中的旧 route，而云端配置会整体覆盖本地兜底
+// （见 applyPortal），所以这里按 key 重定向一次，不必等云端配置同步。
 //
-// 只接管仍指向站内内容列表页的旧配置：云端一旦改成别的（含同步后的外链）就
-// 尊重云端。这条映射是幂等的，云端同步完成后删掉即可。
+// 幂等：云端同步到位后这段不会再改变任何东西，可以安全删除。
 const CONTENT_MIGRATED = {
   quick_park_intro: {
     route: externalLink.ARTICLE,
@@ -80,26 +79,35 @@ const CONTENT_MIGRATED = {
     subtitle: '图文详解'
   },
   quick_activities: {
-    route: externalLink.CHANNELS,
-    params: {},
-    subtitle: '视频号直击'
+    route: externalLink.ARTICLE,
+    params: { url: env.links.activitiesArticle, title: '精彩活动' },
+    subtitle: '图文详解'
   }
 }
-const MIGRATED_FROM = '/pages/content/list/list'
+
+// 这些都是内容搬家途中留下的旧目标，云端配置里可能还是它们：
+//   /pages/content/list/list —— 站内二级列表页，这两个分类的内容已清空
+//   external:channels        —— 视频号跳转，业主 2026-07-26 改用公众号图文
+const STALE_ROUTES = ['/pages/content/list/list', externalLink.CHANNELS]
+
+function isStaleRoute(route) {
+  if (!route) return true
+  return STALE_ROUTES.some((r) => route.indexOf(r) === 0)
+}
 
 function migrateSection(section) {
   const next = CONTENT_MIGRATED[section.key]
   if (!next) return section
 
-  // 已经是外链的：保留云端的标题与显隐，但**链接以本地为准**。
-  // 文章换了（比如换成已关联公众号发的那篇）要能立刻生效，
-  // 不该卡在「等云端配置同步」上。
+  // 已经是同类外链：保留云端的标题与显隐，但**链接以本地为准**。
+  // 换文章要能立刻生效，不该卡在「等云端配置同步」上。
   if (section.route === next.route) {
     return Object.assign({}, section, { params: next.params })
   }
 
-  // 仍指向已搬空的站内列表页：整条替换为外链
-  if (section.route && section.route.indexOf(MIGRATED_FROM) !== 0) return section
+  // 云端配了别的页面（不在过时清单里）就尊重云端，不越权接管
+  if (!isStaleRoute(section.route)) return section
+
   return Object.assign({}, section, next)
 }
 
