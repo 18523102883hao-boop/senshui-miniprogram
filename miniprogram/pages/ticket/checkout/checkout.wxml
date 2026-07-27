@@ -56,7 +56,7 @@
       <view class="sr-divider"></view>
       <text class="para">{{product.validityRule.desc}}</text>
       <text class="para">{{product.refundRule.summary}}</text>
-      <text class="para">{{product.reservationRequired ? '需按所选日期使用' : '无需预约，高峰期可能排队'}}</text>
+      <text class="para">{{product.reservationRequired ? (leadTimeDays > 0 ? '需提前 ' + leadTimeDays + ' 天预约，按所选日期使用' : '需按所选日期使用') : '无需预约，高峰期可能排队'}}</text>
     </view>
   </block>
 

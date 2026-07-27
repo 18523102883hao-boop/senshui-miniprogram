@@ -334,3 +334,28 @@ test('主行动卡底距与数量无关，不靠 nth-last-child 清零', () => {
   assert.ok(!/\.act[^{]*:nth-last-child/.test(block),
     '3 张时倒数第二张在第一排，nth-last-child 清零会让两排贴死')
 })
+
+// 2026-07-26 真机：昵称飘到了屏幕中间。根因是 <button> 在小程序里自带
+// display:block 与 margin:auto，放进 flex 容器会顶开后面的内容。
+test('「我的」页头像按钮压掉了 button 的默认块级与居中', () => {
+  const css = fs.readFileSync(path.join(projectRoot, 'miniprogram/pages/mine/mine.wxss'), 'utf8')
+  const block = css.slice(css.indexOf('.profile__avatar-btn {'), css.indexOf('.profile__avatar-btn::after'))
+  assert.match(block, /margin:\s*0/, '必须显式清掉 button 的 margin:auto')
+  assert.match(block, /padding:\s*0/, '必须清掉 button 的默认左右内边距')
+  assert.match(block, /flex-shrink:\s*0/, '头像不能被压缩')
+})
+
+test('「我的」页信息区显式左对齐，不继承居中', () => {
+  const css = fs.readFileSync(path.join(projectRoot, 'miniprogram/pages/mine/mine.wxss'), 'utf8')
+  const block = css.slice(css.indexOf('.profile__info {'), css.indexOf('.profile__name {'))
+  assert.match(block, /align-items:\s*flex-start/, '纵向排列需左对齐')
+  assert.match(block, /text-align:\s*left/, '文本需显式左对齐')
+  assert.match(block, /min-width:\s*0/, 'flex 子项要允许收缩，否则长昵称会撑破卡片')
+})
+
+test('「我的」页用户信息与页面其余模块同为白底卡片', () => {
+  const css = fs.readFileSync(path.join(projectRoot, 'miniprogram/pages/mine/mine.wxss'), 'utf8')
+  const block = css.slice(css.indexOf('.profile {'), css.indexOf('.profile__avatar-btn {'))
+  assert.match(block, /background:\s*var\(--sr-bg-card\)/, '应为白底卡片')
+  assert.match(block, /border-radius/, '应有圆角')
+})

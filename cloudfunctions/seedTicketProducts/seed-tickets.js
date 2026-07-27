@@ -46,7 +46,10 @@ function product(overrides) {
     validityRule: VALIDITY_RULE,
     blackoutDates: [],
     refundRule: REFUND_RULE,
-    reservationRequired: false, // 业主确认：无需预约，高峰期可能排队
+    // 默认不需预约（溪降即到即玩）。营地类需提前一天，在各票种里覆盖。
+    // leadTimeDays 同时驱动：结算页可选日期下限、云端下单校验。
+    reservationRequired: false,
+    leadTimeDays: 0,
     purchaseLimit: 10,
     stockMode: 'unlimited',
     stock: 0,
@@ -82,6 +85,8 @@ const TICKET_PRODUCTS = [
   }),
   product({
     sku: 'camp_adult', name: '单人票 · 仅营地', category: 'camp', audience: '成人 1 名',
+    // 业主 2026-07-26：营地需提前一天预约（溪降不用）
+    reservationRequired: true, leadTimeDays: 1,
     salePrice: 15800, marketPrice: 80325,
     benefits: CAMP_BENEFITS, restrictions: CAMP_RESTRICTIONS,
     exclusions: ['溪降项目', '装备租赁'],
@@ -90,6 +95,8 @@ const TICKET_PRODUCTS = [
   }),
   product({
     sku: 'camp_child', name: '儿童票 · 仅营地', category: 'camp', audience: '儿童 1 名',
+    // 业主 2026-07-26：营地需提前一天预约（溪降不用）
+    reservationRequired: true, leadTimeDays: 1,
     salePrice: 9800, marketPrice: 49843,
     benefits: CAMP_BENEFITS,
     restrictions: ['儿童适用身高/年龄范围请咨询管家'].concat(CAMP_RESTRICTIONS),
@@ -99,6 +106,8 @@ const TICKET_PRODUCTS = [
   }),
   product({
     sku: 'camp_senior', name: '老人票 · 仅营地', category: 'camp', audience: '65 周岁以上 1 名',
+    // 业主 2026-07-26：营地需提前一天预约（溪降不用）
+    reservationRequired: true, leadTimeDays: 1,
     salePrice: 11800, marketPrice: 49841,
     benefits: CAMP_BENEFITS,
     restrictions: ['入园时请携带有效身份证件核验年龄'].concat(CAMP_RESTRICTIONS),
@@ -108,6 +117,8 @@ const TICKET_PRODUCTS = [
   }),
   product({
     sku: 'combo_single', name: '单人套票 · 含溪降', category: 'combo', audience: '成人 1 名',
+    // 业主 2026-07-26：营地需提前一天预约（溪降不用）
+    reservationRequired: true, leadTimeDays: 1,
     salePrice: 17800, marketPrice: 103653,
     benefits: CAMP_BENEFITS.concat(['溪降全项目']),
     restrictions: CREEK_RESTRICTIONS.concat(CAMP_RESTRICTIONS),

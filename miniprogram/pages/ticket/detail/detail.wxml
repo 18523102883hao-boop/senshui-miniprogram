@@ -55,7 +55,7 @@
       <text class="sr-subtitle">使用说明</text>
       <view class="sr-divider"></view>
       <view class="kv"><text class="kv__k">有效期</text><text class="kv__v">{{product.validityRule.desc || product.validityText}}</text></view>
-      <view class="kv"><text class="kv__k">是否预约</text><text class="kv__v">{{product.reservationRequired ? '需提前预约' : '无需预约，高峰期可能排队'}}</text></view>
+      <view class="kv"><text class="kv__k">是否预约</text><text class="kv__v">{{product.reservationRequired ? (product.leadTimeDays > 0 ? '需提前 ' + product.leadTimeDays + ' 天预约' : '需提前预约') : '无需预约，高峰期可能排队'}}</text></view>
       <view class="kv"><text class="kv__k">取票方式</text><text class="kv__v">无需取票，凭券码或券号直接入园</text></view>
       <view class="kv" wx:if="{{product.blackoutDates.length}}">
         <text class="kv__k">不可用日期</text>

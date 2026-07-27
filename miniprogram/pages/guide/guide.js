@@ -60,7 +60,7 @@ function buildGroups(park) {
       items: [
         { title: '营业时间', desc: businessHoursText(p.hours), status: 'confirmed' },
         { title: '入园时间', desc: admissionHoursText(p.hours), status: 'confirmed' },
-        { title: '是否需要预约', desc: '无需预约，高峰期可能需要排队', status: 'confirmed' }
+        { title: '是否需要预约', desc: '溪降无需预约，高峰期可能排队；营地需提前 1 天预约', status: 'confirmed' }
       ]
     },
     {

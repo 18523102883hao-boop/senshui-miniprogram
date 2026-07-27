@@ -50,6 +50,7 @@ function toCardItem(product, ctx) {
     marketPriceText: showMarket ? fenToYuan(p.marketPrice) : '',
     benefits: (p.benefits || []).slice(0, CARD_BENEFIT_LIMIT),
     reservationRequired: !!p.reservationRequired,
+    leadTimeDays: Number(p.leadTimeDays) || 0,
     refundTag: (p.refundRule && p.refundRule.tag) || p.refundTag || '',
     validityText: (p.validityRule && p.validityRule.desc) || p.validityText || '',
     fulfillmentMode: p.fulfillmentMode || '',

@@ -8,6 +8,20 @@ const MAX_TOTAL_FEE = 1000000 // 单笔上限 100 万分，兜底防脏数据
  * @param {object} input { product, quantity, visitDate, clientAmount }
  * @returns {{ok:boolean, msg?:string, unitPrice?:number, totalFee?:number, quantity?:number}}
  */
+// 日期按本地日历天处理（票是按天核销的，不涉及时区精算）
+function todayStr() {
+  const d = new Date()
+  const pad = (n) => (n < 10 ? '0' + n : '' + n)
+  return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate())
+}
+
+function shiftDate(dateStr, days) {
+  const d = new Date(dateStr + 'T00:00:00')
+  d.setDate(d.getDate() + (Number(days) || 0))
+  const pad = (n) => (n < 10 ? '0' + n : '' + n)
+  return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate())
+}
+
 function resolveOrder(input) {
   const src = input || {}
   const p = src.product
@@ -38,6 +52,18 @@ function resolveOrder(input) {
 
   if (p.reservationRequired && !src.visitDate) {
     return { ok: false, msg: '该商品需选择使用日期' }
+  }
+
+  // 提前量校验必须在云端做：前端的日期选择器下限可以被绕过
+  if (p.reservationRequired) {
+    const lead = Number(p.leadTimeDays) || 0
+    const earliest = shiftDate(todayStr(), lead)
+    if (String(src.visitDate) < earliest) {
+      return {
+        ok: false,
+        msg: lead > 0 ? ('该商品需提前 ' + lead + ' 天预约，最早可选 ' + earliest) : '使用日期不能早于今天'
+      }
+    }
   }
 
   const unitPrice = p.salePrice
@@ -75,4 +101,6 @@ function buildOutTradeNo(prefix) {
   return (p + Date.now().toString(36).toUpperCase() + rand).slice(0, 32)
 }
 
-module.exports = { MAX_TOTAL_FEE, resolveOrder, normalizeIdempotencyKey, pickReusableOrder, buildOutTradeNo }
+module.exports = {
+  shiftDate,
+  todayStr, MAX_TOTAL_FEE, resolveOrder, normalizeIdempotencyKey, pickReusableOrder, buildOutTradeNo }

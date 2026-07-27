@@ -21,6 +21,15 @@ function today() {
   return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate())
 }
 
+// 最早可约日 = 今天 + 提前天数（营地需提前 1 天，溪降为 0）。
+// 云端 createTicketOrder 会再校验一次，这里只是别让用户白选。
+function earliestDate(leadDays) {
+  const d = new Date()
+  d.setDate(d.getDate() + (Number(leadDays) || 0))
+  const p = (n) => (n < 10 ? '0' + n : '' + n)
+  return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate())
+}
+
 Page({
   data: {
     productId: '',
@@ -29,6 +38,7 @@ Page({
     maxQuantity: 1,
     visitDate: '',
     minDate: today(),
+    leadTimeDays: 0,
     contactName: '',
     contactPhone: '',
     totalFee: 0,
@@ -56,7 +66,9 @@ Page({
         this.setData({
           product: p,
           maxQuantity: p.purchaseLimit || 1,
-          visitDate: p.reservationRequired ? today() : '',
+          visitDate: p.reservationRequired ? earliestDate(p.leadTimeDays) : '',
+          minDate: earliestDate(p.leadTimeDays),
+          leadTimeDays: Number(p.leadTimeDays) || 0,
           loading: false
         })
         this.recalc()
