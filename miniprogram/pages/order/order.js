@@ -18,7 +18,8 @@ Page({
     loading: true,
     isEmpty: false,
     hasError: false,
-    paying: false
+    paying: false,
+    cancellingNo: ''
   },
 
   onShow() {
@@ -55,7 +56,7 @@ Page({
   // 注意不能跳支付结果页——那页是「已付款、等回调」的场景，轮询的还是门票；
   // 待支付订单从没付过钱，跳过去只会永远停在「支付确认中」。
   onPay(e) {
-    if (this.data.paying) return Promise.resolve()
+    if (this.data.paying || this.data.cancellingNo) return Promise.resolve()
     const no = e.currentTarget.dataset.no
     const type = e.currentTarget.dataset.type
     haptic('light')
@@ -88,12 +89,62 @@ Page({
       })
   },
 
+  onCancelOrder(e) {
+    if (this.data.paying || this.data.cancellingNo) return Promise.resolve()
+    const no = e.currentTarget.dataset.no
+    if (!no) return Promise.resolve()
+    haptic('light')
+
+    return new Promise((resolve) => {
+      wx.showModal({
+        title: '取消待支付订单？',
+        content: '取消后该订单将关闭；如仍需购买，请重新下单。',
+        confirmText: '确认取消',
+        cancelText: '暂不取消',
+        success: (modal) => {
+          if (!modal.confirm) {
+            resolve()
+            return
+          }
+
+          this.setData({ cancellingNo: no })
+          request.call('cancelPendingOrder', { outTradeNo: no })
+            .then(() => {
+              haptic('heavy')
+              wx.showToast({ title: '订单已取消', icon: 'success' })
+              return this.load()
+            })
+            .catch((err) => {
+              wx.showToast({ title: (err && err.message) || '取消失败，请稍后重试', icon: 'none' })
+              // 订单已支付或被其他请求处理时，刷新服务端最新状态。
+              if (err && err.code === 409) return this.load()
+            })
+            .then(
+              () => { this.setData({ cancellingNo: '' }); resolve() },
+              () => { this.setData({ cancellingNo: '' }); resolve() }
+            )
+        },
+        fail: resolve
+      })
+    })
+  },
+
   onRefund(e) {
     const no = e.currentTarget.dataset.no
     haptic('light')
     wx.navigateTo({
       url: '/pages/refund/detail/detail?outTradeNo=' + encodeURIComponent(no),
       fail: () => wx.showToast({ title: '该功能即将开放', icon: 'none' })
+    })
+  },
+
+  onInvoice(e) {
+    const no = e.currentTarget.dataset.no
+    const target = e.currentTarget.dataset.target === 'detail' ? 'detail' : 'apply'
+    haptic('light')
+    wx.navigateTo({
+      url: `/pages/invoice/${target}/${target}?outTradeNo=` + encodeURIComponent(no),
+      fail: () => wx.showToast({ title: '开票服务暂不可用', icon: 'none' })
     })
   },
 

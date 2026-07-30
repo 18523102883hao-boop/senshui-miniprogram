@@ -92,7 +92,7 @@ const BASE_ENV = {
     longitude: 0,
     // 营地与溪降时段不同，攻略页的营业/入园时间由此推导
     hours: {
-      camp: { label: '营地', open: '10:00', close: '21:00', cutoff: '19:00', cutoffLabel: '停止供餐' },
+      camp: { label: '营地', open: '09:30', close: '21:00', cutoff: '19:00', cutoffLabel: '停止供餐' },
       creek: { label: '溪降', open: '10:00', close: '16:30', closeLabel: '停止检票' }
     }
   },

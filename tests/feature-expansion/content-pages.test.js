@@ -195,7 +195,7 @@ test('列表页可分享，分享路径带回当前分类', async (t) => {
 const FULL_ARTICLE = {
   slug: 'park-intro', title: '园区介绍', summary: '摘要', category: 'park_intro',
   blocks: [
-    { type: 'hero', data: { title: '森水长河', subtitle: '峡谷溯溪' } },
+    { type: 'hero', data: { title: '森水长河', subtitle: '峡谷溪降' } },
     { type: 'text', data: { text: '正文段落' } },
     { type: 'image', data: { fileId: 'cloud://a.png', caption: '峡谷' } },
     { type: 'feature_grid', data: { items: [{ title: '溪降', desc: '2 公里' }] } },

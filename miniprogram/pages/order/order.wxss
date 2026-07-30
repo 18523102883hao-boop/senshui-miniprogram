@@ -19,10 +19,13 @@
 .ord__price { display: flex; align-items: baseline; }
 .ord__cur { font-size: 22rpx; color: var(--sr-text); font-weight: 600; }
 .ord__amount { font-size: 38rpx; font-weight: 800; color: var(--sr-text); line-height: 1; }
-.ord__acts { display: flex; }
+.ord__acts { display: flex; flex-wrap: wrap; justify-content: flex-end; margin: -8rpx 0 0 8rpx; }
 .ord__btn { font-size: 24rpx; font-weight: 600; color: var(--sr-text-sub);
-  border: 2rpx solid var(--sr-border); border-radius: 32rpx; padding: 12rpx 28rpx; margin-left: 16rpx; }
+  border: 2rpx solid var(--sr-border); border-radius: 32rpx; padding: 12rpx 24rpx; margin: 8rpx 0 0 12rpx;
+  min-height: 56rpx; box-sizing: border-box; display: flex; align-items: center; }
+.ord__btn--cancel { color: var(--sr-text-sub); background: var(--sr-bg-card); }
 .ord__btn--pay { background: var(--sr-primary); color: var(--sr-text-invert); border-color: var(--sr-primary); }
+.ord__btn--invoice { color: var(--sr-primary); border-color: var(--sr-primary); background: var(--sr-primary-weak); }
 
 .ord__no { display: block; font-size: 20rpx; color: var(--sr-text-weak); margin-top: 16rpx;
   padding-top: 16rpx; border-top: 1rpx solid var(--sr-line); }
@@ -31,4 +34,4 @@
 .sr-page { padding-bottom: calc(150rpx + env(safe-area-inset-bottom)) !important; }
 
 /* 支付调起中：避免连点重复拉起微信支付面板 */
-.ord__btn--pay.is-busy { opacity: 0.6; }
+.ord__btn.is-busy { opacity: 0.6; }

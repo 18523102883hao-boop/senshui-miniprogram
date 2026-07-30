@@ -1,0 +1,122 @@
+<view class="sr-page operations-page sr-enter">
+  <sr-empty-state wx:if="{{loaded && denied}}"
+                  icon="help" title="无经营数据访问权限"
+                  desc="经营数据中心仅管理员可以查看" />
+
+  <block wx:if="{{!denied}}">
+    <view class="hero-card">
+      <view>
+        <text class="hero-card__kicker">OPERATIONS · TODAY</text>
+        <text class="hero-card__title">经营数据中心</text>
+        <text class="hero-card__note">收入、资金、核销与业务数据按各自口径分别统计</text>
+      </view>
+      <text class="hero-card__time" wx:if="{{updatedAtText}}">更新 {{updatedAtText}}</text>
+    </view>
+
+    <sr-skeleton wx:if="{{loading}}" type="card" rows="4" />
+    <sr-error-state wx:if="{{hasError && !loading}}" bind:retry="onRetry" />
+
+    <block wx:if="{{loaded && !loading && !hasError && report}}">
+      <view class="limit-note" wx:if="{{truncated}}">
+        今日数据量较大，结果已截断，请进入明细缩小查询范围。
+      </view>
+
+      <view class="today-card">
+        <view class="today-card__head">
+          <text class="today-card__title">收入识别</text>
+          <text class="today-card__meta sr-num">{{report.finance.orderIncomeCount || 0}} 笔未核销订单</text>
+        </view>
+        <view class="money-grid">
+          <view class="money-metric">
+            <text class="money-metric__label">订单收入</text>
+            <text class="money-metric__value sr-num">¥{{report.finance.orderIncomeText}}</text>
+          </view>
+          <view class="money-metric">
+            <text class="money-metric__label">实际净收入</text>
+            <text class="money-metric__value sr-num">¥{{report.finance.actualNetIncomeText}}</text>
+          </view>
+          <view class="money-metric">
+            <text class="money-metric__label">退款</text>
+            <text class="money-metric__value sr-num">¥{{report.finance.refundsText}}</text>
+          </view>
+        </view>
+        <text class="income-definition">
+          订单收入为已支付未核销票款；实际净收入在门票核销后确认。
+        </text>
+        <view class="admission-strip">
+          <view>
+            <text class="admission-strip__label">实际入园</text>
+            <text class="admission-strip__value sr-num">{{report.operations.admittedPeopleCount}} 人</text>
+          </view>
+          <view>
+            <text class="admission-strip__label">核销票数</text>
+            <text class="admission-strip__value sr-num">{{report.operations.verifiedTicketCount}} 张</text>
+          </view>
+          <view wx:if="{{report.operations.unknownAdmissionTicketCount}}">
+            <text class="admission-strip__label">待核对</text>
+            <text class="admission-strip__value admission-strip__value--warn sr-num">
+              {{report.operations.unknownAdmissionTicketCount}} 张
+            </text>
+          </view>
+        </view>
+      </view>
+
+      <view class="risk-note" wx:if="{{showRisk}}">
+        <text class="risk-note__title">有事项需要关注</text>
+        <text class="risk-note__desc">
+          待退款 {{report.finance.pendingRefundCount || 0}} 笔 · 异常 {{report.anomalies.total || report.finance.anomalyCount || 0}} 条
+        </text>
+      </view>
+
+      <view class="section-title">按工作选择</view>
+      <view class="primary-entry primary-entry--finance sr-touch"
+            hover-class="sr-touch--card" hover-stay-time="60" bindtap="goFunds">
+        <view>
+          <text class="primary-entry__eyebrow">FINANCE</text>
+          <text class="primary-entry__title">资金账本</text>
+          <text class="primary-entry__desc">按支付与退款实际发生时间核对资金</text>
+        </view>
+        <text class="primary-entry__arrow">›</text>
+      </view>
+      <view class="primary-entry sr-touch"
+            hover-class="sr-touch--card" hover-stay-time="60" bindtap="goVerification">
+        <view>
+          <text class="primary-entry__eyebrow">ADMISSION</text>
+          <text class="primary-entry__title">入园核销</text>
+          <text class="primary-entry__desc">按票种、员工与日期查看票数和实际人数</text>
+        </view>
+        <text class="primary-entry__arrow">›</text>
+      </view>
+
+      <view class="primary-entry primary-entry--business sr-touch"
+            hover-class="sr-touch--card" hover-stay-time="60" bindtap="goBusinessData">
+        <view class="primary-entry__body">
+          <text class="primary-entry__eyebrow">OPERATIONS</text>
+          <text class="primary-entry__title">业务数据</text>
+          <text class="primary-entry__desc">
+            实体兑电子 · 电子兑实体 · 会员卡兑换
+          </text>
+          <view class="primary-entry__summary">
+            <text class="sr-num">{{report.operations.businessRecordCount || 0}} 条记录</text>
+            <text class="sr-num">{{report.operations.businessLingTotal || 0}} 令</text>
+          </view>
+        </view>
+        <text class="primary-entry__arrow">›</text>
+      </view>
+
+      <view class="primary-entry primary-entry--export sr-touch"
+            hover-class="sr-touch--card" hover-stay-time="60" bindtap="goExport">
+        <view>
+          <text class="primary-entry__eyebrow">EXPORT</text>
+          <text class="primary-entry__title">数据导出</text>
+          <text class="primary-entry__desc">选择数据类型，导出为一个 Excel 文件</text>
+        </view>
+        <text class="primary-entry__arrow">›</text>
+      </view>
+
+      <sr-empty-state wx:if="{{!hasData}}"
+                      icon="mine-orders" title="今天暂无经营记录"
+                      desc="下拉刷新可重新获取最新业务数据" />
+    </block>
+  </block>
+</view>

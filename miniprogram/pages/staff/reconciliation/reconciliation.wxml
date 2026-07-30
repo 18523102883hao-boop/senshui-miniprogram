@@ -1,0 +1,96 @@
+<view class="sr-page reconciliation-page sr-enter">
+  <sr-empty-state wx:if="{{loaded && denied}}"
+                  icon="help" title="无账单访问权限"
+                  desc="日、月和自定义账单仅管理员可以查看" />
+
+  <block wx:if="{{!denied}}">
+    <view class="mode-tabs" aria-label="日汇总、月汇总、自定义汇总">
+      <view class="mode-tab {{mode === item.key ? 'mode-tab--on' : ''}} sr-touch"
+            wx:for="{{modes}}" wx:key="key" data-mode="{{item.key}}"
+            hover-class="sr-touch--press" hover-stay-time="60" bindtap="onModeTap">
+        {{item.label}}
+      </view>
+    </view>
+
+    <view class="filter-card">
+      <picker wx:if="{{mode === 'daily'}}" mode="date" value="{{focusDate}}"
+              bindchange="onFocusDateChange">
+        <view class="date-field">
+          <text class="date-field__label">查看截至日期</text>
+          <text class="date-field__value sr-num">{{focusDate}} ›</text>
+        </view>
+      </picker>
+      <picker wx:elif="{{mode === 'monthly'}}" mode="date" fields="month" value="{{focusMonth}}"
+              bindchange="onFocusMonthChange">
+        <view class="date-field">
+          <text class="date-field__label">查看截至月份</text>
+          <text class="date-field__value sr-num">{{focusMonth}} ›</text>
+        </view>
+      </picker>
+      <view wx:else class="custom-filter">
+        <picker mode="date" value="{{customFrom}}" bindchange="onCustomFromChange">
+          <view class="custom-date">
+            <text>开始日期</text>
+            <text class="sr-num">{{customFrom}}</text>
+          </view>
+        </picker>
+        <picker mode="date" value="{{customTo}}" bindchange="onCustomToChange">
+          <view class="custom-date">
+            <text>结束日期</text>
+            <text class="sr-num">{{customTo}}</text>
+          </view>
+        </picker>
+        <view class="query-button sr-touch" hover-class="sr-touch--press"
+              hover-stay-time="60" bindtap="onCustomQuery">查询</view>
+      </view>
+
+      <view class="empty-switch sr-touch" hover-class="sr-touch--press"
+            hover-stay-time="60" bindtap="onToggleEmpty">
+        <view class="empty-switch__box {{hideEmpty ? 'empty-switch__box--on' : ''}}">
+          <text wx:if="{{hideEmpty}}">✓</text>
+        </view>
+        <text>不显示空账单</text>
+      </view>
+    </view>
+
+    <view class="update-note" wx:if="{{updatedAtText}}">数据更新 {{updatedAtText}}</view>
+    <view class="limit-note" wx:if="{{truncated}}">
+      当前查询结果已截断，请缩小日期范围。
+    </view>
+
+    <sr-skeleton wx:if="{{loading}}" type="card" rows="4" />
+    <sr-error-state wx:if="{{hasError && !loading}}" bind:retry="onRetry" />
+
+    <view class="bill-card sr-touch" wx:for="{{entries}}" wx:key="key"
+          data-index="{{index}}" hover-class="sr-touch--card" hover-stay-time="60"
+          bindtap="onEntryTap">
+      <view class="bill-card__head">
+        <view>
+          <text class="bill-card__title">{{item.displayLabel}}</text>
+          <text class="bill-card__orders sr-num">
+            未核销 {{item.orderIncomeCount || 0}} 笔 · 核销票数 {{item.verifiedTicketCount || 0}} 张
+          </text>
+        </view>
+        <view class="bill-card__money">
+          <text class="bill-card__value sr-num">¥{{item.actualNetIncomeText}}</text>
+          <text class="bill-card__arrow">›</text>
+        </view>
+      </view>
+      <view class="bill-card__metrics">
+        <text>订单收入 ¥{{item.orderIncomeText}}</text>
+        <text>实际净收入 ¥{{item.actualNetIncomeText}}</text>
+        <text>支付金额 ¥{{item.grossText}}</text>
+        <text>退款 ¥{{item.refundsText}}</text>
+        <text>资金流水净额 ¥{{item.netText}}</text>
+        <text>实际人数 {{item.admittedPeopleCount}} 人</text>
+      </view>
+      <view class="bill-card__risk" wx:if="{{item.riskCount || item.unknownAdmissionTicketCount}}">
+        风险 {{item.riskCount}} 项 · 人数待核对 {{item.unknownAdmissionTicketCount}} 张
+      </view>
+    </view>
+
+    <sr-empty-state wx:if="{{loaded && !loading && !hasError && !entries.length}}"
+                    icon="mine-orders" title="当前范围没有可显示账单"
+                    desc="{{hideEmpty ? '可关闭“不显示空账单”查看零数据汇总' : '调整日期后重新查询'}}" />
+  </block>
+</view>

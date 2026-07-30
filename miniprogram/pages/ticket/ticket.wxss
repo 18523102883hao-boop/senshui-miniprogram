@@ -37,13 +37,5 @@
   padding: 14rpx 30rpx; border-radius: 34rpx;
 }
 
-.chan { display: flex; align-items: center; justify-content: space-between; padding: 24rpx 0; border-bottom: 1rpx solid var(--sr-line); }
-.chan:last-of-type { border-bottom: none; }
-.chan__name { display: block; font-size: 28rpx; font-weight: 600; color: var(--sr-text); }
-.chan__desc { display: block; font-size: 22rpx; color: var(--sr-text-weak); margin-top: 6rpx; }
-.chan__action { font-size: 24rpx; color: var(--sr-primary); font-weight: 600; }
-.note { margin-top: 18rpx; padding-top: 18rpx; border-top: 1rpx dashed var(--sr-line); font-size: 22rpx; color: var(--sr-text-weak); line-height: 1.6; }
-
-
 /* 常驻底部导航避让 */
 .sr-page { padding-bottom: calc(150rpx + env(safe-area-inset-bottom)) !important; }

@@ -1,13 +1,16 @@
-// 微信生态内的外链跳转（公众号文章 / 视频号）
+// HTTPS 外链跳转（公众号文章 / 业务服务页 / 视频号）
 //
 // 约定：section.route 以 'external:' 开头的走这里，不进 wx.navigateTo。
 // 云端下发配置时也只需把 route 改成这个前缀，不必改代码。
 //
 //   external:article  —— params.url 指向公众号文章，用 web-view 承载
+//   external:webview  —— params.url 指向业务方 HTTPS 服务页，用通用 web-view 承载；
+//                       若同时配置 miniProgramAppId，则优先直跳业务方小程序
 //   external:channels —— 打开视频号主页，参数从 env.channels 读
 const env = require('../env.js')
 
 const ARTICLE = 'external:article'
+const WEBVIEW = 'external:webview'
 const CHANNELS = 'external:channels'
 
 function toast(title) {
@@ -27,7 +30,7 @@ function copyFallback(url, hint) {
   })
 }
 
-function openArticle(params) {
+function openWebviewPage(params) {
   const url = (params && params.url) || ''
   if (!/^https:\/\//.test(url)) {
     toast('内容暂未配置')
@@ -40,6 +43,34 @@ function openArticle(params) {
     fail: () => copyFallback(url)
   })
   return true
+}
+
+// 第三方服务若同时提供小程序 AppID / 页面路径，优先使用微信原生直跳。
+// 这样不依赖 web-view 业务域名；直跳失败时仍自动回落到 HTTPS 承载页。
+function openMiniProgram(params) {
+  const appId = (params && params.miniProgramAppId) || ''
+  if (!appId || typeof wx.navigateToMiniProgram !== 'function') return false
+
+  const payload = {
+    appId,
+    path: (params && params.miniProgramPath) || '',
+    envVersion: (params && params.miniProgramEnvVersion) || 'release',
+    fail: () => openWebviewPage(params)
+  }
+  if (params && params.miniProgramExtraData) {
+    payload.extraData = params.miniProgramExtraData
+  }
+  wx.navigateToMiniProgram(payload)
+  return true
+}
+
+function openWebview(params) {
+  if (openMiniProgram(params)) return true
+  return openWebviewPage(params)
+}
+
+function openArticle(params) {
+  return openWebviewPage(params)
 }
 
 // 视频号打不开时的引导：比微信自己弹的「暂时打不开，请联系商家」清楚得多
@@ -79,6 +110,7 @@ function openChannels() {
  */
 function open(route, params) {
   if (route === ARTICLE) return openArticle(params)
+  if (route === WEBVIEW) return openWebview(params)
   if (route === CHANNELS) return openChannels()
   return false
 }
@@ -87,4 +119,4 @@ function isExternal(route) {
   return typeof route === 'string' && route.indexOf('external:') === 0
 }
 
-module.exports = { open, isExternal, ARTICLE, CHANNELS }
+module.exports = { open, isExternal, openWebview, ARTICLE, WEBVIEW, CHANNELS }

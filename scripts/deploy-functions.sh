@@ -30,6 +30,12 @@ DEFAULT_FUNCTIONS=(
   createTicketOrder getMyTickets getTicketCode payCallback
   # Task 8 核销退款
   verifyTicket requestTicketRefund
+  # 电子发票闭环（订单入口、申请审核、会员退款联动）
+  getMyOrders invoiceService refundMember repayOrder cancelPendingOrder
+  # 客户自助与员工收款补差价（7 类项目支持每单 1–10 份）及价目初始化
+  createSelfUpgrade createUpgradeCharge seedUpgradeItems
+  # 管理员小程序业务账、核销与长河令运营报表
+  adminOperationsLedger exchangeLing resolveUserForLing verifyBenefit
   # Task 9 团队预约
   getReservationConfig createVisitReservation getMyReservations getVisitReservation cancelVisitReservation
   # 头像（此前遗留未部署）
@@ -42,8 +48,14 @@ if [ ! -x "$CLI" ]; then
 fi
 
 check_port() {
-  if ! "$CLI" cloud functions list --env "$ENV_ID" --project "$PROJECT" 2>&1 | grep -q "service port disabled\|服务端口已关闭"; then
+  local output
+  if output="$("$CLI" cloud functions list --env "$ENV_ID" --project "$PROJECT" 2>&1)"; then
     return 0
+  fi
+  if ! printf '%s\n' "$output" | grep -q "service port disabled\|服务端口已关闭"; then
+    echo "✖ 开发者工具 CLI 调用失败："
+    printf '%s\n' "$output" | grep -v "DeprecationWarning\|trace-deprecation"
+    return 1
   fi
   cat <<'TIP'
 ✖ 开发者工具的服务端口没开，CLI 无法调用。

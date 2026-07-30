@@ -1,0 +1,116 @@
+<view class="sr-page detail-page sr-enter">
+  <sr-skeleton wx:if="{{loading}}" type="card" rows="4" />
+  <sr-error-state wx:if="{{hasError && !loading}}" bind:retry="onRetry" />
+
+  <block wx:if="{{!loading && !hasError && request}}">
+    <view class="status-hero status-hero--{{request.status}}">
+      <text class="status-hero__kicker">电子普通发票</text>
+      <text class="status-hero__title">{{request.statusText}}</text>
+      <text class="status-hero__desc">{{statusDesc}}</text>
+    </view>
+
+    <view class="progress-card">
+      <view class="progress-line">
+        <view class="progress-line__fill progress-line__fill--{{progressStep}}"></view>
+      </view>
+      <view class="progress-steps">
+        <view class="progress-step">
+          <view class="progress-step__dot progress-step__dot--on">✓</view>
+          <text class="progress-step__label progress-step__label--on">申请提交</text>
+        </view>
+        <view class="progress-step">
+          <view class="progress-step__dot {{progressStep >= 2 ? 'progress-step__dot--on' : ''}}">
+            {{progressStep >= 2 ? '✓' : '2'}}
+          </view>
+          <text class="progress-step__label {{progressStep >= 2 ? 'progress-step__label--on' : ''}}">商家审核</text>
+        </view>
+        <view class="progress-step">
+          <view class="progress-step__dot {{progressStep >= 3 ? 'progress-step__dot--on' : ''}}">
+            {{progressStep >= 3 ? '✓' : '3'}}
+          </view>
+          <text class="progress-step__label {{progressStep >= 3 ? 'progress-step__label--on' : ''}}">商家开票</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="reason-card" wx:if="{{request.status === 'rejected'}}">
+      <text class="reason-card__label">未通过原因</text>
+      <text class="reason-card__text">{{request.rejectReason || '开票资料需要修改，请联系工作人员确认。'}}</text>
+      <view class="reason-card__action sr-touch" hover-class="sr-touch--press" bindtap="onEdit">修改开票资料</view>
+    </view>
+
+    <view class="invoice-file" wx:if="{{request.status === 'issued' && (request.hasInvoiceFile || request.hasLegacyInvoice)}}">
+      <view class="invoice-file__main">
+        <view class="invoice-file__mark">PDF</view>
+        <view class="invoice-file__copy">
+          <text class="invoice-file__title">{{request.invoiceFile.fileName || '历史电子发票.pdf'}}</text>
+          <text class="invoice-file__meta sr-num" wx:if="{{request.invoiceFile.sizeText}}">
+            {{request.invoiceFile.sizeText}} · 第 {{request.invoiceFile.version || 1}} 版
+          </text>
+          <text class="invoice-file__meta sr-num" wx:if="{{request.issuedAtText}}">
+            开具于 {{request.issuedAtText}}
+          </text>
+        </view>
+      </view>
+      <view class="invoice-file__actions">
+        <view
+          class="invoice-file__action invoice-file__action--secondary sr-touch {{fileBusy ? 'invoice-file__action--disabled' : ''}}"
+          hover-class="{{fileBusy ? 'none' : 'sr-touch--press'}}"
+          bindtap="onViewInvoice"
+        >{{fileBusy && fileAction === 'preview' ? '正在打开…' : '查看电子发票'}}</view>
+        <view
+          class="invoice-file__action sr-touch {{fileBusy ? 'invoice-file__action--disabled' : ''}}"
+          hover-class="{{fileBusy ? 'none' : 'sr-touch--press'}}"
+          bindtap="onDownloadInvoice"
+        >{{fileBusy && fileAction === 'download' ? '正在下载…' : '下载电子发票'}}</view>
+      </view>
+      <text class="invoice-file__hint">打开后可通过右上角菜单转发或保存 PDF</text>
+    </view>
+
+    <view class="invoice-file invoice-file--missing" wx:if="{{request.status === 'issued' && !request.hasInvoiceFile && !request.hasLegacyInvoice}}">
+      <text class="invoice-file__title">电子发票文件暂不可用</text>
+      <text class="invoice-file__hint">请刷新后重试；若仍无法查看，请联系工作人员。</text>
+      <view class="invoice-file__retry sr-touch" hover-class="sr-touch--press" bindtap="onRetry">重新加载</view>
+    </view>
+
+    <view class="detail-card">
+      <text class="detail-card__title">申请详情</text>
+      <view class="detail-row">
+        <text class="detail-row__label">发票类型</text>
+        <text class="detail-row__value">电子普通发票</text>
+      </view>
+      <view class="detail-row">
+        <text class="detail-row__label">发票内容</text>
+        <text class="detail-row__value">商品明细</text>
+      </view>
+      <view class="detail-row">
+        <text class="detail-row__label">订单商品</text>
+        <text class="detail-row__value">{{request.orderTitle}}</text>
+      </view>
+      <view class="detail-row">
+        <text class="detail-row__label">开票金额</text>
+        <text class="detail-row__value detail-row__value--amount sr-num">¥{{request.amountText}}</text>
+      </view>
+      <view class="detail-row">
+        <text class="detail-row__label">抬头类型</text>
+        <text class="detail-row__value">{{request.titleTypeText}}</text>
+      </view>
+      <view class="detail-row">
+        <text class="detail-row__label">抬头名称</text>
+        <text class="detail-row__value">{{request.titleName}}</text>
+      </view>
+      <view class="detail-row">
+        <text class="detail-row__label">接收邮箱</text>
+        <text class="detail-row__value">{{request.email}}</text>
+      </view>
+      <view class="detail-row">
+        <text class="detail-row__label">申请时间</text>
+        <text class="detail-row__value sr-num">{{request.submittedAtText}}</text>
+      </view>
+      <view class="detail-row detail-row--last">
+        <text class="detail-row__label">订单号</text>
+        <text class="detail-row__value sr-num">{{request.outTradeNo}}</text>
+      </view>
+    </view>
+  </block>
+</view>

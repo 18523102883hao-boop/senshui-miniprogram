@@ -1,0 +1,108 @@
+<view class="sr-page apply-page sr-enter">
+  <sr-skeleton wx:if="{{loading}}" type="card" rows="4" />
+  <sr-error-state wx:if="{{hasError && !loading}}"
+                  desc="{{errorMessage || '检查网络后可重试'}}"
+                  bind:retry="onRetry" />
+
+  <block wx:if="{{!loading && !hasError && order}}">
+    <view class="invoice-intro">
+      <view class="invoice-intro__eyebrow">电子普通发票 · 商品明细</view>
+      <view class="invoice-intro__row">
+        <view class="invoice-intro__copy">
+          <text class="invoice-intro__title">{{order.orderTitle}}</text>
+          <text class="invoice-intro__no sr-num">订单号 {{order.outTradeNo}}</text>
+        </view>
+        <view class="invoice-intro__amount">
+          <text class="invoice-intro__currency">¥</text>
+          <text class="invoice-intro__number sr-num">{{order.invoiceAmountText}}</text>
+        </view>
+      </view>
+      <text class="invoice-intro__hint">按订单实际可开票金额开具，预计 10 个自然日内完成审核并开具。</text>
+    </view>
+
+    <view class="reject-note" wx:if="{{rejectReason}}">
+      <text class="reject-note__label">上次申请未通过</text>
+      <text class="reject-note__text">{{rejectReason}}</text>
+    </view>
+
+    <view class="form-card">
+      <view class="form-section">
+        <text class="form-section__title">抬头类型</text>
+        <view class="segment">
+          <view class="segment__item {{form.titleType === 'personal' ? 'segment__item--on' : ''}} sr-touch"
+                data-type="personal" bindtap="onTitleType">个人</view>
+          <view class="segment__item {{form.titleType === 'company' ? 'segment__item--on' : ''}} sr-touch"
+                data-type="company" bindtap="onTitleType">单位</view>
+        </view>
+      </view>
+
+      <view class="field">
+        <text class="field__label">发票抬头<text class="field__req">*</text></text>
+        <input class="field__input" value="{{form.titleName}}" data-field="titleName"
+               maxlength="80" placeholder="{{form.titleType === 'company' ? '请输入单位全称' : '请输入个人姓名'}}"
+               bindinput="onFieldInput" />
+      </view>
+
+      <view class="field" wx:if="{{form.titleType === 'company'}}">
+        <text class="field__label">单位税号<text class="field__req">*</text></text>
+        <input class="field__input sr-num" value="{{form.taxNo}}" data-field="taxNo"
+               maxlength="24" placeholder="请输入纳税人识别号" bindinput="onFieldInput" />
+      </view>
+
+      <view class="field">
+        <text class="field__label">接收邮箱<text class="field__req">*</text></text>
+        <input class="field__input" value="{{form.email}}" data-field="email"
+               maxlength="100" placeholder="用于接收电子发票" bindinput="onFieldInput" />
+      </view>
+
+      <block wx:if="{{form.titleType === 'company'}}">
+        <view class="more sr-touch" hover-class="sr-touch--press" hover-stay-time="60" bindtap="onMoreToggle">
+          <view>
+            <text class="more__title">更多单位信息</text>
+            <text class="more__desc">注册地址、电话和开户资料均为选填</text>
+          </view>
+          <text class="more__arrow">{{moreExpanded ? '收起' : '展开'}} ›</text>
+        </view>
+
+        <view class="more-fields" wx:if="{{moreExpanded}}">
+          <view class="field">
+            <text class="field__label">注册地址</text>
+            <input class="field__input" value="{{form.registeredAddress}}" data-field="registeredAddress"
+                   maxlength="120" placeholder="选填" bindinput="onFieldInput" />
+          </view>
+          <view class="field">
+            <text class="field__label">注册电话</text>
+            <input class="field__input sr-num" value="{{form.registeredPhone}}" data-field="registeredPhone"
+                   maxlength="30" placeholder="选填" bindinput="onFieldInput" />
+          </view>
+          <view class="field">
+            <text class="field__label">开户银行</text>
+            <input class="field__input" value="{{form.bankName}}" data-field="bankName"
+                   maxlength="80" placeholder="选填" bindinput="onFieldInput" />
+          </view>
+          <view class="field">
+            <text class="field__label">银行账号</text>
+            <input class="field__input sr-num" value="{{form.bankAccount}}" data-field="bankAccount"
+                   type="number" maxlength="32" placeholder="选填" bindinput="onFieldInput" />
+          </view>
+        </view>
+      </block>
+    </view>
+
+    <view class="privacy-row">
+      <view class="privacy-row__check {{form.privacyAgreed ? 'privacy-row__check--on' : ''}}"
+            bindtap="onPrivacyToggle">
+        <text wx:if="{{form.privacyAgreed}}">✓</text>
+      </view>
+      <text class="privacy-row__copy" bindtap="onPrivacyToggle">开票资料仅用于本次发票开具与交付，我已阅读并同意</text>
+      <text class="privacy-row__link" bindtap="goPrivacy">《隐私政策》</text>
+    </view>
+
+    <view class="submit-bar">
+      <button class="submit-bar__button sr-touch {{submitting || confirming ? 'submit-bar__button--busy' : ''}}"
+              hover-class="sr-touch--cta" hover-stay-time="60" bindtap="onSubmit">
+        {{submitting ? '提交中…' : (confirming ? '请确认…' : '申请开票')}}
+      </button>
+    </view>
+  </block>
+</view>

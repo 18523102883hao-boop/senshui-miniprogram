@@ -168,12 +168,11 @@ test('表单入口是可选的，默认不显示（业主要求少让客户填�
   assert.equal(inst.data.formRoute, '', '默认不给表单入口')
 })
 
-test('需要时可显式开启表单入口作为次要选项', (t) => {
-  const { inst, calls } = mountComponent(t, 'sr-contact-card', {
-    scene: 'birthday', formRoute: '/pages/service/lead/lead?type=birthday', __env: ENV_WITH_QR
+test('联系卡默认不配置已下线的服务线索表单', (t) => {
+  const { inst } = mountComponent(t, 'sr-contact-card', {
+    scene: 'birthday', __env: ENV_WITH_QR
   })
-  inst.onForm()
-  assert.equal(calls.navigate[0], '/pages/service/lead/lead?type=birthday')
+  assert.equal(inst.data.formRoute, '')
 })
 
 test('组件不直接调用云函数（业务留在页面）', () => {

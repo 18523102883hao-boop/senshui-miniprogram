@@ -2,6 +2,7 @@
 // PRD §8.1 产品类型、§8.2 三种履约模式、§8.3 列表卡、§8.4 详情、§17.3 ticket_products
 // 价格与规则来源：docs/业务参数.md（业主 2026-07-24 确认）
 const assert = require('node:assert/strict')
+const fs = require('node:fs')
 const path = require('node:path')
 const test = require('node:test')
 
@@ -166,6 +167,10 @@ test('溪降票必须写明身高限制，营地票不得凭空套用', () => {
   const bySku = {}
   seedData.TICKET_PRODUCTS.forEach((p) => { bySku[p.sku] = p })
   assert.ok(JSON.stringify(bySku.creek_single.restrictions).includes('150'), '溪降票需写明 150 厘米限制')
+  const childRules = JSON.stringify(bySku.creek_child.restrictions)
+  assert.ok(childRules.includes('120 厘米（含）至 150 厘米（含）'),
+    '儿童溪降票需写明 120–150 厘米且边界均包含')
+  assert.equal(childRules.includes('请咨询管家'), false, '已确认的儿童身高不可继续显示为待咨询')
   assert.ok(Array.isArray(bySku.camp_adult.restrictions))
 })
 
@@ -203,13 +208,18 @@ test('列表页加载上架商品并渲染卡片', async (t) => {
   assert.equal(page.data.products[1].cta.text, '咨询管家')
 })
 
-test('列表接口失败时保留渠道兜底，不让购票入口彻底不可用', async (t) => {
+test('门票列表移除其他购票渠道，但接口失败时仍展示错误重试态', async (t) => {
   const { page } = mountPage(t, listPath, {
     responders: { listTicketProducts: () => Promise.reject(new Error('offline')) }
   })
   await page.onLoad({})
   assert.equal(page.data.hasError, true)
-  assert.ok(page.data.channels.length > 0, '外部渠道兜底必须保留')
+  assert.equal(page.data.channels, undefined, '不应再保留外部购票渠道数据')
+  assert.equal(page.data.upgradeNote, undefined, '不应再保留渠道卡片底部说明')
+  assert.equal(page.copyLink, undefined, '不应再保留渠道复制事件')
+
+  const wxml = fs.readFileSync(path.join(projectRoot, 'miniprogram/pages/ticket/ticket.wxml'), 'utf8')
+  assert.doesNotMatch(wxml, /其他购票渠道|抖音官方旗舰店|美团\s*\/\s*大众点评|通过官方渠道购买/)
 })
 
 test('点击商品卡进入详情并带 productId', async (t) => {
@@ -260,7 +270,7 @@ test('原生支付商品点购买跳下单页，未上线时提示不静默', as
   assert.equal(calls.toast.length, 1)
 })
 
-test('咨询型商品点 CTA 进入管家/线索页而不是下单页', async (t) => {
+test('咨询型商品点 CTA 直接进入管家而不是下单或线索页', async (t) => {
   const { page, calls } = mountPage(t, detailPath, {
     responders: {
       getTicketProduct: () => Promise.resolve({
@@ -271,7 +281,7 @@ test('咨询型商品点 CTA 进入管家/线索页而不是下单页', async (t
   await page.onLoad({ productId: 'p2' })
   page.onCtaTap()
   assert.equal(calls.navigate[0].indexOf('/pages/ticket/checkout/checkout'), -1)
-  assert.ok(/service\/lead|concierge/.test(calls.navigate[0]))
+  assert.equal(calls.navigate[0], '/pages/concierge/concierge')
 })
 
 test('外部渠道商品点 CTA 复制链接', async (t) => {

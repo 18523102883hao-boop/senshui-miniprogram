@@ -11,7 +11,7 @@ const { resolveHomeState } = require('../../utils/home-state.js')
 // 本地默认门户配置：弱网、云函数未部署或云端无配置时使用，保证首页永不白屏。
 // ⚠️ key 与 sort 必须与 cloudfunctions/seedPortalContent/seed-data.js 的 DEFAULT_SECTIONS 对应。
 const LOCAL_SECTIONS = [
-  { key: 'hero', type: 'hero', title: '森水长河', subtitle: '峡谷溯溪 · 山野露营 · 长河令江湖', route: '', params: {}, visible: true, sort: 10 },
+  { key: 'hero', type: 'hero', title: '森水长河', subtitle: '峡谷溪降 · 山野露营 · 长河令江湖', route: '', params: {}, visible: true, sort: 10 },
   // 园区介绍 / 精彩活动都直接跳公众号文章，不再进二级列表（业主 2026-07-26）
   { key: 'quick_park_intro', type: 'quick_entry', title: '园区介绍', subtitle: '图文详解', route: 'external:article', params: { url: env.links.parkIntroArticle, title: '园区介绍' }, visible: true, sort: 20 },
   { key: 'quick_activities', type: 'quick_entry', title: '精彩活动', subtitle: '图文详解', route: 'external:article', params: { url: env.links.activitiesArticle, title: '精彩活动' }, visible: true, sort: 30 },
@@ -20,6 +20,7 @@ const LOCAL_SECTIONS = [
   { key: 'ticket_entry', type: 'primary_action', title: '门票购买', subtitle: '在线选票 · 入园扫码', route: '/pages/ticket/ticket', params: {}, visible: true, sort: 60 },
   { key: 'reservation_entry', type: 'primary_action', title: '立即预约', subtitle: '团队到园 · 研学 · 亲友聚会', route: '/pages/reservation/entry/entry', params: {}, visible: true, sort: 70 },
   { key: 'upgrade_entry', type: 'primary_action', title: '补差价升级', subtitle: '单项票升套票 · 现场办理', route: '/pages/upgrade-info/upgrade-info', params: {}, visible: true, sort: 75 },
+  { key: 'insurance_entry', type: 'primary_action', title: '溪降保险', subtitle: '下水前投保 · 安心体验', route: '/pages/insurance/insurance', params: {}, visible: true, sort: 78 },
   { key: 'user_status', type: 'user_status', title: '我的行程', subtitle: '未使用门票与即将到来的预约', route: '', params: {}, visible: true, sort: 80 },
   { key: 'service_birthday', type: 'service_card', title: '生日宴请', subtitle: '在山水间过一个生日', route: '/pages/service/detail/detail', params: { type: 'birthday' }, visible: true, sort: 90 },
   { key: 'service_teambuilding', type: 'service_card', title: '公司团建', subtitle: '定制行程与场地', route: '/pages/service/detail/detail', params: { type: 'teambuilding' }, visible: true, sort: 100 },
@@ -39,18 +40,20 @@ const SECTION_ICONS = {
   ticket_entry: '/assets/icons/forest/home-ticket.png',
   reservation_entry: '/assets/icons/forest/home-reservation.png',
   upgrade_entry: '/assets/icons/forest/home-upgrade.png',
+  insurance_entry: '/assets/icons/forest/booking-safety.png',
   service_birthday: '/assets/icons/forest/activity-reward.png',
   service_teambuilding: '/assets/icons/forest/booking-people.png',
   service_brand: '/assets/icons/forest/activity-badge.png',
   member_entry: '/assets/icons/forest/home-member.png'
 }
 
-// 三大主行动的层级（业主反馈：不用特别标识，靠排版体现轻重缓急）
-// 三张卡统一白底，只用「方卡网格 + 标题色」拉开主次
+// 四大主行动的层级（业主反馈：不用特别标识，靠排版体现轻重缓急）
+// 四张卡统一白底，只用「方卡网格 + 标题色」拉开主次
 const ACTION_STYLE = {
   ticket_entry: { level: 'primary' },
   reservation_entry: { level: 'secondary' },
-  upgrade_entry: { level: 'secondary' }
+  upgrade_entry: { level: 'secondary' },
+  insurance_entry: { level: 'secondary' }
 }
 // 云端新增未知主行动时按次卡渲染，保证不会出现没有层级定义的卡片
 const ACTION_STYLE_FALLBACK = { level: 'secondary' }
@@ -82,13 +85,20 @@ const CONTENT_MIGRATED = {
     route: externalLink.ARTICLE,
     params: { url: env.links.activitiesArticle, title: '精彩活动' },
     subtitle: '图文详解'
+  },
+  // 保险服务商域名无法作为小程序 web-view 业务域名时，改走二维码识别引导页。
+  // 云端旧配置仍是 external:webview，客户端需立即迁移，不能等重新播种。
+  insurance_entry: {
+    route: '/pages/insurance/insurance',
+    params: {},
+    subtitle: '下水前投保 · 安心体验'
   }
 }
 
 // 这些都是内容搬家途中留下的旧目标，云端配置里可能还是它们：
 //   /pages/content/list/list —— 站内二级列表页，这两个分类的内容已清空
 //   external:channels        —— 视频号跳转，业主 2026-07-26 改用公众号图文
-const STALE_ROUTES = ['/pages/content/list/list', externalLink.CHANNELS]
+const STALE_ROUTES = ['/pages/content/list/list', externalLink.CHANNELS, externalLink.WEBVIEW]
 
 function isStaleRoute(route) {
   if (!route) return true
@@ -111,9 +121,20 @@ function migrateSection(section) {
   return Object.assign({}, section, next)
 }
 
+// 旧版 home_configs 没有保险入口。客户端在不覆盖其他云端文案/排序的前提下
+// 自动补齐必需入口，避免必须等运营重新播种配置才能使用。
+function ensureRequiredSections(sections) {
+  const list = Array.isArray(sections) ? sections.slice() : []
+  const insurance = LOCAL_SECTIONS.find((s) => s.key === 'insurance_entry')
+  if (insurance && !list.some((s) => s && s.key === insurance.key)) {
+    list.push(Object.assign({}, insurance, { params: Object.assign({}, insurance.params) }))
+  }
+  return list
+}
+
 // 把扁平的 sections 配置分组成页面可直接渲染的结构
 function groupSections(sections) {
-  const list = (Array.isArray(sections) ? sections : [])
+  const list = ensureRequiredSections(sections)
     .filter((s) => s && s.visible !== false)
     .sort((a, b) => (a.sort || 0) - (b.sort || 0))
     .map(migrateSection)

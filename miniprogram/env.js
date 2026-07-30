@@ -16,13 +16,13 @@ module.exports = {
     latitude: 28.94570257985686,
     longitude: 106.96986979037949,
     // ⚠️ 营地与溪降营业时间不同，必须分别标注，否则客人会按溪降时间理解整个园区
-    // 业主 2026-07-25 确认：
-    //   营地 10:00-21:00，其中 19:00 停止菜品供应（关门前两小时就点不了餐）
+    // 业主 2026-07-28 调整：
+    //   营地 09:30-21:00，其中 19:00 停止菜品供应
     //   溪降 10:00 开园，16:30 停止检票
     hours: {
       camp: {
         label: '营地',
-        open: '10:00',
+        open: '09:30',
         close: '21:00',
         // 中途节点：到点后仍可停留，但该项服务停止
         cutoff: '19:00',
@@ -36,7 +36,7 @@ module.exports = {
       }
     },
     creekNote: '溪降全程约 2 公里，游玩时长约 1.5 小时',
-    heightLimit: '成人限制身高 150 厘米（含）以上'
+    heightLimit: '成人限制身高 150 厘米（含）以上；儿童限制身高 120 厘米（含）至 150 厘米（含）'
   },
 
   // ============================================================
@@ -50,7 +50,9 @@ module.exports = {
     //    换文章时确认来源公众号已在小程序后台「关联设置」里关联。
     parkIntroArticle: 'https://mp.weixin.qq.com/s/2xr8EjCVa1MUOkFEeIMC9A',
     // 精彩活动也走公众号文章（业主 2026-07-26 改用图文，不再跳视频号）
-    activitiesArticle: 'https://mp.weixin.qq.com/s/LHxIYlwBJi3QqC1bxaa5LA'
+    activitiesArticle: 'https://mp.weixin.qq.com/s/LHxIYlwBJi3QqC1bxaa5LA',
+    // 溪降保险投保入口（保险二维码无法识别时复制链接兜底）
+    insurance: 'https://cpsm.baoyouwang.com/QRCode/c5114feb-5203-4c07-b5cc-0ccd937b9733'
   },
   channels: {
     // ⚠️ 2026-07-26 真机验证：下面这个 id 是从主页短链推导的，**不可用**

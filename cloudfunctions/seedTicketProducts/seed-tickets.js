@@ -51,6 +51,7 @@ function product(overrides) {
     reservationRequired: false,
     leadTimeDays: 0,
     purchaseLimit: 10,
+    admissionCount: 1,
     stockMode: 'unlimited',
     stock: 0,
     status: 'active'
@@ -68,6 +69,7 @@ const TICKET_PRODUCTS = [
   }),
   product({
     sku: 'creek_double', name: '双人溪降票', category: 'creek', audience: '2 名（成人或符合身高的同行者）',
+    admissionCount: 2,
     salePrice: 12800, marketPrice: 67805,
     benefits: CREEK_BENEFITS, restrictions: CREEK_RESTRICTIONS,
     exclusions: ['餐食', '个人消费'],
@@ -78,7 +80,7 @@ const TICKET_PRODUCTS = [
     sku: 'creek_child', name: '儿童溪降票', category: 'creek', audience: '儿童 1 名',
     salePrice: 2990, marketPrice: 29806,
     benefits: CREEK_BENEFITS,
-    restrictions: ['儿童适用身高/年龄范围请咨询管家'].concat(CREEK_RESTRICTIONS.slice(1)),
+    restrictions: ['儿童限制身高 120 厘米（含）至 150 厘米（含）'].concat(CREEK_RESTRICTIONS.slice(1)),
     exclusions: ['餐食', '个人消费'],
     highlight: '需成人陪同',
     sort: 30

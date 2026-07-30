@@ -32,12 +32,30 @@ function shouldIssue(order, existingTicketCount) {
   return (Number(existingTicketCount) || 0) === 0
 }
 
+const KNOWN_SINGLE_SKUS = [
+  'creek_single',
+  'creek_child',
+  'camp_adult',
+  'camp_child',
+  'camp_senior',
+  'combo_single'
+]
+
+function resolveAdmissionCount(order) {
+  const value = Number(order && order.admissionCountPerTicket)
+  if (Number.isInteger(value) && value >= 1 && value <= 20) return value
+  if (order && order.sku === 'creek_double') return 2
+  if (order && KNOWN_SINGLE_SKUS.indexOf(order.sku) >= 0) return 1
+  return null
+}
+
 /**
  * 按订单数量生成票券（一单多张）。
  */
 function buildTickets(order, now) {
   const o = order || {}
   const quantity = Number(o.quantity) || 0
+  const admissionCount = resolveAdmissionCount(o)
   const time = now instanceof Date ? now : new Date()
   const expireAt = computeExpireAt(o, time)
   const tickets = []
@@ -50,6 +68,7 @@ function buildTickets(order, now) {
       sku: o.sku || '',
       productName: o.productName || '',
       unitPrice: o.unitPrice || 0,
+      admissionCount,
       visitDate: o.visitDate || '',
       contact: o.contact || null,
       status: 'unused',
@@ -63,4 +82,4 @@ function buildTickets(order, now) {
   return tickets
 }
 
-module.exports = { genTicketNo, computeExpireAt, shouldIssue, buildTickets }
+module.exports = { genTicketNo, computeExpireAt, shouldIssue, resolveAdmissionCount, buildTickets }

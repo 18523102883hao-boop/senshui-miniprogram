@@ -1,0 +1,82 @@
+<view class="sr-page finance-page sr-enter">
+  <sr-empty-state wx:if="{{loaded && denied}}"
+                  icon="help" title="无财务数据访问权限"
+                  desc="实际净收入仅管理员可以查看" />
+
+  <block wx:if="{{!denied}}">
+    <view class="ledger-head">
+      <text class="ledger-head__eyebrow">FULFILLMENT · TODAY</text>
+      <text class="ledger-head__title">实际净收入</text>
+      <text class="ledger-head__note">按核销时间统计；实际净收入即已核销票面金额，不等于支付流水或微信结算。</text>
+      <text class="ledger-head__time" wx:if="{{updatedAtText}}">更新 {{updatedAtText}}</text>
+    </view>
+
+    <sr-skeleton wx:if="{{loading}}" type="card" rows="4" />
+    <sr-error-state wx:if="{{hasError && !loading}}" bind:retry="onRetry" />
+
+    <block wx:if="{{loaded && !loading && !hasError && report}}">
+      <view class="limit-note" wx:if="{{truncated}}">
+        当前范围数据量较大，结果已截断，请缩小日期范围后重试。
+      </view>
+
+      <view class="income-card">
+        <text class="income-card__label">实际净收入</text>
+        <view class="income-card__money">
+          <text class="income-card__currency">¥</text>
+          <text class="income-card__value sr-num">{{report.finance.actualNetIncomeText}}</text>
+        </view>
+        <view class="income-card__summary">
+          <text>核销 {{report.finance.verifiedTicketCount || 0}} 张</text>
+          <text>按票面金额确认</text>
+        </view>
+      </view>
+
+      <view class="metric-grid">
+        <view class="metric-card">
+          <text class="metric-card__label">关联订单</text>
+          <text class="metric-card__value sr-num">{{report.finance.paidCount || 0}} 笔</text>
+        </view>
+        <view class="metric-card">
+          <text class="metric-card__label">核销票数</text>
+          <text class="metric-card__value sr-num">{{report.finance.verifiedTicketCount || 0}} 张</text>
+        </view>
+      </view>
+
+      <view class="risk-card sr-touch" wx:if="{{showRisk}}"
+            hover-class="sr-touch--card" hover-stay-time="60" bindtap="goAnomalies">
+        <view>
+          <text class="risk-card__title">有 {{riskCount}} 项需要核对</text>
+          <text class="risk-card__desc">
+            待处理退款 {{report.finance.pendingRefundCount || 0}} 笔（¥{{pendingRefundAmountText}}）
+          </text>
+        </view>
+        <text class="risk-card__arrow">›</text>
+      </view>
+
+      <view class="section-title">票种构成</view>
+      <view class="breakdown-card sr-touch" wx:if="{{report.incomeBreakdown.length}}"
+            hover-class="sr-touch--card" hover-stay-time="60" bindtap="goVerifiedIncome">
+        <view class="breakdown-row" wx:for="{{report.incomeBreakdown}}" wx:key="key">
+          <view>
+            <text class="breakdown-row__label">{{item.label}}</text>
+            <text class="breakdown-row__count sr-num">{{item.count}} 张</text>
+          </view>
+          <text class="breakdown-row__amount sr-num">¥{{item.amountText}}</text>
+        </view>
+      </view>
+
+      <view class="all-bills sr-touch"
+            hover-class="sr-touch--card" hover-stay-time="60" bindtap="goReconciliation">
+        <view>
+          <text class="all-bills__title">查看资金账本</text>
+          <text class="all-bills__desc">按支付与退款发生时间查看日、月和自定义汇总</text>
+        </view>
+        <text class="all-bills__arrow">›</text>
+      </view>
+
+      <sr-empty-state wx:if="{{!hasData}}"
+                      icon="mine-orders" title="当前范围暂无核销履约记录"
+                      desc="下拉刷新可重新获取最新数据" />
+    </block>
+  </block>
+</view>

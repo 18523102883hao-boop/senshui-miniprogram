@@ -1,0 +1,55 @@
+<view class="sr-page invoices-page sr-enter">
+  <sr-empty-state wx:if="{{checked && !allowed}}"
+                  icon="help" title="无开票管理权限"
+                  desc="开票资料包含企业税号和银行信息，仅管理员可以查看" />
+
+  <block wx:if="{{allowed}}">
+    <view class="queue-head">
+      <view>
+        <text class="queue-head__kicker">INVOICE DESK</text>
+        <text class="queue-head__title">开票处理队列</text>
+      </view>
+      <view class="queue-head__count">
+        <text class="queue-head__number sr-num">{{list.length}}</text>
+        <text class="queue-head__unit">项</text>
+      </view>
+    </view>
+
+    <scroll-view class="filters" scroll-x enable-flex show-scrollbar="{{false}}"
+                 aria-label="全部、待审核、审核中、已开票、已驳回">
+      <view class="filter {{status === item.key ? 'filter--on' : ''}} sr-touch"
+            wx:for="{{filters}}" wx:key="key" data-key="{{item.key}}"
+            hover-class="sr-touch--press" hover-stay-time="60" bindtap="onFilterTap">
+        {{item.title}}
+      </view>
+    </scroll-view>
+
+    <sr-skeleton wx:if="{{loading}}" type="card" rows="3" />
+    <sr-error-state wx:if="{{hasError && !loading}}" bind:retry="onRetry" />
+
+    <view class="invoice-card sr-touch" wx:for="{{list}}" wx:key="_id"
+          data-id="{{item._id}}" hover-class="sr-touch--card" hover-stay-time="60"
+          bindtap="onInvoiceTap">
+      <view class="invoice-card__head">
+        <text class="invoice-card__type">{{item.titleTypeText}}抬头</text>
+        <text class="invoice-card__status invoice-card__status--{{item.status}}">{{item.statusText}}</text>
+      </view>
+      <text class="invoice-card__title">{{item.titleName}}</text>
+      <text class="invoice-card__order">{{item.orderTitle}}</text>
+      <view class="invoice-card__foot">
+        <view class="invoice-card__amount">
+          <text class="invoice-card__currency">¥</text>
+          <text class="invoice-card__number sr-num">{{item.amountText}}</text>
+        </view>
+        <view class="invoice-card__meta">
+          <text>{{item.email}}</text>
+          <text class="invoice-card__no sr-num">{{item.outTradeNo}} ›</text>
+        </view>
+      </view>
+    </view>
+
+    <sr-empty-state wx:if="{{!loading && !hasError && !list.length}}"
+                    icon="mine-orders" title="当前没有申请"
+                    desc="该状态下的开票申请会集中显示在这里" />
+  </block>
+</view>

@@ -14,6 +14,7 @@ const COLLECTIONS = {
   PRODUCTS: 'products',
   LING_ACCOUNTS: 'ling_accounts',
   LING_LEDGER: 'ling_ledger',
+  LING_DAILY_QUOTAS: 'ling_daily_quotas',
   ACTIVITIES: 'activities',
   NOTICES: 'notices',
   STAFF: 'staff',
@@ -29,7 +30,6 @@ const COLLECTIONS = {
   TICKET_PRODUCTS: 'ticket_products', // 票种
   TICKETS: 'tickets', // 票券（下单后一票一码）
   VISIT_RESERVATIONS: 'visit_reservations', // 团队/研学预约
-  SERVICE_LEADS: 'service_leads', // 团建/生日等服务线索
   FEEDBACK: 'feedback', // 用户反馈
   ITINERARIES: 'itineraries' // 一日游行程推荐
 }

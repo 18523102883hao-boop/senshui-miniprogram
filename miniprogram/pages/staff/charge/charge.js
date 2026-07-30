@@ -16,6 +16,8 @@ Page({
 
     items: [],          // 预设升级项 [{id,label,price,priceYuan}]
     selectedId: '',
+    quantity: 1,
+    selectedTotalYuan: '0.00',
     manualAmount: '',   // 手输金额（元）
     manualLabel: '',
 
@@ -93,11 +95,50 @@ Page({
 
   selectItem(e) {
     const id = e.currentTarget.dataset.id
-    this.setData({ selectedId: id === this.data.selectedId ? '' : id, manualAmount: '', manualLabel: '' })
+    if (id === this.data.selectedId) {
+      this.setData({
+        selectedId: '',
+        quantity: 1,
+        selectedTotalYuan: '0.00',
+        manualAmount: '',
+        manualLabel: ''
+      })
+      return
+    }
+    const item = this.data.items.find((row) => row.id === id)
+    this.setData({
+      selectedId: id,
+      quantity: 1,
+      selectedTotalYuan: item ? item.priceYuan : '0.00',
+      manualAmount: '',
+      manualLabel: ''
+    })
+  },
+
+  setQuantity(value) {
+    const quantity = Math.min(10, Math.max(1, Number(value) || 1))
+    const item = this.data.items.find((row) => row.id === this.data.selectedId)
+    this.setData({
+      quantity,
+      selectedTotalYuan: item ? util.fen2yuan(item.price * quantity) : '0.00'
+    })
+  },
+
+  decreaseQuantity() {
+    this.setQuantity(this.data.quantity - 1)
+  },
+
+  increaseQuantity() {
+    this.setQuantity(this.data.quantity + 1)
   },
 
   onManualAmount(e) {
-    this.setData({ manualAmount: e.detail.value, selectedId: '' })
+    this.setData({
+      manualAmount: e.detail.value,
+      selectedId: '',
+      quantity: 1,
+      selectedTotalYuan: '0.00'
+    })
   },
 
   onManualLabel(e) {
@@ -105,10 +146,10 @@ Page({
   },
 
   createCharge() {
-    const { selectedId, manualAmount, manualLabel } = this.data
+    const { selectedId, quantity, manualAmount, manualLabel } = this.data
     let payload
     if (selectedId) {
-      payload = { itemId: selectedId }
+      payload = { itemId: selectedId, quantity }
     } else {
       const yuan = parseFloat(manualAmount)
       if (!(yuan > 0)) {
@@ -130,7 +171,8 @@ Page({
             chargeId: d.chargeId,
             qrBase64: d.qrBase64,
             amountYuan: util.fen2yuan(d.amount),
-            itemLabel: d.itemLabel
+            itemLabel: d.itemLabel,
+            quantity: d.quantity || 1
           },
           waiting: true
         })
@@ -151,7 +193,15 @@ Page({
           if (d.status === 'paid') {
             this.stopPolling()
             wx.showToast({ title: '已到账 ¥' + this.data.qr.amountYuan, icon: 'success' })
-            this.setData({ qr: null, waiting: false, selectedId: '', manualAmount: '', manualLabel: '' })
+            this.setData({
+              qr: null,
+              waiting: false,
+              selectedId: '',
+              quantity: 1,
+              selectedTotalYuan: '0.00',
+              manualAmount: '',
+              manualLabel: ''
+            })
             this.loadMyCharges()
           } else if (d.status === 'expired' || d.status === 'cancelled') {
             this.stopPolling()

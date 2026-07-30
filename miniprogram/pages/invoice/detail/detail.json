@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "开票进度",
+  "enablePullDownRefresh": true,
+  "backgroundTextStyle": "dark",
+  "usingComponents": {}
+}

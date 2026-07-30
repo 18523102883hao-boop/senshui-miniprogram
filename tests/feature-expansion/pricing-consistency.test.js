@@ -33,7 +33,7 @@ test('单项票 + 升级差价 = 套票价，两条路径不能有价差', () =>
   const paths = [
     ['成人营地 → 升溪降', ticketPrice('camp_adult') + upgradePrice('camp_adult_to_creek')],
     ['成人溪降 → 升营地', ticketPrice('creek_single') + upgradePrice('creek_adult_to_camp')],
-    // 双人票按人均算，升级是每人各收一笔
+    // 双人票按人均算，升级仍按每位持票人的单价计费
     ['双人溪降 → 升营地（每人）', ticketPrice('creek_double') / 2 + upgradePrice('creek_double_to_camp')]
   ]
 

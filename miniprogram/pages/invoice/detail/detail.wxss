@@ -1,0 +1,317 @@
+.detail-page {
+  padding-bottom: calc(var(--sr-gap-6) + env(safe-area-inset-bottom));
+}
+
+.status-hero {
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--sr-gap-6) var(--sr-gap-5);
+  border-radius: var(--sr-radius-lg);
+  background: var(--sr-primary);
+  color: var(--sr-text-invert);
+  text-align: center;
+  box-shadow: var(--sr-shadow);
+}
+
+.status-hero--rejected,
+.status-hero--cancelled_refund {
+  background: var(--sr-primary-deep);
+}
+
+.status-hero__kicker {
+  padding: 4rpx 16rpx;
+  border-radius: var(--sr-radius-sm);
+  background: var(--sr-primary-light);
+  font-size: 22rpx;
+}
+
+.status-hero__title {
+  margin-top: var(--sr-gap-3);
+  font-size: 42rpx;
+  font-weight: 750;
+  letter-spacing: 1rpx;
+}
+
+.status-hero__desc {
+  max-width: 560rpx;
+  margin-top: var(--sr-gap-2);
+  font-size: 25rpx;
+  line-height: 1.7;
+  opacity: .78;
+}
+
+.progress-card,
+.detail-card {
+  margin-top: var(--sr-gap-3);
+  padding: var(--sr-gap-4);
+  border-radius: var(--sr-radius);
+  background: var(--sr-bg-card);
+  box-shadow: var(--sr-shadow);
+}
+
+.progress-card {
+  position: relative;
+  padding-top: var(--sr-gap-5);
+  padding-bottom: var(--sr-gap-4);
+}
+
+.progress-line {
+  position: absolute;
+  top: 61rpx;
+  left: 18%;
+  right: 18%;
+  height: 4rpx;
+  background: var(--sr-bg-sunken);
+}
+
+.progress-line__fill {
+  height: 100%;
+  background: var(--sr-primary);
+  transition: width var(--sr-dur-enter) var(--sr-ease);
+}
+
+.progress-line__fill--1 { width: 0; }
+.progress-line__fill--2 { width: 50%; }
+.progress-line__fill--3 { width: 100%; }
+
+.progress-steps {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+}
+
+.progress-step {
+  width: 32%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.progress-step__dot {
+  width: 44rpx;
+  height: 44rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 6rpx solid var(--sr-bg-card);
+  border-radius: 50%;
+  background: var(--sr-bg-sunken);
+  color: var(--sr-text-weak);
+  font-size: 22rpx;
+  font-weight: 700;
+}
+
+.progress-step__dot--on {
+  background: var(--sr-primary);
+  color: var(--sr-text-invert);
+}
+
+.progress-step__label {
+  margin-top: var(--sr-gap-2);
+  color: var(--sr-text-weak);
+  font-size: 23rpx;
+}
+
+.progress-step__label--on {
+  color: var(--sr-text);
+  font-weight: 650;
+}
+
+.reason-card,
+.invoice-file {
+  margin-top: var(--sr-gap-3);
+  border-radius: var(--sr-radius);
+  background: var(--sr-primary-weak);
+}
+
+.reason-card {
+  padding: var(--sr-gap-4);
+  border-left: 6rpx solid var(--sr-seal);
+}
+
+.reason-card__label,
+.reason-card__text {
+  display: block;
+}
+
+.reason-card__label {
+  color: var(--sr-seal);
+  font-size: 24rpx;
+  font-weight: 700;
+}
+
+.reason-card__text {
+  margin-top: var(--sr-gap-1);
+  color: var(--sr-text-sub);
+  font-size: 25rpx;
+  line-height: 1.65;
+}
+
+.reason-card__action {
+  min-height: 72rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: var(--sr-gap-3);
+  border: 2rpx solid var(--sr-primary);
+  border-radius: var(--sr-radius-sm);
+  color: var(--sr-primary);
+  font-size: 26rpx;
+  font-weight: 650;
+}
+
+.invoice-file {
+  display: flex;
+  flex-direction: column;
+  padding: var(--sr-gap-4);
+}
+
+.invoice-file__main {
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.invoice-file__mark {
+  width: 72rpx;
+  height: 72rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border-radius: var(--sr-radius-sm);
+  background: var(--sr-primary);
+  color: var(--sr-text-invert);
+  font-size: 21rpx;
+  font-weight: 750;
+}
+
+.invoice-file__copy {
+  min-width: 0;
+  flex: 1;
+  margin-left: var(--sr-gap-3);
+}
+
+.invoice-file__title,
+.invoice-file__meta,
+.invoice-file__hint {
+  display: block;
+}
+
+.invoice-file__title {
+  font-size: 28rpx;
+  font-weight: 700;
+}
+
+.invoice-file__meta {
+  margin-top: 4rpx;
+  color: var(--sr-text-sub);
+  font-size: 21rpx;
+}
+
+.invoice-file__actions {
+  width: 100%;
+  display: flex;
+  gap: var(--sr-gap-2);
+  margin-top: var(--sr-gap-3);
+}
+
+.invoice-file__action {
+  min-width: 0;
+  min-height: 80rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  border-radius: var(--sr-radius-sm);
+  background: var(--sr-primary);
+  color: var(--sr-text-invert);
+  font-size: 25rpx;
+  font-weight: 650;
+}
+
+.invoice-file__action--secondary {
+  border: 2rpx solid var(--sr-primary);
+  background: var(--sr-bg-card);
+  color: var(--sr-primary);
+}
+
+.invoice-file__action--disabled {
+  opacity: .48;
+}
+
+.invoice-file__hint {
+  width: 100%;
+  margin-top: var(--sr-gap-2);
+  color: var(--sr-text-weak);
+  font-size: 21rpx;
+  line-height: 1.55;
+  text-align: center;
+}
+
+.invoice-file--missing {
+  align-items: flex-start;
+  background: var(--sr-bg-card);
+  box-shadow: var(--sr-shadow);
+}
+
+.invoice-file--missing .invoice-file__hint {
+  text-align: left;
+}
+
+.invoice-file__retry {
+  min-height: 72rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: stretch;
+  margin-top: var(--sr-gap-3);
+  border: 2rpx solid var(--sr-primary);
+  border-radius: var(--sr-radius-sm);
+  color: var(--sr-primary);
+  font-size: 25rpx;
+  font-weight: 650;
+}
+
+.detail-card__title {
+  display: block;
+  margin-bottom: var(--sr-gap-2);
+  font-size: 30rpx;
+  font-weight: 700;
+}
+
+.detail-row {
+  min-height: 82rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1rpx solid var(--sr-line);
+}
+
+.detail-row--last {
+  border-bottom: none;
+}
+
+.detail-row__label {
+  width: 160rpx;
+  flex-shrink: 0;
+  color: var(--sr-text-sub);
+  font-size: 24rpx;
+}
+
+.detail-row__value {
+  flex: 1;
+  overflow-wrap: anywhere;
+  color: var(--sr-text);
+  font-size: 25rpx;
+  text-align: right;
+}
+
+.detail-row__value--amount {
+  color: var(--sr-primary);
+  font-size: 30rpx;
+  font-weight: 750;
+}

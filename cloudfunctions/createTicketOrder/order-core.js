@@ -22,6 +22,13 @@ function shiftDate(dateStr, days) {
   return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate())
 }
 
+function resolveAdmissionCount(product) {
+  const value = Number(product && product.admissionCount)
+  if (Number.isInteger(value) && value >= 1 && value <= 20) return value
+  if (product && product.sku === 'creek_double') return 2
+  return 1
+}
+
 function resolveOrder(input) {
   const src = input || {}
   const p = src.product
@@ -75,7 +82,16 @@ function resolveOrder(input) {
     return { ok: false, msg: '订单金额异常' }
   }
 
-  return { ok: true, unitPrice, totalFee, quantity, visitDate: src.visitDate || '' }
+  const admissionCountPerTicket = resolveAdmissionCount(p)
+  return {
+    ok: true,
+    unitPrice,
+    totalFee,
+    quantity,
+    admissionCountPerTicket,
+    admittedPeopleCount: admissionCountPerTicket * quantity,
+    visitDate: src.visitDate || ''
+  }
 }
 
 function normalizeIdempotencyKey(key) {
@@ -102,5 +118,5 @@ function buildOutTradeNo(prefix) {
 }
 
 module.exports = {
-  shiftDate,
+  shiftDate, resolveAdmissionCount,
   todayStr, MAX_TOTAL_FEE, resolveOrder, normalizeIdempotencyKey, pickReusableOrder, buildOutTradeNo }

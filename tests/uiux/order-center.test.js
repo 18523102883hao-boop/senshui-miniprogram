@@ -1,6 +1,7 @@
 // 订单中心整合（原 Task 13 · PRD §14.4）
 // 三类订单（会员卡 / 补差价 / 门票）统一展示模型，底层差异由服务层适配
 const assert = require('node:assert/strict')
+const fs = require('node:fs')
 const path = require('node:path')
 const test = require('node:test')
 
@@ -16,7 +17,7 @@ function mountPage(t, options = {}) {
   const originalPage = global.Page
   const originalWx = global.wx
   const originals = {}
-  const calls = { request: [], navigate: [], toast: [] }
+  const calls = { request: [], navigate: [], toast: [], modal: [] }
   let pageConfig
   const stub = (p, e) => { originals[p] = require.cache[p]; require.cache[p] = { id: p, filename: p, loaded: true, exports: e } }
   const req = {
@@ -35,6 +36,17 @@ function mountPage(t, options = {}) {
     navigateTo(o) { calls.navigate.push(o.url); if (options.navigateFail && o.fail) o.fail({}) },
     switchTab(o) { calls.navigate.push(o.url) },
     showToast(o) { calls.toast.push(o) },
+    showModal(o) {
+      calls.modal.push(o)
+      if (options.modalFail) {
+        if (o.fail) o.fail({ errMsg: 'showModal:fail' })
+        return
+      }
+      if (o.success) {
+        const confirm = options.modalConfirm !== false
+        o.success({ confirm, cancel: !confirm })
+      }
+    },
     stopPullDownRefresh() {}, setNavigationBarTitle() {}
   }
   global.Page = (c) => { pageConfig = c }
@@ -144,10 +156,50 @@ test('待支付订单可继续支付，已完成的不给支付入口', () => {
   assert.equal(core.canPay({ status: 'refunded', type: 'ticket_order' }), false)
 })
 
+test('三类待支付订单可取消，已支付及其他业务类型不给取消入口', () => {
+  for (const type of ['member_card', 'ticket_order', 'ticket_upgrade']) {
+    assert.equal(core.canCancel({ status: 'pending', type }), true, type)
+    assert.equal(core.toDisplayOrder({ status: 'pending', type }).canCancel, true, type)
+  }
+  assert.equal(core.canCancel({ status: 'paid', type: 'ticket_order' }), false)
+  assert.equal(core.canCancel({ status: 'pending', type: 'rental_order' }), false)
+})
+
 test('只有已支付的门票订单能申请退款', () => {
   assert.equal(core.canRefund({ status: 'paid', type: 'ticket_order' }), true)
   assert.equal(core.canRefund({ status: 'pending', type: 'ticket_order' }), false)
   assert.equal(core.canRefund({ status: 'paid', type: 'ticket_upgrade' }), false, '补差价现场业务不走线上退款')
+  assert.equal(core.canRefund({ status: 'paid', type: 'ticket_order', invoiceStatus: 'issued' }), false, '已开票须先人工处理红字发票')
+})
+
+test('已完成订单按开票状态输出正确操作，异常重复单不可开票', () => {
+  assert.equal(core.canInvoice({ status: 'paid', type: 'member_card' }), true)
+  assert.equal(core.canInvoice({ status: 'paid', type: 'ticket_order' }), true)
+  assert.equal(core.canInvoice({ status: 'paid', type: 'ticket_upgrade' }), true)
+  assert.equal(core.canInvoice({ status: 'paid_dup', type: 'ticket_order' }), false)
+  assert.equal(core.canInvoice({ status: 'refunded', type: 'ticket_order' }), false)
+
+  const fresh = core.toDisplayOrder({ type: 'member_card', status: 'paid', amount: 990 })
+  assert.equal(fresh.invoiceActionText, '申请开票')
+  assert.equal(fresh.invoiceTarget, 'apply')
+
+  const reviewing = core.toDisplayOrder({
+    type: 'ticket_order', status: 'paid', totalFee: 5800, invoiceStatus: 'reviewing'
+  })
+  assert.equal(reviewing.invoiceActionText, '查看开票进度')
+  assert.equal(reviewing.invoiceTarget, 'detail')
+
+  const issued = core.toDisplayOrder({
+    type: 'ticket_order', status: 'paid', totalFee: 5800, invoiceStatus: 'issued'
+  })
+  assert.equal(issued.invoiceActionText, '查看发票')
+  assert.equal(issued.canRefund, false)
+
+  const rejected = core.toDisplayOrder({
+    type: 'ticket_upgrade', status: 'paid', amount: 11400, invoiceStatus: 'rejected'
+  })
+  assert.equal(rejected.invoiceActionText, '修改并重新申请')
+  assert.equal(rejected.invoiceTarget, 'apply')
 })
 
 // ============ 订单页 ============
@@ -201,4 +253,59 @@ test('门票订单可跳转退款页', async (t) => {
   await page.onShow()
   page.onRefund({ currentTarget: { dataset: { no: 'TK001' } } })
   assert.ok(calls.navigate.some((u) => u.includes('refund') && u.includes('TK001')))
+})
+
+test('订单开票操作按目标进入申请页或进度页', (t) => {
+  const { page, calls } = mountPage(t)
+  page.onInvoice({ currentTarget: { dataset: { no: 'TK001', target: 'apply' } } })
+  page.onInvoice({ currentTarget: { dataset: { no: 'TK002', target: 'detail' } } })
+  assert.ok(calls.navigate.some((u) => u.includes('/pages/invoice/apply/apply') && u.includes('TK001')))
+  assert.ok(calls.navigate.some((u) => u.includes('/pages/invoice/detail/detail') && u.includes('TK002')))
+})
+
+test('待支付订单先二次确认，确认后取消并刷新当前列表', async (t) => {
+  const { page, calls } = mountPage(t, {
+    responders: {
+      cancelPendingOrder: () => Promise.resolve({ status: 'cancelled' }),
+      getMyOrders: () => Promise.resolve({ list: [] })
+    }
+  })
+  page.data.tab = 'pending'
+
+  await page.onCancelOrder({ currentTarget: { dataset: { no: 'TK-PENDING' } } })
+
+  assert.equal(calls.modal.length, 1)
+  assert.match(calls.modal[0].title, /取消/)
+  assert.deepEqual(calls.request.map((item) => item.name), ['cancelPendingOrder', 'getMyOrders'])
+  assert.equal(calls.request[0].data.outTradeNo, 'TK-PENDING')
+  assert.ok(calls.toast.some((item) => item.title === '订单已取消'))
+  assert.equal(page.data.cancellingNo, '')
+})
+
+test('用户放弃二次确认时不发送取消请求', async (t) => {
+  const { page, calls } = mountPage(t, { modalConfirm: false })
+  await page.onCancelOrder({ currentTarget: { dataset: { no: 'TK-PENDING' } } })
+  assert.equal(calls.modal.length, 1)
+  assert.equal(calls.request.length, 0)
+})
+
+test('订单状态已变化时提示服务端原因并刷新列表', async (t) => {
+  const changed = Object.assign(new Error('订单已支付，不能取消'), { code: 409 })
+  const { page, calls } = mountPage(t, {
+    responders: {
+      cancelPendingOrder: () => Promise.reject(changed),
+      getMyOrders: () => Promise.resolve({ list: ORDERS })
+    }
+  })
+  await page.onCancelOrder({ currentTarget: { dataset: { no: 'TK-PENDING' } } })
+  assert.ok(calls.toast.some((item) => /已支付/.test(item.title)))
+  assert.deepEqual(calls.request.map((item) => item.name), ['cancelPendingOrder', 'getMyOrders'])
+  assert.equal(page.data.cancellingNo, '')
+})
+
+test('订单卡片包含取消待支付订单的次要操作', () => {
+  const wxml = fs.readFileSync(path.join(projectRoot, 'miniprogram/pages/order/order.wxml'), 'utf8')
+  assert.match(wxml, /wx:if="\{\{item\.canCancel\}\}"/)
+  assert.match(wxml, /catchtap="onCancelOrder"/)
+  assert.match(wxml, /取消订单/)
 })

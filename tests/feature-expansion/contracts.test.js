@@ -1,5 +1,5 @@
 // Task 1 契约测试：锁定跨任务复用的领域常量与纯函数
-// 依据 PRD：§8.6 票券状态、§12.4 线索状态、§14.4 订单类型、§15.2 反馈状态、
+// 依据 PRD：§8.6 票券状态、§14.4 订单类型、§15.2 反馈状态、
 //          §17.6 团队预约状态、§23 金额用分、specs/_conventions.md §6 合规禁用词
 const assert = require('node:assert/strict')
 const fs = require('node:fs')
@@ -44,14 +44,6 @@ test('团队预约状态覆盖 PRD §17.6 且取值唯一', () => {
   assert.equal(new Set(list).size, list.length, '状态取值必须唯一')
 })
 
-test('服务线索状态覆盖 PRD §12.4 且取值唯一', () => {
-  const { LEAD_STATUS } = loadDomain()
-  const list = values(LEAD_STATUS)
-  const expected = ['new', 'contacted', 'qualified', 'proposal', 'won', 'lost', 'closed']
-  assert.deepEqual(list.slice().sort(), expected.slice().sort())
-  assert.equal(new Set(list).size, list.length, '状态取值必须唯一')
-})
-
 test('反馈状态覆盖 PRD §15.2 且取值唯一', () => {
   const { FEEDBACK_STATUS } = loadDomain()
   const list = values(FEEDBACK_STATUS)
@@ -62,7 +54,7 @@ test('反馈状态覆盖 PRD §15.2 且取值唯一', () => {
 
 test('常量对象被冻结，避免运行期被业务代码改写', () => {
   const domain = loadDomain()
-  const frozen = ['ORDER_TYPES', 'TICKET_STATUS', 'VISIT_RESERVATION_STATUS', 'LEAD_STATUS', 'FEEDBACK_STATUS']
+  const frozen = ['ORDER_TYPES', 'TICKET_STATUS', 'VISIT_RESERVATION_STATUS', 'FEEDBACK_STATUS']
   for (const name of frozen) {
     assert.equal(Object.isFrozen(domain[name]), true, `${name} 必须冻结`)
   }

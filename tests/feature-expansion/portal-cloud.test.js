@@ -83,7 +83,8 @@ test('摘要查询失败时首页仍返回完整骨架', () => {
     activities: null,
     summary: null // 模拟摘要查询异常被吞掉
   }, NOW)
-  assert.equal(data.sections.length, 1)
+  assert.deepEqual(data.sections.map((s) => s.key), ['hero', 'insurance_entry'],
+    '旧云端配置也必须补齐保险入口')
   assert.deepEqual(data.activities, [])
   assert.deepEqual(data.userSummary, { unusedTicketCount: 0, usedTicketCount: 0, isMember: false, hasAnyOrder: false, upcomingReservation: null })
   assert.equal(data.notice, null)
@@ -133,11 +134,18 @@ test('文章正文块过滤未知类型，避免前端渲染空白', () => {
   assert.deepEqual(doc.blocks.map((b) => b.type), ['text', 'image'])
 })
 
-test('默认首页模块包含购票与预约两个主转化入口', () => {
+test('默认首页模块包含购票、预约与溪降保险转化入口', () => {
   const keys = seedData.DEFAULT_SECTIONS.map((s) => s.key)
   assert.ok(keys.includes('ticket_entry'), '缺少门票购买入口')
   assert.ok(keys.includes('reservation_entry'), '缺少立即预约入口')
+  assert.ok(keys.includes('insurance_entry'), '缺少溪降保险入口')
   assert.ok(keys.includes('member_entry'), '会员卡与长河令入口必须保留')
+})
+
+test('溪降保险入口锁定二维码识别引导页', () => {
+  const insurance = seedData.DEFAULT_SECTIONS.find((s) => s.key === 'insurance_entry')
+  assert.equal(insurance.route, '/pages/insurance/insurance')
+  assert.deepEqual(insurance.params, {})
 })
 
 test('默认首页模块 key 唯一、sort 唯一，且都配了跳转目标', () => {

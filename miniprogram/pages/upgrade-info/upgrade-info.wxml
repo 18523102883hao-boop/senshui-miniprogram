@@ -14,6 +14,10 @@
         <text class="result-card__label">升级项目</text>
         <text class="result-card__value">{{success.itemLabel}}</text>
       </view>
+      <view class="result-card__row">
+        <text class="result-card__label">购买数量</text>
+        <text class="result-card__value">{{success.quantity}} 份</text>
+      </view>
       <view class="result-card__row result-card__row--amount">
         <text class="result-card__label">已支付</text>
         <text class="result-card__amount sr-num">¥{{success.amountYuan}}</text>
@@ -167,13 +171,32 @@
       </view>
       <text class="sheet__benefit">{{buy.benefit}}</text>
 
+      <view class="quantity-panel">
+        <view class="quantity-panel__copy">
+          <text class="quantity-panel__label">购买数量</text>
+          <text class="quantity-panel__desc">每份升级对应 1 张原票，单次最多 10 份</text>
+        </view>
+        <view class="quantity-stepper" aria-label="购买数量，当前{{quantity}}份">
+          <view class="quantity-stepper__button {{quantity <= 1 ? 'quantity-stepper__button--disabled' : ''}} sr-touch"
+                hover-class="{{quantity > 1 ? 'sr-touch--press' : ''}}"
+                aria-role="button" aria-disabled="{{quantity <= 1}}"
+                aria-label="减少购买数量" bindtap="onMinus">−</view>
+          <text class="quantity-stepper__value sr-num">{{quantity}}</text>
+          <view class="quantity-stepper__button {{quantity >= 10 ? 'quantity-stepper__button--disabled' : ''}} sr-touch"
+                hover-class="{{quantity < 10 ? 'sr-touch--press' : ''}}"
+                aria-role="button" aria-disabled="{{quantity >= 10}}"
+                aria-label="增加购买数量" bindtap="onPlus">+</view>
+        </view>
+      </view>
+
       <view class="sheet__price">
         <view>
           <text class="sheet__price-label">本次应付</text>
-          <text class="sheet__price-note">最终金额由官方订单锁定</text>
+          <text class="sheet__price-note">{{buy.add}} / 份 × {{quantity}} 份</text>
         </view>
-        <text class="sheet__price-num sr-num">{{buy.add}}</text>
+        <text class="sheet__price-num sr-num">{{totalAmountText}}</text>
       </view>
+      <text class="sheet__ticket-notice">请确认：需持有对应数量的原票，现场将逐份核验。</text>
 
       <view class="staff-disclosure sr-touch" hover-class="sr-touch--press"
             aria-role="button" aria-expanded="{{staffExpanded}}"
@@ -190,15 +213,15 @@
       </view>
 
       <view class="staff-field" wx:if="{{staffExpanded}}">
-        <text class="staff-field__label">接待员工</text>
+        <text class="staff-field__label">员工手机尾号后四位</text>
         <input class="staff-field__input" value="{{staffRef}}" bindinput="onStaffRef"
-               maxlength="20" confirm-type="done"
-               placeholder="输入员工姓名或手机号" placeholder-class="staff-field__placeholder" />
+               type="number" maxlength="4" confirm-type="done"
+               placeholder="请输入后四位" placeholder-class="staff-field__placeholder" />
       </view>
 
       <button class="sr-btn sr-btn--seal sheet__pay" bindtap="onPay"
               loading="{{paying}}" disabled="{{paying}}">
-        确认微信支付 {{buy.add}}
+        确认微信支付 {{totalAmountText}}
       </button>
       <text class="sheet__safe">支付通过微信安全支付完成，款项进入森水长河官方账户。</text>
     </view>

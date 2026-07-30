@@ -124,7 +124,7 @@ async function insert(col, doc) {
 
 const COLLECTIONS = [
   'users', 'members', 'orders', 'tickets', 'ticket_products', 'home_configs', 'articles',
-  'visit_reservations', 'service_leads', 'feedback', 'itineraries', 'refund_requests',
+  'visit_reservations', 'feedback', 'itineraries', 'refund_requests',
   'activities', 'notices', 'staff', 'verifications', 'sessions', 'bookings', 'ling_accounts'
 ]
 
@@ -148,7 +148,7 @@ async function cmdSeed() {
   const now = new Date()
 
   for (const c of ['home_configs', 'articles', 'ticket_products', 'tickets', 'visit_reservations',
-    'service_leads', 'feedback', 'itineraries', 'refund_requests']) {
+    'feedback', 'itineraries', 'refund_requests']) {
     console.log(' 集合', c, await ensureCollection(c))
   }
 

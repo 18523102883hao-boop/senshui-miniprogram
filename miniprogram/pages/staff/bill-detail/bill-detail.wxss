@@ -1,0 +1,313 @@
+.bill-detail-page {
+  padding-bottom: calc(var(--sr-gap-8) + env(safe-area-inset-bottom));
+}
+
+.bill-head,
+.detail-tabs,
+.summary-card,
+.breakdown-card,
+.anomaly-card,
+.filter-card,
+.fund-card {
+  border-radius: var(--sr-radius-lg);
+  box-shadow: var(--sr-shadow);
+}
+
+.bill-head {
+  padding: var(--sr-gap-4);
+  background: var(--sr-primary-deep);
+  color: var(--sr-text-invert);
+}
+
+.bill-head__eyebrow,
+.bill-head__title,
+.bill-head__range,
+.bill-head__note,
+.summary-card__label,
+.summary-card__value,
+.breakdown-row__label,
+.breakdown-row__count,
+.anomaly-card__title,
+.anomaly-card__ref,
+.fund-card__type,
+.fund-card__time,
+.fund-card__title,
+.fund-card__order,
+.fund-card__staff,
+.export-note {
+  display: block;
+}
+
+.bill-head__eyebrow {
+  color: var(--sr-primary-light);
+  font-size: 19rpx;
+  font-weight: 740;
+  letter-spacing: 2rpx;
+}
+
+.bill-head__title {
+  margin-top: var(--sr-gap-1);
+  font-size: 38rpx;
+  font-weight: 780;
+}
+
+.bill-head__range {
+  margin-top: var(--sr-gap-2);
+  font-size: 24rpx;
+}
+
+.bill-head__note {
+  margin-top: 4rpx;
+  font-size: 20rpx;
+  opacity: .64;
+}
+
+.detail-tabs {
+  display: flex;
+  margin-top: var(--sr-gap-3);
+  padding: var(--sr-gap-1);
+  background: var(--sr-bg-card);
+}
+
+.detail-tab,
+.event-tab {
+  flex: 1;
+  padding: var(--sr-gap-2);
+  border-radius: var(--sr-radius);
+  color: var(--sr-text-sub);
+  font-size: 24rpx;
+  text-align: center;
+}
+
+.detail-tab--on,
+.event-tab--on {
+  background: var(--sr-primary);
+  color: var(--sr-text-invert);
+  font-weight: 730;
+}
+
+.summary-card {
+  margin-top: var(--sr-gap-3);
+  padding: var(--sr-gap-5) var(--sr-gap-4);
+  background: var(--sr-bg-card);
+}
+
+.summary-card__label {
+  color: var(--sr-text-weak);
+  font-size: 22rpx;
+}
+
+.summary-card__value {
+  margin-top: var(--sr-gap-1);
+  color: var(--sr-primary-deep);
+  font-size: 56rpx;
+  font-weight: 780;
+}
+
+.summary-card__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--sr-gap-3);
+  margin-top: var(--sr-gap-4);
+}
+
+.summary-card__grid > view {
+  display: flex;
+  flex-direction: column;
+  padding: var(--sr-gap-3);
+  border-radius: var(--sr-radius);
+  background: var(--sr-bg-sunken);
+  color: var(--sr-text-sub);
+  font-size: 21rpx;
+}
+
+.summary-card__grid text:nth-child(2) {
+  margin-top: 4rpx;
+  color: var(--sr-text);
+  font-size: 28rpx;
+  font-weight: 740;
+}
+
+.section-title {
+  padding: var(--sr-gap-5) var(--sr-gap-1) var(--sr-gap-2);
+  color: var(--sr-text);
+  font-size: 29rpx;
+  font-weight: 750;
+}
+
+.breakdown-card {
+  padding: 0 var(--sr-gap-4);
+  background: var(--sr-bg-card);
+}
+
+.breakdown-row,
+.anomaly-card,
+.fund-card__head,
+.fund-card__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.breakdown-row {
+  padding: var(--sr-gap-3) 0;
+  border-bottom: 1rpx solid var(--sr-line);
+}
+
+.breakdown-row:last-child {
+  border-bottom: 0;
+}
+
+.breakdown-row__label {
+  color: var(--sr-text);
+  font-size: 24rpx;
+  font-weight: 690;
+}
+
+.breakdown-row__count,
+.anomaly-card__ref,
+.fund-card__time,
+.fund-card__order,
+.fund-card__staff {
+  color: var(--sr-text-weak);
+  font-size: 20rpx;
+}
+
+.breakdown-row__amount {
+  color: var(--sr-text);
+  font-size: 26rpx;
+  font-weight: 740;
+}
+
+.anomaly-card {
+  margin-bottom: var(--sr-gap-2);
+  padding: var(--sr-gap-3);
+  background: var(--sr-bg-sunken);
+}
+
+.anomaly-card__title {
+  color: var(--sr-warning);
+  font-size: 24rpx;
+  font-weight: 720;
+}
+
+.anomaly-card__arrow {
+  color: var(--sr-primary);
+  font-size: 38rpx;
+}
+
+.filter-card {
+  margin-top: var(--sr-gap-3);
+  padding: var(--sr-gap-3);
+  background: var(--sr-bg-card);
+}
+
+.event-tabs {
+  display: flex;
+  padding: 4rpx;
+  border-radius: var(--sr-radius);
+  background: var(--sr-bg-sunken);
+}
+
+.picker-row {
+  display: flex;
+  justify-content: space-between;
+  margin-top: var(--sr-gap-3);
+}
+
+.picker-row picker {
+  width: calc(50% - var(--sr-gap-2) / 2);
+  padding: var(--sr-gap-2);
+  border-radius: var(--sr-radius-sm);
+  background: var(--sr-bg-sunken);
+  color: var(--sr-text-sub);
+  font-size: 21rpx;
+}
+
+.picker-row text {
+  display: block;
+}
+
+.picker-row text:last-child {
+  margin-top: 2rpx;
+  color: var(--sr-text);
+  font-weight: 690;
+}
+
+.search-row {
+  display: flex;
+  align-items: center;
+  margin-top: var(--sr-gap-3);
+}
+
+.search-row input {
+  flex: 1;
+  padding: var(--sr-gap-2);
+  border-radius: var(--sr-radius-sm);
+  background: var(--sr-bg-sunken);
+  color: var(--sr-text);
+  font-size: 22rpx;
+}
+
+.search-row__reset {
+  margin-left: var(--sr-gap-2);
+  color: var(--sr-primary);
+  font-size: 22rpx;
+  font-weight: 700;
+}
+
+.fund-card {
+  margin-top: var(--sr-gap-3);
+  padding: var(--sr-gap-4);
+  background: var(--sr-bg-card);
+}
+
+.fund-card__type {
+  color: var(--sr-primary);
+  font-size: 21rpx;
+  font-weight: 700;
+}
+
+.fund-card__title {
+  margin-top: var(--sr-gap-2);
+  color: var(--sr-text);
+  font-size: 27rpx;
+  font-weight: 740;
+}
+
+.fund-card__foot {
+  margin-top: var(--sr-gap-3);
+  padding-top: var(--sr-gap-3);
+  border-top: 1rpx solid var(--sr-line);
+}
+
+.fund-card__amount {
+  color: var(--sr-primary);
+  font-size: 27rpx;
+  font-weight: 760;
+}
+
+.fund-card__amount--refund {
+  color: var(--sr-seal);
+}
+
+.limit-note {
+  margin-top: var(--sr-gap-3);
+  padding: var(--sr-gap-3);
+  border-radius: var(--sr-radius);
+  background: var(--sr-bg-sunken);
+  color: var(--sr-warning);
+  font-size: 21rpx;
+}
+
+.loading-more,
+.export-note {
+  padding: var(--sr-gap-3);
+  color: var(--sr-text-weak);
+  font-size: 20rpx;
+  text-align: center;
+}
+
+.export-button {
+  margin-top: var(--sr-gap-4);
+}

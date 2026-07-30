@@ -139,14 +139,49 @@ test('员工手输票号也可核销（弱网兜底）', () => {
 
 test('核销留痕包含票号、员工与时间', () => {
   const record = verifyCore.buildVerification(
-    { ticketNo: 'T1', productName: '单人溪降票', orderId: 'TK1', _openid: 'buyer' },
+    {
+      ticketNo: 'T1',
+      sku: 'creek_double',
+      productName: '双人溪降票',
+      orderId: 'TK1',
+      _openid: 'buyer',
+      admissionCount: 2
+    },
     { _openid: 'staff-1', name: '小李', role: 'creek' },
     new Date('2026-08-01T10:00:00+08:00')
   )
   assert.equal(record.ticketNo, 'T1')
   assert.equal(record.staffOpenid, 'staff-1')
   assert.equal(record.type, 'ticket')
+  assert.equal(record.ticketCount, 1)
+  assert.equal(record.admissionCount, 2)
+  assert.equal(record.admissionCountUnknown, false)
   assert.ok(record.createdAt)
+})
+
+test('历史已知票种可回填人数，未知历史票必须标记待核对', () => {
+  assert.equal(verifyCore.resolveAdmissionCount({ sku: 'creek_double' }), 2)
+  assert.equal(verifyCore.resolveAdmissionCount({ sku: 'creek_single' }), 1)
+  assert.equal(verifyCore.resolveAdmissionCount({ sku: 'legacy_unknown' }), null)
+
+  const record = verifyCore.buildVerification(
+    { ticketNo: 'T2', sku: 'legacy_unknown', orderId: 'TK2' },
+    { _openid: 'staff-1', name: '小李', role: 'creek' },
+    new Date('2026-08-01T10:00:00+08:00')
+  )
+  assert.equal(record.ticketCount, 1)
+  assert.equal(record.admissionCount, null)
+  assert.equal(record.admissionCountUnknown, true)
+})
+
+test('核销预览与核销写入都携带实际人数快照', () => {
+  const source = require('node:fs').readFileSync(
+    path.join(projectRoot, 'cloudfunctions/verifyTicket/index.js'),
+    'utf8'
+  )
+  assert.match(source, /admissionCount:\s*admissionCount/)
+  assert.match(source, /admissionCountUnknown/)
+  assert.match(source, /verificationPatch/)
 })
 
 // ============ 退款分支 ============

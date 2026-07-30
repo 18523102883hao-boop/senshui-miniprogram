@@ -1,0 +1,144 @@
+<view class="sr-page staff-invoice-page sr-enter">
+  <sr-skeleton wx:if="{{loading}}" type="card" rows="4" />
+  <sr-error-state wx:if="{{hasError && !loading}}" bind:retry="onRetry" />
+
+  <block wx:if="{{request && !loading && !hasError}}">
+    <view class="status-card status-card--{{request.status}}">
+      <view class="status-card__head">
+        <view>
+          <text class="status-card__eyebrow">INVOICE REVIEW</text>
+          <text class="status-card__title">{{request.statusText}}</text>
+        </view>
+        <view class="status-card__amount">
+          <text class="status-card__currency">¥</text>
+          <text class="status-card__number sr-num">{{request.amountText}}</text>
+        </view>
+      </view>
+      <text class="status-card__desc">{{request.statusDesc}}</text>
+      <text class="status-card__order sr-num">{{request.orderTitle}} · {{request.outTradeNo}}</text>
+    </view>
+
+    <view class="privacy-note">
+      <sr-icon name="mine-orders" size="28" color="primary" />
+      <text>以下资料仅用于发票开具，请勿截图、转发或用于其他用途。</text>
+    </view>
+
+    <view class="detail-card">
+      <view class="detail-card__head">
+        <text class="detail-card__title">开票资料</text>
+        <text class="detail-card__tag">{{request.titleTypeText}}抬头</text>
+      </view>
+      <view class="detail-row">
+        <text class="detail-row__label">抬头名称</text>
+        <text class="detail-row__value">{{request.titleName}}</text>
+      </view>
+      <view class="detail-row">
+        <text class="detail-row__label">接收邮箱</text>
+        <text class="detail-row__value detail-row__value--num">{{request.email}}</text>
+      </view>
+      <block wx:if="{{request.titleType === 'company'}}">
+        <view class="detail-row">
+          <text class="detail-row__label">单位税号</text>
+          <text class="detail-row__value detail-row__value--num">{{request.taxNoText}}</text>
+        </view>
+        <view class="detail-row">
+          <text class="detail-row__label">注册地址</text>
+          <text class="detail-row__value">{{request.registeredAddressText}}</text>
+        </view>
+        <view class="detail-row">
+          <text class="detail-row__label">注册电话</text>
+          <text class="detail-row__value detail-row__value--num">{{request.registeredPhoneText}}</text>
+        </view>
+        <view class="detail-row">
+          <text class="detail-row__label">开户银行</text>
+          <text class="detail-row__value">{{request.bankNameText}}</text>
+        </view>
+        <view class="detail-row">
+          <text class="detail-row__label">银行账号</text>
+          <text class="detail-row__value detail-row__value--num">{{request.bankAccountText}}</text>
+        </view>
+      </block>
+      <view class="detail-row">
+        <text class="detail-row__label">发票类型</text>
+        <text class="detail-row__value">电子普通发票</text>
+      </view>
+      <view class="detail-row detail-row--last">
+        <text class="detail-row__label">发票内容</text>
+        <text class="detail-row__value">商品明细</text>
+      </view>
+    </view>
+
+    <view class="action-card" wx:if="{{request.status === 'submitted'}}">
+      <text class="action-card__title">开始处理</text>
+      <text class="action-card__desc">开始审核后，申请人会在进度页看到“商家审核中”。</text>
+      <button class="sr-btn sr-touch" hover-class="sr-touch--cta"
+              loading="{{saving}}" disabled="{{saving}}" bindtap="onStartReview">开始审核</button>
+    </view>
+
+    <view class="action-card" wx:if="{{request.status === 'reviewing'}}">
+      <text class="action-card__title">完成电子发票</text>
+      <text class="action-card__desc">上传单个 PDF 文件，申请人将在小程序内查看。文件上限 10MB。</text>
+
+      <view class="file-uploader" wx:if="{{!request.hasInvoiceFile}}">
+        <view class="file-uploader__badge">PDF</view>
+        <text class="file-uploader__title">上传电子发票</text>
+        <text class="file-uploader__desc">从微信聊天或手机文件中选择</text>
+        <button class="file-uploader__button sr-touch" hover-class="sr-touch--cta"
+                loading="{{uploading}}" disabled="{{uploading || saving}}"
+                bindtap="onChooseInvoiceFile">选择 PDF 文件</button>
+      </view>
+
+      <view class="file-ready" wx:else>
+        <view class="file-ready__main">
+          <view class="file-ready__badge">PDF</view>
+          <view class="file-ready__copy">
+            <text class="file-ready__name">{{request.invoiceFileName}}</text>
+            <text class="file-ready__meta">{{request.invoiceFileSizeText}} · 第 {{request.invoiceFile.version}} 版</text>
+          </view>
+          <text class="file-ready__state">已上传</text>
+        </view>
+        <view class="file-ready__actions">
+          <button class="file-action file-action--primary sr-touch" hover-class="sr-touch--press"
+                  loading="{{previewing}}" disabled="{{previewing || uploading}}"
+                  bindtap="onPreviewInvoice">预览发票</button>
+          <button class="file-action sr-touch" hover-class="sr-touch--press"
+                  loading="{{uploading}}" disabled="{{previewing || uploading || saving}}"
+                  bindtap="onChooseInvoiceFile">替换文件</button>
+        </view>
+      </view>
+
+      <view class="delivery-confirm">
+        <text class="delivery-confirm__title">确认交付</text>
+        <text class="delivery-confirm__desc">请先预览并核对文件；完成后申请人即可查看，仍可保留邮箱作为联系信息。</text>
+      </view>
+      <button class="sr-btn sr-touch" hover-class="sr-touch--cta"
+              loading="{{saving}}" disabled="{{saving || uploading || !request.hasInvoiceFile}}"
+              bindtap="onIssue">完成开票</button>
+    </view>
+
+    <view class="action-card action-card--reject"
+          wx:if="{{request.status === 'submitted' || request.status === 'reviewing'}}">
+      <text class="action-card__title">资料需要修改</text>
+      <text class="action-card__desc">请写明具体问题，申请人修改资料后可以重新提交。</text>
+      <textarea class="reject-input" value="{{rejectReason}}" maxlength="200"
+                placeholder="填写驳回原因" bindinput="onRejectReasonInput" />
+      <button class="reject-button sr-touch" hover-class="sr-touch--cta"
+              loading="{{saving}}" disabled="{{saving}}" bindtap="onReject">驳回申请</button>
+    </view>
+
+    <view class="result-card" wx:if="{{request.status === 'issued'}}">
+      <text class="result-card__label">电子发票文件</text>
+      <text class="result-card__value">{{request.invoiceFileName}}</text>
+      <text class="result-card__meta">{{request.invoiceFileSizeText}} · 已交付给申请人</text>
+      <button class="file-action file-action--primary result-card__preview sr-touch"
+              hover-class="sr-touch--press" loading="{{previewing}}" disabled="{{previewing}}"
+              bindtap="onPreviewInvoice">预览发票</button>
+    </view>
+
+    <view class="result-card result-card--reject" wx:if="{{request.status === 'rejected'}}">
+      <text class="result-card__label">驳回原因</text>
+      <text class="result-card__value">{{request.rejectReason}}</text>
+    </view>
+  </block>
+  <privacy-popup />
+</view>

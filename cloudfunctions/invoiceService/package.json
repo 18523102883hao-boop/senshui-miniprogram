@@ -1,0 +1,9 @@
+{
+  "name": "invoiceService",
+  "version": "1.0.0",
+  "description": "用户开票申请与管理员处理",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3"
+  }
+}

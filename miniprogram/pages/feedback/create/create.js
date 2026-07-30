@@ -4,6 +4,10 @@ const request = require('../../../utils/request.js')
 const env = require('../../../env.js')
 const { haptic } = require('../../../utils/haptics.js')
 const { makePhoneCall } = require('../../../utils/util.js')
+const {
+  isUndeclaredPrivacyScopeError,
+  showDeclarationGuide
+} = require('../../../utils/privacy-scope.js')
 
 const MAX_IMAGES = 6
 const TYPES = [
@@ -12,6 +16,18 @@ const TYPES = [
   { key: 'praise', title: '表扬', placeholder: '哪位同事或哪个环节让你满意？' },
   { key: 'lost_found', title: '失物招领', placeholder: '请描述物品特征、遗失时间与大致位置' }
 ]
+
+function isChooseCancelled(error) {
+  return /cancel/i.test(String(error && (error.errMsg || error.message) || ''))
+}
+
+function chooseErrorText(error) {
+  const message = String(error && (error.errMsg || error.message) || '')
+  if (/permission|authorize/i.test(message)) {
+    return '未获得图片权限，请在微信设置中允许后重试'
+  }
+  return '图片选择失败，请重试'
+}
 
 Page({
   data: {
@@ -49,15 +65,49 @@ Page({
       wx.showToast({ title: '最多 ' + MAX_IMAGES + ' 张', icon: 'none' })
       return
     }
-    wx.chooseMedia({
-      count: left,
-      mediaType: ['image'],
-      success: (res) => {
-        const paths = (res.tempFiles || []).map((f) => f.tempFilePath)
-        this.setData({ 'form.images': this.data.form.images.concat(paths) })
-      },
-      fail: () => {}
-    })
+    const onSuccess = (res) => {
+      const files = (res && (res.tempFiles || res.tempFilePaths)) || []
+      const paths = files.map((file) => (
+        typeof file === 'string' ? file : file.tempFilePath || file.path
+      )).filter(Boolean)
+      if (!paths.length) return
+      this.setData({
+        'form.images': this.data.form.images.concat(paths).slice(0, MAX_IMAGES)
+      })
+    }
+    const onFail = (error) => {
+      if (isChooseCancelled(error)) return
+      if (isUndeclaredPrivacyScopeError(error)) {
+        showDeclarationGuide('photo')
+        return
+      }
+      wx.showToast({ title: chooseErrorText(error), icon: 'none' })
+    }
+
+    if (typeof wx.chooseMedia === 'function') {
+      wx.chooseMedia({
+        count: left,
+        mediaType: ['image'],
+        sourceType: ['album', 'camera'],
+        sizeType: ['compressed'],
+        success: onSuccess,
+        fail: onFail
+      })
+      return
+    }
+
+    if (typeof wx.chooseImage === 'function') {
+      wx.chooseImage({
+        count: left,
+        sourceType: ['album', 'camera'],
+        sizeType: ['compressed'],
+        success: onSuccess,
+        fail: onFail
+      })
+      return
+    }
+
+    wx.showToast({ title: '当前微信版本不支持选择图片', icon: 'none' })
   },
 
   onRemoveImage(e) {
@@ -124,3 +174,8 @@ Page({
     wx.switchTab({ url: '/pages/index/index' })
   }
 })
+
+module.exports = {
+  isChooseCancelled,
+  chooseErrorText
+}

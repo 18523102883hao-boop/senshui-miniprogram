@@ -1,0 +1,211 @@
+.finance-page {
+  padding-bottom: calc(var(--sr-gap-8) + env(safe-area-inset-bottom));
+}
+
+.ledger-head,
+.income-card,
+.metric-card,
+.risk-card,
+.breakdown-card,
+.all-bills {
+  border-radius: var(--sr-radius-lg);
+  box-shadow: var(--sr-shadow);
+}
+
+.ledger-head {
+  padding: var(--sr-gap-4);
+  background: var(--sr-bg-card);
+}
+
+.ledger-head__eyebrow,
+.ledger-head__title,
+.ledger-head__note,
+.ledger-head__time,
+.income-card__label,
+.metric-card__label,
+.metric-card__value,
+.risk-card__title,
+.risk-card__desc,
+.breakdown-row__label,
+.breakdown-row__count,
+.all-bills__title,
+.all-bills__desc {
+  display: block;
+}
+
+.ledger-head__eyebrow {
+  color: var(--sr-primary-light);
+  font-size: 20rpx;
+  font-weight: 740;
+  letter-spacing: 2rpx;
+}
+
+.ledger-head__title {
+  margin-top: var(--sr-gap-1);
+  color: var(--sr-text);
+  font-size: 40rpx;
+  font-weight: 780;
+}
+
+.ledger-head__note,
+.ledger-head__time {
+  margin-top: var(--sr-gap-2);
+  color: var(--sr-text-weak);
+  font-size: 21rpx;
+}
+
+.income-card {
+  margin-top: var(--sr-gap-3);
+  padding: var(--sr-gap-5) var(--sr-gap-4);
+  background: var(--sr-primary-deep);
+  color: var(--sr-text-invert);
+}
+
+.income-card__label {
+  font-size: 23rpx;
+  opacity: .7;
+}
+
+.income-card__money {
+  display: flex;
+  align-items: baseline;
+  margin-top: var(--sr-gap-1);
+}
+
+.income-card__currency {
+  margin-right: var(--sr-gap-1);
+  font-size: 30rpx;
+  font-weight: 720;
+}
+
+.income-card__value {
+  font-size: 62rpx;
+  font-weight: 780;
+  line-height: 1.18;
+}
+
+.income-card__summary {
+  display: flex;
+  gap: var(--sr-gap-4);
+  margin-top: var(--sr-gap-3);
+  font-size: 22rpx;
+  opacity: .72;
+}
+
+.metric-grid {
+  display: flex;
+  justify-content: space-between;
+  margin-top: var(--sr-gap-3);
+}
+
+.metric-card {
+  width: calc(50% - var(--sr-gap-2) / 2);
+  box-sizing: border-box;
+  padding: var(--sr-gap-3);
+  background: var(--sr-bg-card);
+}
+
+.metric-card__label {
+  color: var(--sr-text-weak);
+  font-size: 21rpx;
+}
+
+.metric-card__value {
+  margin-top: var(--sr-gap-1);
+  color: var(--sr-text);
+  font-size: 30rpx;
+  font-weight: 750;
+}
+
+.risk-card,
+.all-bills {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: var(--sr-gap-3);
+  padding: var(--sr-gap-4);
+}
+
+.risk-card {
+  background: var(--sr-bg-sunken);
+}
+
+.risk-card__title {
+  color: var(--sr-warning);
+  font-size: 27rpx;
+  font-weight: 750;
+}
+
+.risk-card__desc {
+  margin-top: 4rpx;
+  color: var(--sr-text-sub);
+  font-size: 21rpx;
+}
+
+.risk-card__arrow,
+.all-bills__arrow {
+  color: var(--sr-primary);
+  font-size: 46rpx;
+}
+
+.limit-note {
+  margin-top: var(--sr-gap-3);
+  padding: var(--sr-gap-3);
+  border-radius: var(--sr-radius);
+  background: var(--sr-bg-sunken);
+  color: var(--sr-warning);
+  font-size: 21rpx;
+}
+
+.section-title {
+  padding: var(--sr-gap-5) var(--sr-gap-1) var(--sr-gap-2);
+  color: var(--sr-text);
+  font-size: 29rpx;
+  font-weight: 750;
+}
+
+.breakdown-card,
+.all-bills {
+  background: var(--sr-bg-card);
+}
+
+.breakdown-card {
+  padding: 0 var(--sr-gap-4);
+}
+
+.breakdown-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--sr-gap-3) 0;
+  border-bottom: 1rpx solid var(--sr-line);
+}
+
+.breakdown-row:last-child {
+  border-bottom: 0;
+}
+
+.breakdown-row__label {
+  color: var(--sr-text);
+  font-size: 24rpx;
+  font-weight: 690;
+}
+
+.breakdown-row__count,
+.all-bills__desc {
+  margin-top: 2rpx;
+  color: var(--sr-text-weak);
+  font-size: 20rpx;
+}
+
+.breakdown-row__amount {
+  color: var(--sr-text);
+  font-size: 26rpx;
+  font-weight: 740;
+}
+
+.all-bills__title {
+  color: var(--sr-primary-deep);
+  font-size: 28rpx;
+  font-weight: 760;
+}

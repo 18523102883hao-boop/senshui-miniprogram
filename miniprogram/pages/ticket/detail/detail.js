@@ -94,13 +94,10 @@ Page({
       })
     }
 
-    // contact：走线索表单，带上商品来源便于跟进
+    // contact：直接进入在线管家，不再创建内部线索记录。
     wx.navigateTo({
-      url: '/pages/service/lead/lead?type=ticket&sku=' + encodeURIComponent(p.sku || ''),
-      fail: () => wx.navigateTo({
-        url: '/pages/concierge/concierge',
-        fail: () => wx.showToast({ title: '该功能即将开放', icon: 'none' })
-      })
+      url: '/pages/concierge/concierge',
+      fail: () => wx.showToast({ title: '在线管家暂不可用，请稍后再试', icon: 'none' })
     })
   },
 

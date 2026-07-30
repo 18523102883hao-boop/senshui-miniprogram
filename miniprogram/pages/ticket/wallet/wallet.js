@@ -24,7 +24,8 @@ Page({
     hasError: false,
     codeToken: '',
     codeTicketNo: '',
-    codeExpiresIn: 0
+    codeExpiresIn: 0,
+    qrFallback: false
   },
 
   onLoad() {
@@ -75,7 +76,8 @@ Page({
       visibleList,
       isEmpty: visibleList.length === 0,
       codeToken: '',
-      codeTicketNo: ''
+      codeTicketNo: '',
+      qrFallback: false
     })
   },
 
@@ -90,17 +92,54 @@ Page({
     haptic('light')
     return request.call('getTicketCode', { ticketNo: no })
       .then((d) => {
+        const token = (d && d.token) || ''
         this.setData({
-          codeToken: (d && d.token) || '',
+          codeToken: token,
           codeTicketNo: no,
-          codeExpiresIn: (d && d.expiresIn) || 90
-        })
+          codeExpiresIn: (d && d.expiresIn) || 90,
+          qrFallback: false
+        }, () => this.renderTicketQr(token))
       })
       .catch((err) => wx.showToast({ title: (err && err.message) || '获取入园码失败', icon: 'none' }))
   },
 
+  renderTicketQr(text) {
+    if (!text) return
+    let drawQrcode
+    try {
+      drawQrcode = require('weapp-qrcode-canvas-2d')
+    } catch (e) {
+      this.setData({ qrFallback: true })
+      return
+    }
+
+    const query = wx.createSelectorQuery().in(this)
+    query.select('#ticketqrcode').fields({ node: true, size: true }).exec((res) => {
+      if (!res || !res[0] || !res[0].node) {
+        this.setData({ qrFallback: true })
+        return
+      }
+
+      const canvas = res[0].node
+      const size = res[0].width || 200
+      const dpr = (wx.getWindowInfo && wx.getWindowInfo().pixelRatio) || 2
+      canvas.width = size * dpr
+      canvas.height = size * dpr
+      try {
+        drawQrcode({
+          canvas,
+          width: size * dpr,
+          height: size * dpr,
+          text
+        })
+      } catch (e) {
+        this.setData({ qrFallback: true })
+      }
+    })
+  },
+
   closeCode() {
-    this.setData({ codeToken: '', codeTicketNo: '' })
+    this.setData({ codeToken: '', codeTicketNo: '', qrFallback: false })
   },
 
   // 弹层内部点击不穿透到遮罩

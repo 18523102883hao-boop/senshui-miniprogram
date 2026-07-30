@@ -36,7 +36,11 @@
       <text class="code__title">入园码</text>
       <text class="code__no sr-num">{{codeTicketNo}}</text>
       <view class="code__box">
-        <text class="code__token">{{codeToken}}</text>
+        <canvas wx:if="{{!qrFallback}}" type="2d" id="ticketqrcode" class="code__qr-canvas"></canvas>
+        <view wx:else class="code__qr-error">
+          <text class="code__qr-error-title">二维码生成失败</text>
+          <text class="code__qr-error-desc">请关闭后重新打开入园码</text>
+        </view>
       </view>
       <text class="code__tip">请出示给检票员扫码；{{codeExpiresIn}} 秒内有效，过期重新打开即可</text>
       <view class="code__close" bindtap="closeCode">关闭</view>

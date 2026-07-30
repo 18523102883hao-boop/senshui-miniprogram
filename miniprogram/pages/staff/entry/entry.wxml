@@ -1,59 +1,154 @@
-<view class="sr-page">
-  <!-- 未登记 -->
-  <view class="sr-card" wx:if="{{loaded && !role}}">
-    <text class="sr-subtitle">员工登记</text>
-    <view class="sr-divider"></view>
-    <text class="tip">填写姓名、手机号和员工口令，口令正确即开通对应权限（口令向管理员索取）。</text>
-    <view class="field">
-      <text class="field__label">姓名</text>
-      <input class="field__input" data-field="name" bindinput="onInput" placeholder="请输入姓名" />
-    </view>
-    <view class="field">
-      <text class="field__label">手机号</text>
-      <input class="field__input" type="number" data-field="phone" bindinput="onInput" placeholder="请输入手机号" />
-    </view>
-    <view class="field">
-      <text class="field__label">员工口令</text>
-      <input class="field__input" data-field="inviteCode" bindinput="onInput" placeholder="请输入员工口令" />
-    </view>
-    <button class="sr-btn" bindtap="bind">登记并开通</button>
+<view class="workbench">
+  <view class="state state--loading" wx:if="{{viewState === 'loading'}}">
+    <view class="state__mark state__mark--pulse"></view>
+    <text class="state__title">正在确认员工身份</text>
+    <text class="state__desc">请稍候，现场功能马上就绪</text>
   </view>
 
-  <!-- 已绑定 -->
-  <block wx:if="{{loaded && role}}">
-    <view class="sr-card">
-      <text class="sr-subtitle">已绑定</text>
-      <view class="sr-divider"></view>
-      <view class="sr-row-between info"><text class="sr-text-sub">姓名</text><text>{{staffName}}</text></view>
-      <view class="sr-row-between info"><text class="sr-text-sub">角色</text><text class="sr-seal-text">{{roleText}}</text></view>
+  <view class="state state--error" wx:elif="{{viewState === 'error'}}">
+    <image class="state__icon" src="/assets/icons/forest/refresh.png" mode="aspectFit" />
+    <text class="state__title">身份信息加载失败</text>
+    <text class="state__desc">请检查网络后重试，不需要重新登记</text>
+    <button class="state__button sr-touch" hover-class="sr-touch--cta" bindtap="onRetry">重新加载</button>
+  </view>
+
+  <view class="registration sr-enter" wx:elif="{{viewState === 'unbound'}}">
+    <view class="registration__head">
+      <text class="registration__eyebrow">STAFF ACCESS</text>
+      <text class="registration__title">员工登记</text>
+      <text class="registration__desc">首次使用请完成工牌绑定，员工口令向管理员索取。</text>
+    </view>
+    <view class="registration__form">
+      <view class="field">
+        <text class="field__label">姓名</text>
+        <input class="field__input" data-field="name" bindinput="onInput" placeholder="请输入姓名" placeholder-class="field__placeholder" />
+      </view>
+      <view class="field">
+        <text class="field__label">手机号</text>
+        <input class="field__input" type="number" maxlength="11" data-field="phone" bindinput="onInput" placeholder="请输入手机号" placeholder-class="field__placeholder" />
+      </view>
+      <view class="field">
+        <text class="field__label">员工口令</text>
+        <input class="field__input" password data-field="inviteCode" bindinput="onInput" placeholder="请输入员工口令" placeholder-class="field__placeholder" />
+      </view>
+    </view>
+    <button class="registration__button sr-touch" hover-class="sr-touch--cta" bindtap="bind">登记并开通</button>
+  </view>
+
+  <block wx:elif="{{viewState === 'bound'}}">
+    <view class="identity sr-enter">
+      <view>
+        <text class="identity__eyebrow">今日工作台</text>
+        <view class="identity__name-row">
+          <text class="identity__name">{{staffName || '森水长河员工'}}</text>
+          <text class="identity__role">{{roleText}}</text>
+        </view>
+      </view>
+      <view class="identity__status">
+        <view class="identity__dot"></view>
+        <text>已连接</text>
+      </view>
     </view>
 
-    <view class="sr-card actions">
-      <view class="action sr-touch" hover-class="sr-touch--press" hover-stay-time="60" wx:if="{{role === 'front' || role === 'admin'}}" bindtap="goCharge">
-        <text class="action__title">补差价收款</text>
-        <text class="action__desc">出示收款码 · 客户扫码升级补差价</text>
+    <view
+      class="primary sr-touch sr-enter"
+      hover-class="sr-touch--card"
+      hover-stay-time="60"
+      data-route="{{primaryTask.route}}"
+      bindtap="onTaskTap"
+      wx:if="{{primaryTask}}"
+    >
+      <view class="primary__glow"></view>
+      <view class="task-icon task-icon--primary">
+        <image src="{{primaryTask.icon}}" mode="aspectFit" />
       </view>
-      <view class="action sr-touch" hover-class="sr-touch--press" hover-stay-time="60" wx:if="{{role === 'admin'}}" bindtap="goMaps">
-        <text class="action__title">园区地图管理</text>
-        <text class="action__desc">上传 / 更换 营地·溪降 游览图</text>
+      <view class="primary__copy">
+        <text class="primary__hint">现在最常用</text>
+        <text class="primary__title">{{primaryTask.title}}</text>
+        <text class="primary__desc">{{primaryTask.desc}}</text>
       </view>
-      <view class="action sr-touch" hover-class="sr-touch--press" hover-stay-time="60" wx:if="{{role === 'front' || role === 'admin'}}" bindtap="goLingExchange">
-        <text class="action__title">长河令兑换</text>
-        <text class="action__desc">实体 ↔ 电子长河令 互兑</text>
+      <text class="primary__arrow">›</text>
+    </view>
+
+    <view class="section sr-enter" wx:if="{{frequentTasks.length}}">
+      <view class="section__head">
+        <text class="section__title">常用任务</text>
+        <text class="section__hint">按现场频率排列</text>
       </view>
-      <view class="action sr-touch" hover-class="sr-touch--press" hover-stay-time="60" bindtap="goVerify">
-        <text class="action__title">会员核销台</text>
-        <text class="action__desc">扫码核销 令 / 生日 85 折</text>
+      <view class="task-grid">
+        <view
+          class="task-card sr-touch"
+          hover-class="sr-touch--press"
+          hover-stay-time="60"
+          wx:for="{{frequentTasks}}"
+          wx:key="key"
+          data-route="{{item.route}}"
+          bindtap="onTaskTap"
+        >
+          <view class="task-icon">
+            <image src="{{item.icon}}" mode="aspectFit" />
+          </view>
+          <text class="task-card__title">{{item.title}}</text>
+          <text class="task-card__desc">{{item.desc}}</text>
+        </view>
       </view>
-      <view class="action sr-touch" hover-class="sr-touch--press" hover-stay-time="60"
-            wx:if="{{role === 'front' || role === 'creek' || role === 'admin'}}" bindtap="goTicketVerify">
-        <text class="action__title">门票核销</text>
-        <text class="action__desc">扫入园码 · 先预览再确认</text>
+    </view>
+
+    <view class="dashboard sr-enter" wx:if="{{role === 'admin'}}">
+      <view class="section__head">
+        <text class="section__title">今日概览</text>
+        <text class="section__hint" wx:if="{{dashboardLoading}}">更新中</text>
+        <text class="section__hint section__hint--warn" wx:elif="{{dashboardError}}">部分数据未更新</text>
+        <text class="section__hint" wx:else>实时业务数据</text>
       </view>
-      <view class="action sr-touch" hover-class="sr-touch--press" hover-stay-time="60"
-            wx:if="{{role === 'front' || role === 'admin'}}" bindtap="goLeads">
-        <text class="action__title">线索跟进</text>
-        <text class="action__desc">生日 / 团建 / 品牌合作咨询</text>
+      <view class="dashboard__hero">
+        <text class="dashboard__label">今日实际净收入</text>
+        <text class="dashboard__amount sr-num">¥{{dashboard.actualNetIncomeText}}</text>
+      </view>
+      <view class="metric-grid">
+        <view class="metric">
+          <text class="metric__value sr-num">{{dashboard.admittedPeopleCount}}</text>
+          <text class="metric__label">实际入园人数</text>
+        </view>
+        <view class="metric">
+          <text class="metric__value sr-num">{{dashboard.verifiedTicketCount}}</text>
+          <text class="metric__label">核销票数</text>
+        </view>
+        <view class="metric">
+          <text class="metric__value sr-num">{{dashboard.pendingInvoiceCount}}</text>
+          <text class="metric__label">待处理开票</text>
+        </view>
+        <view class="metric">
+          <text class="metric__value sr-num">{{dashboard.anomalyCount}}</text>
+          <text class="metric__label">账务异常</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="section section--manage sr-enter" wx:if="{{manageTasks.length}}">
+      <view class="section__head">
+        <text class="section__title">管理工具</text>
+        <text class="section__hint">低频操作集中管理</text>
+      </view>
+      <view class="manage-list">
+        <view
+          class="manage-row sr-touch"
+          hover-class="sr-touch--press"
+          hover-stay-time="60"
+          wx:for="{{manageTasks}}"
+          wx:key="key"
+          data-route="{{item.route}}"
+          bindtap="onTaskTap"
+        >
+          <view class="task-icon task-icon--manage">
+            <image src="{{item.icon}}" mode="aspectFit" />
+          </view>
+          <view class="manage-row__copy">
+            <text class="manage-row__title">{{item.title}}</text>
+            <text class="manage-row__desc">{{item.desc}}</text>
+          </view>
+          <text class="manage-row__arrow">›</text>
+        </view>
       </view>
     </view>
   </block>

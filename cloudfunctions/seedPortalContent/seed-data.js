@@ -8,7 +8,7 @@ const DEFAULT_SECTIONS = [
     key: 'hero',
     type: 'hero',
     title: '森水长河',
-    subtitle: '峡谷溯溪 · 山野露营 · 长河令江湖',
+    subtitle: '峡谷溪降 · 山野露营 · 长河令江湖',
     imageFileId: '',
     route: '',
     params: {},
@@ -85,6 +85,16 @@ const DEFAULT_SECTIONS = [
     params: {},
     visible: true,
     sort: 75
+  },
+  {
+    key: 'insurance_entry',
+    type: 'primary_action',
+    title: '溪降保险',
+    subtitle: '下水前投保 · 安心体验',
+    route: '/pages/insurance/insurance',
+    params: {},
+    visible: true,
+    sort: 78
   },
   {
     key: 'user_status',

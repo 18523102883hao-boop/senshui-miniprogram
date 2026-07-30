@@ -5,8 +5,33 @@ cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV })
 const db = cloud.database()
 const _ = db.command
 const core = require('./refund-core.js')
+const invoiceRefund = require('./invoice-refund.js')
 
 const payConfig = require('./pay-config.js')
+
+async function getInvoiceForRefund(openid, outTradeNo) {
+  const result = await db.collection('invoice_requests')
+    .where({ _openid: openid, outTradeNo })
+    .limit(1)
+    .get()
+  return result.data[0] || null
+}
+
+async function cancelInvoiceForRefund(invoice, order, now) {
+  const decision = invoiceRefund.resolve(invoice)
+  if (!decision.shouldCancel || !invoice || !invoice._id) return false
+  const patch = invoiceRefund.buildCancellationPatch(invoice, now)
+  // 摘要先关闭；若明细更新短暂失败，开票服务仍会拒绝完成开票。
+  await db.collection('orders').doc(order._id).update({
+    data: {
+      invoiceStatus: 'cancelled_refund',
+      invoiceRevision: Number(invoice.revision) || 1,
+      updatedAt: now
+    }
+  })
+  await db.collection('invoice_requests').doc(invoice._id).update({ data: patch })
+  return true
+}
 
 exports.main = async (event) => {
   // 子商户号可能来自数据库，只能在运行时求值（原本在模块顶层算，配置改了要等容器回收才生效）
@@ -36,6 +61,12 @@ exports.main = async (event) => {
 
   if (plan.mode === 'reject') return { code: 400, msg: plan.msg }
 
+  const invoice = await getInvoiceForRefund(OPENID, outTradeNo)
+  const invoiceDecision = invoiceRefund.resolve(invoice || { status: order.invoiceStatus })
+  if (!invoiceDecision.ok) {
+    return { code: invoiceDecision.code, msg: invoiceDecision.msg }
+  }
+
   const now = new Date()
   const ticketNos = plan.ticketNos || []
 
@@ -55,7 +86,14 @@ exports.main = async (event) => {
         createdAt: now, updatedAt: now
       }
     }).catch(() => {})
-    return { code: 0, msg: 'ok', data: { mode: 'manual', msg: plan.msg, ticketNos } }
+    let invoiceSyncPending = false
+    try {
+      await cancelInvoiceForRefund(invoice, order, now)
+    } catch (e) {
+      invoiceSyncPending = true
+      console.error('[requestTicketRefund] 开票申请关闭失败', e)
+    }
+    return { code: 0, msg: 'ok', data: { mode: 'manual', msg: plan.msg, ticketNos, invoiceSyncPending } }
   }
 
   // 自动退款：退款单号稳定，失败可原样重试而不会退两次
@@ -88,5 +126,19 @@ exports.main = async (event) => {
     await db.collection('orders').doc(order._id).update({ data: { status: 'refunded', updatedAt: now } })
   }
 
-  return { code: 0, msg: 'ok', data: { mode: 'auto', refundFee: plan.refundFee, ticketNos, outRefundNo } }
+  let invoiceSyncPending = false
+  try {
+    await cancelInvoiceForRefund(invoice, order, now)
+  } catch (e) {
+    invoiceSyncPending = true
+    console.error('[requestTicketRefund] 开票申请关闭失败', e)
+  }
+
+  return {
+    code: 0,
+    msg: 'ok',
+    data: { mode: 'auto', refundFee: plan.refundFee, ticketNos, outRefundNo, invoiceSyncPending }
+  }
 }
+
+exports._private = { getInvoiceForRefund, cancelInvoiceForRefund }

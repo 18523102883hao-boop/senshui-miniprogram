@@ -60,6 +60,7 @@ function toDisplayOrder(order) {
     if (o.visitDate) subtitle += (subtitle ? ' · ' : '') + o.visitDate
   }
 
+  const invoice = getInvoiceAction(o)
   return {
     orderId: o._id || '',
     outTradeNo: o.outTradeNo || '',
@@ -74,7 +75,12 @@ function toDisplayOrder(order) {
     createdAt: o.createdAt || null,
     paidAt: o.paidAt || null,
     canPay: canPay(o),
-    canRefund: canRefund(o)
+    canCancel: canCancel(o),
+    canRefund: canRefund(o),
+    canInvoice: canInvoice(o),
+    invoiceStatus: o.invoiceStatus || '',
+    invoiceActionText: invoice.text,
+    invoiceTarget: invoice.target
   }
 }
 
@@ -82,10 +88,37 @@ function canPay(order) {
   return !!order && order.status === 'pending'
 }
 
+function canCancel(order) {
+  const o = order || {}
+  const eligibleType = ['member_card', 'ticket_order', 'ticket_upgrade'].indexOf(o.type) >= 0
+  return eligibleType && o.status === 'pending'
+}
+
 // 只有线上购买的门票支持自助退款；补差价是现场业务，退款走前台
 function canRefund(order) {
   const o = order || {}
+  if (o.invoiceStatus === 'issued') return false
   return o.type === 'ticket_order' && (o.status === 'paid' || o.status === 'paid_dup')
+}
+
+function canInvoice(order) {
+  const o = order || {}
+  const eligibleType = ['member_card', 'ticket_order', 'ticket_upgrade'].indexOf(o.type) >= 0
+  if (!eligibleType || o.status !== 'paid') return false
+  return ['submitted', 'reviewing', 'issued'].indexOf(o.invoiceStatus) < 0
+}
+
+function getInvoiceAction(order) {
+  const o = order || {}
+  if (o.invoiceStatus === 'issued') return { text: '查看发票', target: 'detail' }
+  if (o.invoiceStatus === 'submitted' || o.invoiceStatus === 'reviewing') {
+    return { text: '查看开票进度', target: 'detail' }
+  }
+  if (o.invoiceStatus === 'rejected' && canInvoice(o)) {
+    return { text: '修改并重新申请', target: 'apply' }
+  }
+  if (canInvoice(o)) return { text: '申请开票', target: 'apply' }
+  return { text: '', target: '' }
 }
 
 function filterByTab(orders, tab) {
@@ -100,4 +133,17 @@ function sortOrders(orders) {
     .sort((a, b) => toTime(b.createdAt) - toTime(a.createdAt))
 }
 
-module.exports = { TYPE_TEXT, STATUS_TEXT, TAB_STATUS, fenToYuan, toDisplayOrder, canPay, canRefund, filterByTab, sortOrders }
+module.exports = {
+  TYPE_TEXT,
+  STATUS_TEXT,
+  TAB_STATUS,
+  fenToYuan,
+  toDisplayOrder,
+  canPay,
+  canCancel,
+  canRefund,
+  canInvoice,
+  getInvoiceAction,
+  filterByTab,
+  sortOrders
+}

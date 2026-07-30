@@ -4,7 +4,7 @@
     <view class="card__body">
       <text class="card__text">在你使用森水长河小程序前，请阅读并同意</text>
       <text class="card__link" bindtap="openContract">{{contractName}}</text>
-      <text class="card__text">。我们仅在开通会员、预约、设置头像等必要环节收集手机号与头像信息，用于身份识别与业务联系，不作其他用途。</text>
+      <text class="card__text">。我们仅在开通会员、预约、设置头像，以及你主动选择照片、视频或文件时，处理完成对应服务所需的信息，不作其他用途。</text>
     </view>
     <text class="card__more" bindtap="openFullPolicy">查看完整隐私政策 ›</text>
 

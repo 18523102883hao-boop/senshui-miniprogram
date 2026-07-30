@@ -27,6 +27,8 @@ exports.main = async (event) => {
   const r = await db.collection('tickets').where({ ticketNo: resolved.ticketNo }).limit(1).get()
   if (!r.data.length) return { code: 404, msg: '票券不存在' }
   const ticket = r.data[0]
+  const admissionCount = core.resolveAdmissionCount(ticket)
+  const admissionCountUnknown = admissionCount === null
 
   const usable = core.canConsume(ticket, now)
   const preview = {
@@ -36,6 +38,8 @@ exports.main = async (event) => {
     visitDate: ticket.visitDate,
     seq: ticket.seq,
     total: ticket.total,
+    admissionCount: admissionCount,
+    admissionCountUnknown: admissionCountUnknown,
     usedAt: ticket.usedAt || null,
     expireAt: ticket.expireAt || null
   }
@@ -48,16 +52,26 @@ exports.main = async (event) => {
 
   if (!usable.ok) return { code: 400, msg: usable.msg, data: { ticket: preview, verified: false } }
 
+  const verificationPatch = {
+    status: 'used',
+    usedAt: now,
+    verifiedBy: OPENID,
+    updatedAt: now
+  }
+  if (!admissionCountUnknown) verificationPatch.admissionCount = admissionCount
+
   // 条件更新：并发下只有一次能命中，第二次 updated=0
   const upd = await db.collection('tickets')
     .where({ ticketNo: resolved.ticketNo, status: _.in(core.CONSUMABLE) })
-    .update({ data: { status: 'used', usedAt: now, verifiedBy: OPENID, updatedAt: now } })
+    .update({ data: verificationPatch })
 
   if (!upd.stats.updated) {
     return { code: 400, msg: '该票券已核销', data: { ticket: preview, verified: false } }
   }
 
-  await db.collection('verifications').add({ data: core.buildVerification(ticket, staff, now) })
+  await db.collection('verifications').add({
+    data: core.buildVerification(Object.assign({}, ticket, { admissionCount }), staff, now)
+  })
 
   return {
     code: 0,

@@ -2,17 +2,23 @@
 // PRD §8.5 原生下单、§14 订单、§23 金额与幂等
 // 云函数逻辑抽到 *-core.js（不依赖 wx-server-sdk）以便本地验证。
 const assert = require('node:assert/strict')
+const fs = require('node:fs')
 const path = require('node:path')
 const test = require('node:test')
 
 const projectRoot = path.resolve(__dirname, '../..')
 const orderCore = require(path.join(projectRoot, 'cloudfunctions/createTicketOrder/order-core.js'))
 const issueCore = require(path.join(projectRoot, 'cloudfunctions/payCallback/ticket-issue.js'))
+const { TICKET_PRODUCTS } = require(path.join(projectRoot, 'cloudfunctions/seedTicketProducts/seed-tickets.js'))
 const checkoutPath = path.join(projectRoot, 'miniprogram/pages/ticket/checkout/checkout.js')
 const resultPath = path.join(projectRoot, 'miniprogram/pages/ticket/result/result.js')
 const walletPath = path.join(projectRoot, 'miniprogram/pages/ticket/wallet/wallet.js')
+const walletWxmlPath = path.join(projectRoot, 'miniprogram/pages/ticket/wallet/wallet.wxml')
 const requestPath = path.join(projectRoot, 'miniprogram/utils/request.js')
 const hapticsPath = path.join(projectRoot, 'miniprogram/utils/haptics.js')
+const qrPath = require.resolve('weapp-qrcode-canvas-2d', {
+  paths: [path.dirname(walletPath)]
+})
 
 function clone(value) {
   return JSON.parse(JSON.stringify(value))
@@ -22,7 +28,17 @@ function mountPage(t, pagePath, options = {}) {
   const originalPage = global.Page
   const originalWx = global.wx
   const originals = {}
-  const calls = { request: [], navigate: [], redirect: [], toast: [], modal: [], payment: [] }
+  const calls = {
+    request: [],
+    navigate: [],
+    redirect: [],
+    toast: [],
+    modal: [],
+    payment: [],
+    qr: [],
+    selector: []
+  }
+  const qrCanvas = {}
   let pageConfig
 
   const stub = (p, exports) => {
@@ -41,6 +57,10 @@ function mountPage(t, pagePath, options = {}) {
     callWithLoading(name, data) { return this.call(name, data) }
   })
   stub(hapticsPath, { haptic() {} })
+  stub(qrPath, (qrOptions) => {
+    calls.qr.push(qrOptions)
+    if (options.qrThrows) throw new Error('qr draw failed')
+  })
 
   global.wx = {
     requestPayment(o) {
@@ -55,6 +75,19 @@ function mountPage(t, pagePath, options = {}) {
     showModal(o) { calls.modal.push(o) },
     showLoading() {}, hideLoading() {},
     getStorageSync() { return null }, setStorageSync() {},
+    getWindowInfo() { return { pixelRatio: 2 } },
+    createSelectorQuery() {
+      return {
+        in() { return this },
+        select(selector) { calls.selector.push(selector); return this },
+        fields() { return this },
+        exec(callback) {
+          callback(options.selectorResult === undefined
+            ? [{ node: qrCanvas, width: 200, height: 200 }]
+            : options.selectorResult)
+        }
+      }
+    },
     setNavigationBarTitle() {}, stopPullDownRefresh() {},
     setClipboardData(o) { if (o.success) o.success() }
   }
@@ -65,7 +98,10 @@ function mountPage(t, pagePath, options = {}) {
 
   const page = Object.assign({}, pageConfig, {
     data: clone(pageConfig.data),
-    setData(patch) { Object.assign(this.data, patch) }
+    setData(patch, callback) {
+      Object.assign(this.data, patch)
+      if (typeof callback === 'function') callback()
+    }
   })
 
   t.after(() => {
@@ -100,6 +136,40 @@ test('订单金额由云端商品快照计算，客户端传的金额被忽略',
   assert.equal(r.ok, true)
   assert.equal(r.totalFee, 11600, '必须是 5800 × 2，而不是客户端传的值')
   assert.equal(r.unitPrice, 5800)
+})
+
+test('票种显式保存每张实际人数，双人票为 2 且其他当前票种为 1', () => {
+  const counts = Object.fromEntries(TICKET_PRODUCTS.map((item) => [item.sku, item.admissionCount]))
+  assert.equal(counts.creek_double, 2)
+  for (const product of TICKET_PRODUCTS) {
+    if (product.sku !== 'creek_double') {
+      assert.equal(product.admissionCount, 1, `${product.sku} 应按每张 1 人`)
+    }
+  }
+})
+
+test('订单人数只取云端商品快照，忽略客户端伪造的人数', () => {
+  const doubleProduct = Object.assign({}, PRODUCT, {
+    sku: 'creek_double',
+    admissionCount: 2
+  })
+  const resolved = orderCore.resolveOrder({
+    product: doubleProduct,
+    quantity: 3,
+    admissionCount: 99
+  })
+  assert.equal(resolved.ok, true)
+  assert.equal(resolved.admissionCountPerTicket, 2)
+  assert.equal(resolved.admittedPeopleCount, 6)
+})
+
+test('下单记录保存每张人数和订单预计总人数快照', () => {
+  const source = fs.readFileSync(
+    path.join(projectRoot, 'cloudfunctions/createTicketOrder/index.js'),
+    'utf8'
+  )
+  assert.match(source, /admissionCountPerTicket:\s*resolved\.admissionCountPerTicket/)
+  assert.match(source, /admittedPeopleCount:\s*resolved\.admittedPeopleCount/)
 })
 
 test('商品未上架不允许下单', () => {
@@ -180,12 +250,16 @@ test('一单多张票，出票数量与购买数量一致', () => {
 })
 
 test('新出票券初始为未使用，并带齐溯源字段', () => {
-  const [ticket] = issueCore.buildTickets(PAID_ORDER, new Date('2026-08-01T10:00:00+08:00'))
+  const [ticket] = issueCore.buildTickets(
+    Object.assign({}, PAID_ORDER, { admissionCountPerTicket: 2 }),
+    new Date('2026-08-01T10:00:00+08:00')
+  )
   assert.equal(ticket.status, 'unused')
   assert.equal(ticket._openid, 'user-1')
   assert.equal(ticket.orderId, 'TK123')
   assert.equal(ticket.productId, 'p1')
   assert.equal(ticket.unitPrice, 5800)
+  assert.equal(ticket.admissionCount, 2)
   assert.ok(ticket.ticketNo)
   assert.ok(ticket.createdAt)
 })
@@ -350,7 +424,14 @@ test('票夹空态提示去购票而不是空白', async (t) => {
   assert.equal(page.data.isEmpty, true)
 })
 
-test('点击未使用票券展示入园码', async (t) => {
+test('入园码弹层使用 2D canvas 展示二维码，不直接暴露动态令牌文本', () => {
+  const wxml = fs.readFileSync(walletWxmlPath, 'utf8')
+  assert.match(wxml, /<canvas[^>]+type="2d"[^>]+id="ticketqrcode"/)
+  assert.doesNotMatch(wxml, /class="code__token"/)
+  assert.doesNotMatch(wxml, /<text[^>]*>\{\{codeToken\}\}<\/text>/)
+})
+
+test('点击未使用票券后用完整动态令牌绘制入园二维码', async (t) => {
   const { page, calls } = mountPage(t, walletPath, {
     responders: {
       getMyTickets: () => Promise.resolve({ list: [{ ticketNo: 'T2', status: 'unused', productName: 'B' }] }),
@@ -361,6 +442,24 @@ test('点击未使用票券展示入园码', async (t) => {
   await page.onTicketTap({ currentTarget: { dataset: { no: 'T2' } } })
   assert.equal(page.data.codeToken, 'TK.T2.123.abc')
   assert.ok(calls.request.some((c) => c.name === 'getTicketCode'))
+  assert.deepEqual(calls.selector, ['#ticketqrcode'])
+  assert.equal(calls.qr.length, 1)
+  assert.equal(calls.qr[0].text, 'TK.T2.123.abc')
+  assert.equal(calls.qr[0].canvas.width, 400)
+  assert.equal(calls.qr[0].canvas.height, 400)
+})
+
+test('二维码画布不可用时显示重试提示，不回退为动态令牌文本', async (t) => {
+  const { page } = mountPage(t, walletPath, {
+    selectorResult: [],
+    responders: {
+      getMyTickets: () => Promise.resolve({ list: [{ ticketNo: 'T2', status: 'unused', productName: 'B' }] }),
+      getTicketCode: () => Promise.resolve({ token: 'TK.T2.123.abc', expiresIn: 90 })
+    }
+  })
+  await page.onLoad({})
+  await page.onTicketTap({ currentTarget: { dataset: { no: 'T2' } } })
+  assert.equal(page.data.qrFallback, true)
 })
 
 test('已使用票券不再请求入园码', async (t) => {

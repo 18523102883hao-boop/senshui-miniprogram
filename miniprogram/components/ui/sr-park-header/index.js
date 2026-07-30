@@ -36,7 +36,7 @@ Component({
       const p = env.park || {}
       this.setData({
         parkName: p.name || '森水长河',
-        tagline: '峡谷溯溪 · 山野露营 · 长河令江湖',
+        tagline: '峡谷溪降 · 山野露营 · 长河令江湖',
         address: p.address || '',
         status: computeOpenStatus(),
         canNavigate: !!(p.latitude && p.longitude)

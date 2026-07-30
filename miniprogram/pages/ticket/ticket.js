@@ -1,5 +1,5 @@
 // 门票中心 · 商品列表（T16 → 功能扩展 Task 6 改造）
-// PRD §8.3。原「聚合外部渠道」能力保留为兜底：接口异常或商品全部下架时仍能引导购票。
+// PRD §8.3。
 const request = require('../../utils/request.js')
 const { haptic } = require('../../utils/haptics.js')
 
@@ -50,13 +50,7 @@ Page({
     products: [],
     loading: false,
     hasError: false,
-    nativePayReady: true,
-    // 外部渠道兜底（原 T16 能力，后台可通过 getTicketConfig 下发）
-    channels: [
-      { name: '抖音官方旗舰店', desc: '团购套餐 · 分销优惠', url: '' },
-      { name: '美团 / 大众点评', desc: '到店门票套餐', url: '' }
-    ],
-    upgradeNote: '已购基础票升级套票，可在前台补差价办理，线上线下同价。'
+    nativePayReady: true
   },
 
   onLoad() {
@@ -84,7 +78,6 @@ Page({
         this.setData({ products, nativePayReady: ready, loading: false, hasError: false })
       })
       .catch(() => {
-        // 商品拉不到时不能让购票入口彻底失效，保留外部渠道兜底
         this.setData({ loading: false, hasError: true })
       })
   },
@@ -98,18 +91,6 @@ Page({
     if (!id) return
     haptic('light')
     wx.navigateTo({ url: '/pages/ticket/detail/detail?productId=' + encodeURIComponent(id) })
-  },
-
-  copyLink(e) {
-    const url = e.currentTarget.dataset.url
-    if (!url) {
-      wx.showToast({ title: '链接整备中', icon: 'none' })
-      return
-    }
-    wx.setClipboardData({
-      data: url,
-      success: () => wx.showToast({ title: '链接已复制，去浏览器打开', icon: 'none' })
-    })
   },
 
   onShareAppMessage() {

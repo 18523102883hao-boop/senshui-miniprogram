@@ -16,6 +16,15 @@ const STATUS_MSG = {
   void: '该票券已作废'
 }
 
+const KNOWN_SINGLE_SKUS = [
+  'creek_single',
+  'creek_child',
+  'camp_adult',
+  'camp_child',
+  'camp_senior',
+  'combo_single'
+]
+
 function canVerify(staff) {
   if (!staff) return { ok: false, msg: '请先在员工模式登记' }
   if (staff.status !== 'approved') return { ok: false, msg: '员工身份待审核' }
@@ -60,14 +69,28 @@ function resolveTicketNo(input, secret, now) {
   return { ticketNo }
 }
 
+function resolveAdmissionCount(ticket) {
+  const value = Number(ticket && ticket.admissionCount)
+  if (Number.isInteger(value) && value >= 1 && value <= 20) return value
+  if (ticket && ticket.sku === 'creek_double') return 2
+  if (ticket && KNOWN_SINGLE_SKUS.indexOf(ticket.sku) >= 0) return 1
+  return null
+}
+
 function buildVerification(ticket, staff, now) {
   const t = ticket || {}
   const s = staff || {}
+  const admissionCount = resolveAdmissionCount(t)
   return {
     type: 'ticket',
     ticketNo: t.ticketNo || '',
     orderId: t.orderId || '',
     productName: t.productName || '',
+    sku: t.sku || '',
+    unitPrice: Number(t.unitPrice || 0),
+    ticketCount: 1,
+    admissionCount,
+    admissionCountUnknown: admissionCount === null,
     customerOpenid: t._openid || '',
     staffOpenid: s._openid || '',
     staffName: s.name || '',
@@ -76,4 +99,14 @@ function buildVerification(ticket, staff, now) {
   }
 }
 
-module.exports = { TTL, VERIFY_ROLES, CONSUMABLE, canVerify, canConsume, signToken, resolveTicketNo, buildVerification }
+module.exports = {
+  TTL,
+  VERIFY_ROLES,
+  CONSUMABLE,
+  canVerify,
+  canConsume,
+  signToken,
+  resolveTicketNo,
+  resolveAdmissionCount,
+  buildVerification
+}

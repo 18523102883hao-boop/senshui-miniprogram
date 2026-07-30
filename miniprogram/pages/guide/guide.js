@@ -91,7 +91,7 @@ function buildGroups(park) {
       icon: '/assets/icons/forest/booking-safety.png',
       items: [
         // 身高与强度是已确认的安全规则，写死默认值，env 可覆盖
-        { title: '身高限制', desc: p.heightLimit || '成人限制身高 150 厘米（含）以上；儿童票适用范围请咨询管家', status: 'confirmed' },
+        { title: '身高限制', desc: p.heightLimit || '成人限制身高 150 厘米（含）以上；儿童限制身高 120 厘米（含）至 150 厘米（含）', status: 'confirmed' },
         { title: '溪降强度', desc: p.creekNote || '溪降全程约 2 公里，游玩时长约 1.5 小时', status: 'confirmed' },
         { title: '身体状况', desc: '孕妇、心脑血管疾病及其他不适宜剧烈运动者请勿参加', status: 'confirmed' },
         { title: '天气与水位', desc: '遇强降雨或上游涨水会临时停运，以现场公告为准', status: 'confirmed' }

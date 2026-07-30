@@ -4,10 +4,10 @@
 //
 // 价目来源（客户提供，金额单位=分）：
 //   成人单营地(158) → 升溪降 +20
-//   亲子单营地(198) → 升溪降 大人+58 / 儿童+29.9（拆两项）
+//   亲子单营地(198) → 升溪降 大人+68 / 儿童+29.9（拆两项）
 //   儿童单营地(98)  → 升溪降 +29.9
-//   成人单溪降(58)  → 升营地 +120
-//   双人单溪降(88)  → 升营地 +134/人（现场两人各收一笔）
+//   成人单溪降(68)  → 升营地 +110
+//   双人单溪降(128) → 升营地 +114/人
 //   儿童单溪降(29.9)→ 升营地 +98
 const cloud = require('wx-server-sdk')
 cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV })
@@ -19,10 +19,10 @@ const db = cloud.database()
 const UPGRADE_ITEMS = [
   { id: 'camp_adult_to_creek',        label: '成人单营地 → 升溪降',        price: 2000,  note: '等同178套票：营地全部权益+溪降体验',            enabled: true },
   { id: 'camp_family_to_creek_adult', label: '亲子单营地 → 升溪降（大人）', price: 6800,  note: '大人可玩溪降（= 单人溪降票价）',              enabled: true },
-  { id: 'camp_family_to_creek_child', label: '亲子单营地 → 升溪降（儿童）', price: 2990,  note: '儿童须符合年龄/身高安全条件',                 enabled: true },
-  { id: 'camp_child_to_creek',        label: '儿童单营地 → 升溪降',        price: 2990,  note: '加玩溪降（须符合年龄/身高条件）',             enabled: true },
+  { id: 'camp_family_to_creek_child', label: '亲子单营地 → 升溪降（儿童）', price: 2990,  note: '儿童限身高120厘米（含）至150厘米（含）',       enabled: true },
+  { id: 'camp_child_to_creek',        label: '儿童单营地 → 升溪降',        price: 2990,  note: '儿童限身高120厘米（含）至150厘米（含）',       enabled: true },
   { id: 'creek_adult_to_camp',        label: '成人单溪降 → 升营地',        price: 11000, note: '自助烧烤火锅畅吃、饮品畅饮、60长河令、全天活动', enabled: true },
-  { id: 'creek_double_to_camp',       label: '双人单溪降 → 升营地（每人）', price: 11400, note: '每人升级为178套票全权益；两人各收一笔',       enabled: true },
+  { id: 'creek_double_to_camp',       label: '双人单溪降 → 升营地（每人）', price: 11400, note: '每份对应1张原票；支持一次购买1至10份', enabled: true },
   { id: 'creek_child_to_camp',        label: '儿童单溪降 → 升营地',        price: 9800,  note: '儿童营地全权益',                             enabled: true }
 ]
 

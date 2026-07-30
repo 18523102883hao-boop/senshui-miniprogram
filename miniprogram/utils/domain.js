@@ -1,7 +1,7 @@
 // ============================================================
 // 领域常量与纯函数（本轮功能扩展的稳定契约）
 // 只放跨页面/跨云函数复用的取值与无副作用函数，不放页面状态。
-// 依据 PRD：§8.6 票券、§12.4 线索、§14.4 订单类型、§15.2 反馈、§17.6 团队预约
+// 依据 PRD：§8.6 票券、§14.4 订单类型、§15.2 反馈、§17.6 团队预约
 // ============================================================
 
 // 订单类型：前两个为线上已有业务，改动会破坏历史订单与支付回调分流
@@ -33,17 +33,6 @@ const VISIT_RESERVATION_STATUS = Object.freeze({
   REJECTED: 'rejected' // 园区驳回
 })
 
-// 服务线索状态（PRD §12.4）
-const LEAD_STATUS = Object.freeze({
-  NEW: 'new',
-  CONTACTED: 'contacted',
-  QUALIFIED: 'qualified',
-  PROPOSAL: 'proposal',
-  WON: 'won',
-  LOST: 'lost',
-  CLOSED: 'closed'
-})
-
 // 用户反馈状态（PRD §15.2）
 const FEEDBACK_STATUS = Object.freeze({
   SUBMITTED: 'submitted',
@@ -73,7 +62,6 @@ module.exports = {
   ORDER_TYPES,
   TICKET_STATUS,
   VISIT_RESERVATION_STATUS,
-  LEAD_STATUS,
   FEEDBACK_STATUS,
   fenToYuan
 }

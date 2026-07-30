@@ -46,6 +46,15 @@ exports.main = async (event) => {
   if (reusable) {
     outTradeNo = reusable.outTradeNo
     orderId = reusable._id
+    if (!Number.isInteger(Number(reusable.admissionCountPerTicket))) {
+      await db.collection('orders').doc(orderId).update({
+        data: {
+          admissionCountPerTicket: resolved.admissionCountPerTicket,
+          admittedPeopleCount: resolved.admittedPeopleCount,
+          updatedAt: now
+        }
+      })
+    }
   } else {
     outTradeNo = core.buildOutTradeNo('TK')
     const contact = event.contact || {}
@@ -61,6 +70,8 @@ exports.main = async (event) => {
         quantity: resolved.quantity,
         unitPrice: resolved.unitPrice,
         totalFee: resolved.totalFee,
+        admissionCountPerTicket: resolved.admissionCountPerTicket,
+        admittedPeopleCount: resolved.admittedPeopleCount,
         amount: resolved.totalFee, // 与既有订单字段对齐
         visitDate: resolved.visitDate,
         contact: {
@@ -97,7 +108,9 @@ exports.main = async (event) => {
         outTradeNo,
         orderId,
         totalFee: resolved.totalFee,
-        quantity: resolved.quantity
+        quantity: resolved.quantity,
+        admissionCountPerTicket: resolved.admissionCountPerTicket,
+        admittedPeopleCount: resolved.admittedPeopleCount
       }
     }
   } catch (e) {

@@ -18,7 +18,15 @@ function mountPage(t, pagePath, options = {}) {
   const originalPage = global.Page
   const originalWx = global.wx
   const originals = {}
-  const calls = { request: [], toast: [], navigate: [], phone: [], chooseMedia: [] }
+  const calls = {
+    request: [],
+    toast: [],
+    modal: [],
+    navigate: [],
+    phone: [],
+    chooseMedia: [],
+    chooseImage: []
+  }
   let pageConfig
 
   const stub = (p, exports) => {
@@ -42,18 +50,27 @@ function mountPage(t, pagePath, options = {}) {
     navigateTo(o) { calls.navigate.push(o.url); if (options.navigateFail && o.fail) o.fail({}) },
     navigateBack() {}, switchTab(o) { calls.navigate.push(o.url) },
     showToast(o) { calls.toast.push(o) },
-    showModal(o) { if (o.success) o.success({ confirm: true }) },
+    showModal(o) {
+      calls.modal.push(o)
+      if (o.success) o.success({ confirm: true })
+    },
     showLoading() {}, hideLoading() {},
     makePhoneCall(o) { calls.phone.push(o.phoneNumber) },
     chooseMedia(o) {
       calls.chooseMedia.push(o)
       if (options.chosenFiles) o.success({ tempFiles: options.chosenFiles.map((p) => ({ tempFilePath: p })) })
-      else if (o.fail) o.fail({})
+      else if (o.fail) o.fail(options.chooseError || {})
+    },
+    chooseImage(o) {
+      calls.chooseImage.push(o)
+      if (options.chosenFiles) o.success({ tempFilePaths: options.chosenFiles })
+      else if (o.fail) o.fail(options.chooseError || {})
     },
     cloud: { uploadFile: (o) => Promise.resolve({ fileID: 'cloud://' + (o.cloudPath || 'x') }) },
     getStorageSync() { return null }, setStorageSync() {},
     setNavigationBarTitle() {}, stopPullDownRefresh() {}
   }
+  if (options.disableChooseMedia) delete global.wx.chooseMedia
   global.Page = (c) => { pageConfig = c }
   delete require.cache[pagePath]
   require(pagePath)
@@ -198,6 +215,65 @@ test('连点提交只发一次请求', async (t) => {
   page.setData({ 'form.content': '排队时间太长了，希望增加窗口' })
   await Promise.all([page.onSubmit(), page.onSubmit()])
   assert.equal(calls.request.filter((c) => c.name === 'submitFeedback').length, 1)
+})
+
+test('四种反馈共用图片选择链路并可添加图片', async (t) => {
+  const { page, calls } = mountPage(t, createPath, {
+    chosenFiles: ['/tmp/feedback-1.jpg']
+  })
+  for (const type of ['complaint', 'suggestion', 'praise', 'lost_found']) {
+    await page.onLoad({ type })
+    page.onChooseImage()
+  }
+  assert.equal(calls.chooseMedia.length, 4)
+  assert.equal(page.data.form.images.length, 4)
+})
+
+test('提交反馈时先上传本地图片，并只把云文件标识提交到服务端', async (t) => {
+  const { page, calls } = mountPage(t, createPath, {
+    chosenFiles: ['/tmp/feedback-upload.jpg'],
+    responders: { submitFeedback: () => Promise.resolve({ feedbackId: 'f1' }) }
+  })
+  page.onChooseImage()
+  page.setData({ 'form.content': '这是包含现场图片的投诉反馈内容' })
+  await page.onSubmit()
+
+  const submit = calls.request.find((item) => item.name === 'submitFeedback')
+  assert.ok(submit)
+  assert.equal(submit.data.form.images.length, 1)
+  assert.match(submit.data.form.images[0], /^cloud:\/\/feedback\//)
+})
+
+test('旧微信没有 chooseMedia 时回退 chooseImage', (t) => {
+  const { page, calls } = mountPage(t, createPath, {
+    disableChooseMedia: true,
+    chosenFiles: ['/tmp/legacy.jpg']
+  })
+  page.onChooseImage()
+  assert.equal(calls.chooseImage.length, 1)
+  assert.deepEqual(page.data.form.images, ['/tmp/legacy.jpg'])
+})
+
+test('用户取消选择图片保持安静，未声明图片类型时给出可执行的后台配置提示', (t) => {
+  const cancelled = mountPage(t, createPath, {
+    chooseError: { errMsg: 'chooseMedia:fail cancel' }
+  })
+  cancelled.page.onChooseImage()
+  assert.equal(cancelled.calls.toast.length, 0)
+
+  const privacy = mountPage(t, createPath, {
+    chooseError: {
+      errMsg: 'chooseMedia:fail api scope is not declared in the privacy agreement'
+    }
+  })
+  privacy.page.onChooseImage()
+  assert.equal(privacy.calls.toast.length, 0)
+  assert.ok(privacy.calls.modal.some((item) => (
+    /隐私/.test(item.title) &&
+    /设置[—-]服务内容声明[—-]用户隐私保护指引/.test(item.content) &&
+    /收集你选中的照片或视频信息/.test(item.content) &&
+    /5 分钟/.test(item.content)
+  )))
 })
 
 // ============ 记录页 ============

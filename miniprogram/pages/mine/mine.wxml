@@ -1,26 +1,34 @@
 <view class="sr-page sr-page--tab sr-enter">
   <!-- 用户信息 -->
   <view class="profile">
-    <button class="profile__avatar-btn" open-type="chooseAvatar" bindchooseavatar="onChooseAvatar">
-      <image class="profile__avatar" src="{{userInfo.avatarUrl || '/assets/icons/forest/mine-profile.png'}}" mode="aspectFill" />
-      <view class="profile__avatar-edit">
-        <image src="/assets/icons/forest/edit.png" mode="aspectFit" />
+    <view class="profile__identity">
+      <view class="profile__avatar-wrap">
+        <image class="profile__avatar" src="{{userInfo.avatarUrl || '/assets/icons/forest/mine-profile.png'}}" mode="aspectFill" />
+        <view class="profile__avatar-edit">
+          <image src="/assets/icons/forest/edit.png" mode="aspectFit" />
+        </view>
+        <button
+          class="profile__avatar-btn"
+          open-type="chooseAvatar"
+          bindchooseavatar="onChooseAvatar"
+          aria-label="更换头像"
+        />
       </view>
-    </button>
-    <view class="profile__info">
-      <text class="profile__name">{{userInfo.nickName || '森水游客'}}</text>
-      <button
-        wx:if="{{!hasPhone}}"
-        class="profile__login"
-        open-type="getPhoneNumber"
-        bindgetphonenumber="onGetPhone"
-      >
-        <image class="profile__login-icon" src="/assets/icons/forest/mine-phone.png" mode="aspectFit" />
-        <text>手机号一键登录</text>
-      </button>
-      <view wx:else class="profile__phone-done">
-        <image class="profile__done-icon" src="/assets/icons/status/status-success.png" mode="aspectFit" />
-        <text>已登录 · {{phoneMask}}</text>
+      <view class="profile__info">
+        <text class="profile__name">{{userInfo.nickName || '森水游客'}}</text>
+        <button
+          wx:if="{{!hasPhone}}"
+          class="profile__login"
+          open-type="getPhoneNumber"
+          bindgetphonenumber="onGetPhone"
+        >
+          <image class="profile__login-icon" src="/assets/icons/forest/mine-phone.png" mode="aspectFit" />
+          <text>手机号一键登录</text>
+        </button>
+        <view wx:else class="profile__phone-done">
+          <image class="profile__done-icon" src="/assets/icons/status/status-success.png" mode="aspectFit" />
+          <text>已登录 · {{phoneMask}}</text>
+        </view>
       </view>
     </view>
   </view>

@@ -14,6 +14,7 @@ const appJson = JSON.parse(fs.readFileSync(path.join(projectRoot, 'miniprogram/a
 // 它们只是发起拨号/打开地图，不获取用户信息）
 const PRIVACY_APIS = [
   'getPhoneNumber', 'chooseAvatar', 'chooseMedia', 'chooseImage', 'chooseVideo',
+  'chooseMessageFile',
   'getLocation', 'chooseLocation', 'scanCode', 'startRecord', 'getRecorderManager',
   'getUserProfile', 'chooseAddress', 'chooseInvoiceTitle', 'getClipboardData'
 ]
@@ -88,6 +89,12 @@ test('隐私政策覆盖实际收集的信息类型', () => {
   }
 })
 
+test('隐私政策使用与微信后台一致的照片和文件声明名称', () => {
+  const src = fs.readFileSync(path.join(projectRoot, 'miniprogram/pages/legal/privacy/privacy.js'), 'utf8')
+  assert.match(src, /收集你选中的照片或视频信息/)
+  assert.match(src, /收集你选中的文件/)
+})
+
 test('隐私弹窗组件提供同意与拒绝两条路径', () => {
   const dir = path.join(projectRoot, 'miniprogram/components/privacy-popup')
   const wxml = fs.readFileSync(path.join(dir, 'index.wxml'), 'utf8')
@@ -96,6 +103,16 @@ test('隐私弹窗组件提供同意与拒绝两条路径', () => {
   assert.match(wxml, /bindagreeprivacyauthorization/, '缺同意回调')
   const js = fs.readFileSync(path.join(dir, 'index.js'), 'utf8')
   assert.ok(js.includes('onDisagree') || js.includes('disagree'), '必须提供拒绝路径')
+})
+
+test('隐私弹窗如实说明照片与文件仅在用户主动选择时使用', () => {
+  const wxml = fs.readFileSync(
+    path.join(projectRoot, 'miniprogram/components/privacy-popup/index.wxml'),
+    'utf8'
+  )
+  assert.match(wxml, /主动选择/)
+  assert.match(wxml, /照片/)
+  assert.match(wxml, /文件/)
 })
 
 test('隐私弹窗可跳转完整隐私政策，满足知情权', () => {

@@ -1,0 +1,151 @@
+<view class="sr-page verification-page sr-enter">
+  <view class="verification-head">
+    <text class="verification-head__eyebrow">ADMISSION DATA</text>
+    <text class="verification-head__title">门票验证数据</text>
+    <text class="verification-head__range sr-num">{{rangeText}}</text>
+    <text class="verification-head__note">核销票数与实际人数分别统计；双人票示例：1 张 / 2 人</text>
+  </view>
+
+  <view class="mode-tabs" aria-label="按日、按月、自定义">
+    <view class="mode-tab {{mode === item.key ? 'mode-tab--on' : ''}} sr-touch"
+          wx:for="{{modes}}" wx:key="key" data-mode="{{item.key}}"
+          hover-class="sr-touch--press" hover-stay-time="60" bindtap="onModeTap">
+      {{item.label}}
+    </view>
+  </view>
+
+  <view class="date-card">
+    <picker wx:if="{{mode === 'day'}}" mode="date" value="{{focusDate}}"
+            bindchange="onFocusDateChange">
+      <view class="date-field">
+        <text>核销日期</text>
+        <text class="sr-num">{{focusDate}} ›</text>
+      </view>
+    </picker>
+    <picker wx:elif="{{mode === 'month'}}" mode="date" fields="month" value="{{focusMonth}}"
+            bindchange="onFocusMonthChange">
+      <view class="date-field">
+        <text>核销月份</text>
+        <text class="sr-num">{{focusMonth}} ›</text>
+      </view>
+    </picker>
+    <view wx:else class="custom-range">
+      <picker mode="date" value="{{customFrom}}" bindchange="onCustomFromChange">
+        <view><text>开始</text><text class="sr-num">{{customFrom}}</text></view>
+      </picker>
+      <picker mode="date" value="{{customTo}}" bindchange="onCustomToChange">
+        <view><text>结束</text><text class="sr-num">{{customTo}}</text></view>
+      </picker>
+      <view class="query-button sr-touch" hover-class="sr-touch--press"
+            hover-stay-time="60" bindtap="onCustomQuery">查询</view>
+    </view>
+  </view>
+
+  <view class="detail-tabs" aria-label="验证统计、验证明细">
+    <view class="detail-tab {{tab === item.key ? 'detail-tab--on' : ''}} sr-touch"
+          wx:for="{{tabs}}" wx:key="key" data-tab="{{item.key}}"
+          hover-class="sr-touch--press" hover-stay-time="60" bindtap="onTabTap">
+      {{item.label}}
+    </view>
+  </view>
+
+  <sr-skeleton wx:if="{{loading}}" type="card" rows="4" />
+  <sr-empty-state wx:if="{{loaded && denied}}"
+                  icon="help" title="无核销数据访问权限"
+                  desc="门票验证统计与明细仅管理员可以查看" />
+  <sr-error-state wx:if="{{loaded && hasError && !loading}}" bind:retry="onRetry" />
+  <view class="limit-note" wx:if="{{truncated}}">
+    当前范围数据已截断，请缩小日期范围后重新查询。
+  </view>
+
+  <block wx:if="{{loaded && !loading && !denied && !hasError && tab === 'summary' && summary}}">
+    <view class="summary-card">
+      <view class="primary-metrics">
+        <view>
+          <text class="metric__label">核销票数</text>
+          <text class="metric__value sr-num">{{summary.operations.verifiedTicketCount}} 张</text>
+        </view>
+        <view>
+          <text class="metric__label">实际人数</text>
+          <text class="metric__value sr-num">{{summary.operations.admittedPeopleCount}} 人</text>
+        </view>
+      </view>
+      <view class="secondary-metrics">
+        <view><text>待核对票数</text><text class="sr-num">{{summary.operations.unknownAdmissionTicketCount}} 张</text></view>
+        <view><text>关联订单</text><text class="sr-num">{{summary.operations.relatedOrderCount}} 单</text></view>
+        <view><text>实际净收入</text><text class="sr-num">¥{{summary.operations.actualNetIncomeText}}</text></view>
+      </view>
+    </view>
+
+    <view class="section-title">按票种统计</view>
+    <view class="ticket-card" wx:for="{{summary.ticketBreakdown}}" wx:key="key">
+      <view class="ticket-card__head">
+        <view>
+          <text class="ticket-card__title">{{item.label}}</text>
+          <text class="ticket-card__count sr-num">{{item.countText}}</text>
+        </view>
+        <text class="ticket-card__money sr-num">¥{{item.faceValueText}}</text>
+      </view>
+      <view class="share-track">
+        <view class="share-track__fill" style="width: {{item.shareText}};"></view>
+      </view>
+      <view class="ticket-card__foot">
+        <text>实际人数占比 {{item.shareText}}</text>
+        <text wx:if="{{item.unknownAdmissionTicketCount}}">待核对 {{item.unknownAdmissionTicketCount}} 张</text>
+      </view>
+    </view>
+
+    <sr-empty-state wx:if="{{!summary.ticketBreakdown.length}}"
+                    icon="mine-orders" title="当前范围没有门票核销"
+                    desc="可切换日期、月份或自定义查询历史记录" />
+  </block>
+
+  <block wx:if="{{tab === 'details' && !denied}}">
+    <view class="filter-card">
+      <view class="picker-row">
+        <picker mode="selector" range="{{subtypeOptions}}" range-key="label"
+                value="{{subtypeIndex}}" bindchange="onSubtypeChange">
+          <text>票种</text>
+          <text>{{subtypeOptions[subtypeIndex].label}} ›</text>
+        </picker>
+        <picker mode="selector" range="{{staffOptions}}" range-key="staffName"
+                value="{{staffIndex}}" bindchange="onStaffChange">
+          <text>核销员工</text>
+          <text>{{staffOptions[staffIndex].staffName}} ›</text>
+        </picker>
+      </view>
+      <view class="search-row">
+        <input value="{{keyword}}" maxlength="40" confirm-type="search"
+               placeholder="订单号、票号、票种或手机尾号"
+               bindinput="onKeywordInput" bindconfirm="onSearchConfirm" />
+        <text bindtap="onResetFilters">重置</text>
+      </view>
+    </view>
+
+    <view class="verification-item sr-touch" wx:for="{{list}}" wx:key="reference"
+          data-order-no="{{item.orderTradeNo}}" hover-class="sr-touch--card"
+          hover-stay-time="60" bindtap="onDetailTap">
+      <view class="verification-item__head">
+        <text>{{item.subtypeLabel}}</text>
+        <text class="sr-num">{{item.timeText}}</text>
+      </view>
+      <text class="verification-item__count sr-num">{{item.countText}}</text>
+      <view class="verification-item__foot">
+        <view>
+          <text class="sr-num">{{item.orderTradeNo || '未关联订单'}}</text>
+          <text>{{item.staffName}}{{item.phoneTail ? ' · 手机尾号 ' + item.phoneTail : ''}}</text>
+        </view>
+        <text class="sr-num">实际净收入 ¥{{item.amountText}}{{item.orderTradeNo ? ' ›' : ''}}</text>
+      </view>
+    </view>
+
+    <view class="loading-more" wx:if="{{loadingMore}}">正在加载更多…</view>
+    <view class="loading-more" wx:elif="{{loaded && list.length && !hasMore}}">
+      已显示全部 {{total}} 条记录
+    </view>
+    <sr-empty-state wx:if="{{loaded && !loading && !hasError && !list.length}}"
+                    icon="mine-orders" title="没有符合条件的验证明细"
+                    desc="更换日期、员工、票种或清空订单号"
+                    actionText="重置筛选" bind:action="onResetFilters" />
+  </block>
+</view>

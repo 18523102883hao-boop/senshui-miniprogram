@@ -1,5 +1,5 @@
-// 首页三大主行动（购票 / 预约 / 补差价升级）
-// 业主 2026-07-25：补差价是高频重要功能，必须上首页；三者需统一且醒目的视觉标识
+// 首页四大主行动（购票 / 预约 / 补差价升级 / 溪降保险）
+// 业主 2026-07-28：保险是溪降行前必需服务，必须与其他转化入口统一呈现
 const assert = require('node:assert/strict')
 const fs = require('node:fs')
 const path = require('node:path')
@@ -67,13 +67,13 @@ function mountIndex(t, options = {}) {
   return { page, calls }
 }
 
-test('首页默认包含三个主行动：购票 / 预约 / 补差价升级', (t) => {
+test('首页默认包含四个主行动：购票 / 预约 / 补差价升级 / 溪降保险', (t) => {
   const { page } = mountIndex(t)
   const keys = page.data.primaryActions.map((a) => a.key)
-  assert.deepEqual(keys, ['ticket_entry', 'reservation_entry', 'upgrade_entry'])
+  assert.deepEqual(keys, ['ticket_entry', 'reservation_entry', 'upgrade_entry', 'insurance_entry'])
 })
 
-test('三个主行动都有明确层级（靠排版区分，不靠配色）', (t) => {
+test('四个主行动都有明确层级（靠排版区分，不靠配色）', (t) => {
   // 业主 2026-07-25 反馈：不需要特别标识，符合整体调性即可，靠排版体现轻重缓急
   const { page } = mountIndex(t)
   for (const a of page.data.primaryActions) {
@@ -82,13 +82,13 @@ test('三个主行动都有明确层级（靠排版区分，不靠配色）', (t
   }
 })
 
-test('购票是主卡，预约与补差价为次卡（主次分明）', (t) => {
+test('购票是主卡，其余三个入口为次卡（主次分明）', (t) => {
   const { page } = mountIndex(t)
   const primary = page.data.primaryActions.filter((a) => a.level === 'primary')
   const secondary = page.data.primaryActions.filter((a) => a.level === 'secondary')
   assert.equal(primary.length, 1, '只能有一个主卡')
   assert.equal(primary[0].key, 'ticket_entry')
-  assert.equal(secondary.length, 2)
+  assert.equal(secondary.length, 3)
 })
 
 test('补差价升级指向已有的说明页，不是死链', (t) => {
@@ -106,7 +106,20 @@ test('点击补差价升级能正常跳转', (t) => {
   assert.equal(calls.navigate[0], '/pages/upgrade-info/upgrade-info')
 })
 
-test('云端配置可覆盖三大行动的文案与排序', async (t) => {
+test('溪降保险进入二维码识别引导页，不再尝试 web-view', (t) => {
+  const { page, calls } = mountIndex(t)
+  const insurance = page.data.primaryActions.find((a) => a.key === 'insurance_entry')
+  assert.ok(insurance)
+  assert.equal(insurance.route, '/pages/insurance/insurance')
+  assert.deepEqual(insurance.params, {})
+
+  page.onSectionTap({ currentTarget: { dataset: { key: 'insurance_entry' } } })
+  assert.equal(calls.navigate[0], '/pages/insurance/insurance')
+  const registered = JSON.parse(fs.readFileSync(path.join(projectRoot, 'miniprogram/app.json'), 'utf8')).pages
+  assert.ok(registered.includes('pages/insurance/insurance'), '保险引导页必须已注册')
+})
+
+test('旧云端配置缺保险入口时自动补齐，且保留云端文案与排序', async (t) => {
   const { page } = mountIndex(t, {
     portal: {
       sections: [
@@ -117,25 +130,27 @@ test('云端配置可覆盖三大行动的文案与排序', async (t) => {
     }
   })
   await page.loadData()
-  assert.deepEqual(page.data.primaryActions.map((a) => a.title), ['补差价', '买票'])
+  assert.deepEqual(page.data.primaryActions.map((a) => a.title), ['补差价', '买票', '溪降保险'])
   // 云端下发的也要补齐层级，否则渲染会缺样式
   for (const a of page.data.primaryActions) assert.ok(a.level, a.key + ' 缺 level')
 })
 
-test('种子配置与云函数兜底都含补差价入口，且两处一致', () => {
+test('种子配置与云函数兜底都含补差价及保险入口，且两处一致', () => {
   const seedKeys = seedData.DEFAULT_SECTIONS.map((s) => s.key)
   assert.ok(seedKeys.includes('upgrade_entry'), '种子配置缺补差价入口')
+  assert.ok(seedKeys.includes('insurance_entry'), '种子配置缺溪降保险入口')
   const fallback = portalCore.DEFAULT_SECTIONS.map((s) => s.key + ':' + s.sort)
   const seed = seedData.DEFAULT_SECTIONS.map((s) => s.key + ':' + s.sort)
   assert.deepEqual(fallback, seed, '云函数兜底与种子配置必须一致')
 })
 
-test('三大行动的 sort 连续且排在用户状态卡之前', () => {
+test('四大行动依次排在用户状态卡之前', () => {
   const byKey = {}
   seedData.DEFAULT_SECTIONS.forEach((s) => { byKey[s.key] = s })
   const t1 = byKey.ticket_entry.sort
   const t2 = byKey.reservation_entry.sort
   const t3 = byKey.upgrade_entry.sort
-  assert.ok(t1 < t2 && t2 < t3, '购票 → 预约 → 补差价 顺序')
-  assert.ok(t3 < byKey.user_status.sort, '三大行动应在用户状态卡之前')
+  const t4 = byKey.insurance_entry.sort
+  assert.ok(t1 < t2 && t2 < t3 && t3 < t4, '购票 → 预约 → 补差价 → 保险 顺序')
+  assert.ok(t4 < byKey.user_status.sort, '四大行动应在用户状态卡之前')
 })

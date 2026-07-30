@@ -5,7 +5,7 @@
 // ⚠️ 必须与 cloudfunctions/seedPortalContent/seed-data.js 的 DEFAULT_SECTIONS 保持一致
 // （云函数各自独立打包无法共享文件，一致性由 tests/feature-expansion/portal-cloud.test.js 锁定）。
 const DEFAULT_SECTIONS = [
-  { key: 'hero', type: 'hero', title: '森水长河', subtitle: '峡谷溯溪 · 山野露营 · 长河令江湖', imageFileId: '', route: '', params: {}, visible: true, sort: 10 },
+  { key: 'hero', type: 'hero', title: '森水长河', subtitle: '峡谷溪降 · 山野露营 · 长河令江湖', imageFileId: '', route: '', params: {}, visible: true, sort: 10 },
   // 园区介绍 / 精彩活动直接跳公众号与视频号，不再进二级列表（业主 2026-07-26）
   { key: 'quick_park_intro', type: 'quick_entry', title: '园区介绍', subtitle: '图文详解', route: 'external:article', params: { url: 'https://mp.weixin.qq.com/s/2xr8EjCVa1MUOkFEeIMC9A', title: '园区介绍' }, visible: true, sort: 20 },
   { key: 'quick_activities', type: 'quick_entry', title: '精彩活动', subtitle: '图文详解', route: 'external:article', params: { url: 'https://mp.weixin.qq.com/s/LHxIYlwBJi3QqC1bxaa5LA', title: '精彩活动' }, visible: true, sort: 30 },
@@ -14,6 +14,7 @@ const DEFAULT_SECTIONS = [
   { key: 'ticket_entry', type: 'primary_action', title: '门票购买', subtitle: '在线选票 · 入园扫码', route: '/pages/ticket/ticket', params: {}, visible: true, sort: 60 },
   { key: 'reservation_entry', type: 'primary_action', title: '立即预约', subtitle: '团队到园 · 研学 · 亲友聚会', route: '/pages/reservation/entry/entry', params: {}, visible: true, sort: 70 },
   { key: 'upgrade_entry', type: 'primary_action', title: '补差价升级', subtitle: '单项票升套票 · 现场办理', route: '/pages/upgrade-info/upgrade-info', params: {}, visible: true, sort: 75 },
+  { key: 'insurance_entry', type: 'primary_action', title: '溪降保险', subtitle: '下水前投保 · 安心体验', route: '/pages/insurance/insurance', params: {}, visible: true, sort: 78 },
   { key: 'user_status', type: 'user_status', title: '我的行程', subtitle: '未使用门票与即将到来的预约', route: '', params: {}, visible: true, sort: 80 },
   { key: 'service_birthday', type: 'service_card', title: '生日宴请', subtitle: '在山水间过一个生日', route: '/pages/service/detail/detail', params: { type: 'birthday' }, visible: true, sort: 90 },
   { key: 'service_teambuilding', type: 'service_card', title: '公司团建', subtitle: '定制行程与场地', route: '/pages/service/detail/detail', params: { type: 'teambuilding' }, visible: true, sort: 100 },
@@ -64,6 +65,17 @@ function filterSections(sections, now) {
     .sort((a, b) => (a.sort || 0) - (b.sort || 0))
 }
 
+// 旧 home_configs 缺少后来新增的关键入口时，在云函数返回层补齐。
+// 若运营明确配置了同 key（包括 visible:false），则尊重运营配置。
+function ensureRequiredSections(sections) {
+  const list = Array.isArray(sections) ? sections.slice() : []
+  const insurance = DEFAULT_SECTIONS.find((s) => s.key === 'insurance_entry')
+  if (insurance && !list.some((s) => s && s.key === insurance.key)) {
+    list.push(Object.assign({}, insurance, { params: Object.assign({}, insurance.params) }))
+  }
+  return list
+}
+
 /**
  * 首页用户状态卡摘要。
  * 二次按 _openid 过滤：即使查询条件写错也不会把别人的票券/预约带到首页。
@@ -111,7 +123,10 @@ function buildUserSummary(input) {
  */
 function buildPortalData(input, now) {
   const src = input || {}
-  const sections = filterSections(src.sections, now)
+  const sourceSections = Array.isArray(src.sections) && src.sections.length
+    ? ensureRequiredSections(src.sections)
+    : DEFAULT_SECTIONS
+  const sections = filterSections(sourceSections, now)
   return {
     notice: src.notice || null,
     sections: sections.length ? sections : filterSections(DEFAULT_SECTIONS, now),
@@ -125,6 +140,7 @@ module.exports = {
   DEFAULT_SECTIONS,
   EMPTY_SUMMARY,
   filterSections,
+  ensureRequiredSections,
   buildUserSummary,
   buildPortalData
 }

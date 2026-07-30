@@ -7,13 +7,14 @@ const db = cloud.database()
 
 const COLLECTIONS = [
   'users', 'members', 'coupons', 'orders', 'products',
-  'ling_accounts', 'ling_ledger', 'activities', 'notices',
+  'ling_accounts', 'ling_ledger', 'ling_daily_quotas', 'activities', 'notices',
   'staff', 'verifications',
   // 下一阶段（溪降）/ V2（商城）预建
   'sessions', 'bookings', 'rentals',
   // 本轮功能扩展（PRD §17 数据模型）
   'home_configs', 'articles', 'ticket_products', 'tickets',
-  'visit_reservations', 'service_leads', 'feedback', 'itineraries'
+  'visit_reservations', 'feedback', 'itineraries',
+  'invoice_requests'
 ]
 
 async function ensureCollection(name) {

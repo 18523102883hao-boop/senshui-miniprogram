@@ -1,39 +1,47 @@
 /* ===== 用户信息卡 =====
    与页面其余模块统一为白底卡片。
-   ⚠️ <button> 在小程序里自带 display:block 与 margin:auto，直接放进 flex
-   容器会把后面的内容顶开（表现为昵称飘到屏幕中间）。必须显式压掉这些默认值，
-   并给信息区固定左对齐，避免继承任何居中规则。 */
+   ⚠️ 原生 <button> 的运行时盒模型会因基础库版本产生差异，不能让它直接参与
+   身份组的 flex 排版；头像容器固定尺寸，按钮只作为绝对定位的透明点击层。 */
 .profile {
-  display: flex; align-items: center;
+  display: flex; align-items: center; justify-content: flex-start;
   background: var(--sr-bg-card); border-radius: var(--sr-radius);
   box-shadow: var(--sr-shadow);
-  padding: 28rpx 32rpx; margin-bottom: 24rpx;
+  padding: 24rpx; margin-bottom: 24rpx;
+}
+.profile__identity {
+  display: inline-flex; align-items: center;
+  max-width: 100%; min-width: 0;
+}
+.profile__avatar-wrap {
+  position: relative; flex: 0 0 88rpx;
+  width: 88rpx; height: 88rpx;
 }
 .profile__avatar-btn {
-  position: relative; flex-shrink: 0;
-  width: 104rpx; height: 104rpx;
+  position: absolute; inset: 0; z-index: 2;
+  width: 88rpx; height: 88rpx;
   padding: 0; margin: 0; line-height: normal;
-  background: transparent; border-radius: 50%; overflow: visible;
+  background: transparent; border-radius: 50%; overflow: hidden;
+  opacity: 0;
 }
 .profile__avatar-btn::after { border: none; }
 .profile__avatar {
-  width: 104rpx; height: 104rpx; border-radius: 50%; display: block;
+  width: 88rpx; height: 88rpx; border-radius: 50%; display: block;
   background: var(--sr-bg-sunken);
   border: 2rpx solid var(--sr-line); box-sizing: border-box;
 }
 /* 编辑徽标：白底细边比深绿实心克制得多，小尺寸下不抢头像。
    位置取 45° 方向压住圆周（按方框角落定位会离圆周约 15rpx，看着像飘在外面）。 */
 .profile__avatar-edit {
-  position: absolute; right: 4rpx; bottom: 4rpx;
-  width: 34rpx; height: 34rpx; border-radius: 50%;
+  position: absolute; right: 1rpx; bottom: 1rpx;
+  width: 30rpx; height: 30rpx; border-radius: 50%;
   background: var(--sr-bg-card); border: 2rpx solid var(--sr-line);
   box-shadow: 0 2rpx 6rpx rgba(0, 0, 0, 0.08);
   display: flex; align-items: center; justify-content: center;
 }
-.profile__avatar-edit image { width: 18rpx; height: 18rpx; opacity: 0.5; }
+.profile__avatar-edit image { width: 16rpx; height: 16rpx; opacity: 0.5; }
 
 .profile__info {
-  flex: 1; min-width: 0; margin-left: 24rpx;
+  flex: 0 1 auto; width: auto; min-width: 0; margin-left: 16rpx;
   display: flex; flex-direction: column; align-items: flex-start;
   text-align: left;
 }
@@ -43,7 +51,7 @@
 }
 .profile__login {
   display: inline-flex; align-items: center; gap: 10rpx;
-  margin: 16rpx 0 0; padding: 0 26rpx; height: 60rpx; line-height: 60rpx;
+  margin: 10rpx 0 0; padding: 0 24rpx; height: 56rpx; line-height: 56rpx;
   font-size: 26rpx; font-weight: 600; color: #fff; background: var(--sr-primary);
   border-radius: 30rpx;
 }

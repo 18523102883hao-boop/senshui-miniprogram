@@ -140,7 +140,8 @@ test('云端配置可以隐藏模块、改标题、改排序', async (t) => {
     }
   })
   await page.loadData()
-  assert.deepEqual(titles(page.data.primaryActions), ['立即预约', '限时门票'], '应按云端 sort 排序并采用云端标题')
+  assert.deepEqual(titles(page.data.primaryActions), ['立即预约', '限时门票', '溪降保险'],
+    '应按云端 sort 排序、采用云端标题，并补齐必需的保险入口')
   assert.equal(page.data.quickEntries.length, 0, '云端未下发的模块不应再显示')
   assert.equal(page.data.notice, '今日 16:30 后停止入园')
 })
@@ -281,7 +282,8 @@ test('三处首页配置对外链入口保持一致，避免同步脚本把云�
 
   const EXPECT = {
     quick_park_intro: 'external:article',
-    quick_activities: 'external:article'
+    quick_activities: 'external:article',
+    insurance_entry: '/pages/insurance/insurance'
   }
   for (const [key, route] of Object.entries(EXPECT)) {
     assert.equal(seed.find((s) => s.key === key).route, route, 'seed-data 的 ' + key + ' 路由不对')

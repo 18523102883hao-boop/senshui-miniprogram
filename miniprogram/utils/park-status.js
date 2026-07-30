@@ -1,7 +1,7 @@
 // 园区营业状态（首页与园区 Tab 共用，避免两处各算一遍导致口径不一致）
 //
 // ⚠️ 营地与溪降时间不同，必须分别标注：
-//    营地 10:00-21:00（19:00 停止供餐）· 溪降 10:00-16:30（停止检票）
+//    营地 09:30-21:00（19:00 停止供餐）· 溪降 10:00-16:30（停止检票）
 //    只写一个时间会让客人以为整个园区都是那个时段。
 const env = require('../env.js')
 
@@ -13,7 +13,7 @@ function toMinutes(hhmm) {
 function hoursConfig() {
   const h = (env.park && env.park.hours) || {}
   return {
-    camp: h.camp || { label: '营地', open: '10:00', close: '21:00', cutoff: '19:00', cutoffLabel: '停止供餐' },
+    camp: h.camp || { label: '营地', open: '09:30', close: '21:00', cutoff: '19:00', cutoffLabel: '停止供餐' },
     creek: h.creek || { label: '溪降', open: '10:00', close: '16:30', closeLabel: '停止检票' }
   }
 }

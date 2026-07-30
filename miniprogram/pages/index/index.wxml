@@ -27,9 +27,9 @@
     <text class="quickbar__cta">{{quickBar.cta}} ›</text>
   </view>
 
-  <!-- 4. 三大主行动：购票 / 预约 / 补差价升级
+  <!-- 4. 四大主行动：购票 / 预约 / 补差价升级 / 溪降保险
        方卡网格：两列并排，落单的最后一张通栏（span 由 JS 算好）。
-       三张卡都是白底，主次只靠标题色与水印深浅，不用实心块压场。 -->
+       卡片都是白底，主次只靠标题色与水印深浅，不用实心块压场。 -->
   <view class="acts" wx:if="{{primaryActions.length}}">
     <view wx:for="{{primaryActions}}" wx:key="key"
           class="act act--{{item.span}} {{item.level === 'primary' ? 'act--lead' : 'act--sub'}} sr-touch"

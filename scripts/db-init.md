@@ -11,7 +11,7 @@
 - `seed: true` 会写入 2 条示例活动 + 1 条首页公告，便于联调；正式上线前清理。
 - 重复执行安全：集合已存在会跳过。
 
-集合清单：`users` `members` `coupons` `orders` `products` `ling_accounts` `ling_ledger` `activities` `notices` `staff` `verifications` `sessions`(☆) `bookings`(☆) `rentals`(☆)
+集合清单：`users` `members` `coupons` `orders` `products` `ling_accounts` `ling_ledger` `ling_daily_quotas` `activities` `notices` `staff` `verifications` `sessions`(☆) `bookings`(☆) `rentals`(☆)
 
 ## 2. 建索引（手动，控制台）
 
@@ -24,6 +24,7 @@
 | members | _openid | 否 |
 | orders | outTradeNo | 是 |
 | ling_accounts | _openid | 是 |
+| ling_daily_quotas | dayKey | 否（可选，用于按日运维查询） |
 | staff | _openid | 是 |
 | activities | date | 否 |
 
@@ -53,9 +54,17 @@
 - **部署**：新增 `getMemberQr`，重新部署 `createMemberOrder`、`payCallback`、`getMemberForVerify`、`verifyBenefit`、`getMemberCard`、`refundMember`。
 - **二维码库**：会员卡页动态码依赖 `weapp-qrcode-canvas-2d`，需在开发者工具「构建 npm」；未构建则降级为占位（无法扫码）。
 
+### 6.1 长河令实体转电子每日额度（2026-07-28）
+
+- 新增集合 `ling_daily_quotas`，权限必须设为“所有用户不可读写”，仅云函数访问。
+- 额度按同一客户、北京时间自然日累计：`front` 5000 令/日，`admin` 10000 令/日。
+- 电子兑实体和会员卡赠送不计入该额度。
+- 部署 `exchangeLing`、`resolveUserForLing`、`initDb` 后，再执行一次 `initDb`（`seed:false` 即可）。
+- 前端显示的剩余额度仅用于操作提示，最终约束由 `exchangeLing` 的事务校验负责。
+
 ## 7. 首页门户与内容中心（本轮功能扩展 Task 2）
 
-新增集合：`home_configs` `articles` `ticket_products` `tickets` `visit_reservations` `service_leads` `feedback` `itineraries`
+新增集合：`home_configs` `articles` `ticket_products` `tickets` `visit_reservations` `feedback` `itineraries`
 （`initDb` 已包含，重新部署后再执行一次即可，已存在的集合会跳过。）
 
 **新增云函数（需在开发者工具逐个上传部署）**：
@@ -282,37 +291,6 @@ API Key 永不过期，权限是 system admin。**绝不能提交进仓库**，�
 
 **修复的老 bug**：预约列表跳创建页时没传日期，创建页又只查当天场次 —— 预约次日及以后的场次必然报"场次不存在"。
 
-## 14. 特色服务线索与员工跟进（Task 11-12）
-
-**新增云函数**：`createServiceLead`、`getMyServiceLeads`、`listAssignedLeads`、`updateServiceLead`
-
-**权限规则**：
-- 线索处理权限：`front` / `admin`（检票、酒吧角色无权）
-- 普通员工只能看到**分配给自己的 + 尚未分配的**线索；管理员看全部
-- 非负责人看到的手机号自动脱敏，内部备注不下发
-- 首次跟进会自动认领线索，避免无人负责
-
-**状态机**（不允许跳跃或回退，终态不可改）：
-
-```
-new → contacted → qualified → proposal → won
- ↓        ↓            ↓           ↓
- └────────┴────────────┴───────────┴──→ closed / lost
-```
-
-每次变更都往 `history` 追加一条 `{ from, to, note, byOpenid, byName, at }`。
-
-**建议索引**：
-
-| 集合 | 字段 | 唯一 |
-|---|---|---|
-| service_leads | _openid, createdAt | 否 |
-| service_leads | status, nextFollowAt | 否 |
-| service_leads | assigneeOpenid, status | 否 |
-
-> 表单字段白名单由 `createServiceLead/lead-core.js` 的 SCHEMAS 定义；
-> 客户端提交的未声明字段（含 `status`）一律丢弃，状态只能由服务端流转。
-
 ## 15. 溪降预约功能下线（2026-07-25）
 
 业主决定：**溪降不再走场次预约**。业务上本就是「无需预约、凭券码直接入园」（见 docs/业务参数.md §3），
@@ -375,3 +353,59 @@ node scripts/tcb-api.mjs sync-home
 
 > 2026-07-25 补差价升级入口就是因为漏了这步而“消失”的——本地三处都加了，云端还是旧的 15 个模块。
 > 前三处的一致性由 `tests/uiux/home-actions.test.js` 锁定；云端只能靠这条命令同步。
+
+## 18. 已完成订单申请开票（2026-07-28）
+
+**新增云函数**：`invoiceService`
+**需重新部署**：`getMyOrders`、`refundMember`、`requestTicketRefund`、`initDb`
+
+部署后执行一次：
+
+```bash
+node scripts/tcb-api.mjs invoke initDb '{}'
+```
+
+确认已创建 `invoice_requests` 集合，并在云开发控制台手动建立：
+
+| 集合 | 字段 | 唯一 |
+|---|---|---|
+| invoice_requests | _openid, outTradeNo | 是 |
+| invoice_requests | status, updatedAt | 否 |
+
+> `_openid + outTradeNo` 唯一复合索引是防止快速重复提交产生两条申请的数据库兜底，必须建立。
+
+集合权限设为“所有用户不可读写”。游客只可经 `invoiceService` 读取本人申请；完整抬头、税号及银行资料只对已审批管理员开放。
+
+**回归重点**：
+
+- 正常已完成订单可申请，退款中/已退款订单不可申请。
+- 已开票订单自助退款会提示先联系工作人员处理红字发票。
+- 待审核或审核中的申请在退款受理后自动关闭。
+- 部分退票后重新申请时，金额按当前未退款票券重新计算。
+
+## 19. 管理员运营与对账（2026-07-28）
+
+**新增云函数**：`adminOperationsLedger`
+
+第一阶段读取现有业务数据，不新增集合。部署：
+
+```bash
+scripts/deploy-functions.sh adminOperationsLedger
+```
+
+在云开发控制台确认以下普通索引，避免月度/自定义范围查询退化为全表扫描：
+
+| 集合 | 字段 |
+|---|---|
+| orders | paidAt |
+| tickets | usedAt |
+| tickets | refundedAt |
+| members | refundedAt |
+| refund_requests | createdAt |
+| verifications | createdAt |
+| ling_ledger | createdAt |
+
+集合权限继续保持“所有用户不可读写”。报表云函数会再次查询 `staff`，只允许
+`status=approved` 且 `role=admin` 的员工访问。
+
+> 页面显示的是小程序业务账，不是微信商户结算账；核销票面金额和长河令不会计入净收。

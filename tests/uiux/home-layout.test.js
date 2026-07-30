@@ -57,7 +57,7 @@ function mountIndex(t, options = {}) {
 
 // ============ 视觉收敛 ============
 
-test('三大主行动不再各用一种渐变（层级靠排版而非堆色）', () => {
+test('四大主行动不再各用一种渐变（层级靠排版而非堆色）', () => {
   // 原实现给购票/预约/补差价各配了珊瑚/绿/金三种渐变，一屏五个色块导致杂乱
   for (const cls of ['.act--coral', '.act--gold']) {
     assert.equal(indexWxss.includes(cls), false, '不应再有多色渐变类：' + cls)
@@ -69,13 +69,13 @@ test('首页渐变色块数量受控（STYLE.md 禁止所有模块都用渐变�
   assert.ok(gradients.length <= 3, '首页渐变不应超过 3 处，实际 ' + gradients.length)
 })
 
-test('主行动仍有明确主次：一个主卡 + 两个次卡', (t) => {
+test('主行动仍有明确主次：一个主卡 + 三个次卡', (t) => {
   const { page } = mountIndex(t)
   const primary = page.data.primaryActions.filter((a) => a.level === 'primary')
   const secondary = page.data.primaryActions.filter((a) => a.level === 'secondary')
   assert.equal(primary.length, 1)
   assert.equal(primary[0].key, 'ticket_entry')
-  assert.equal(secondary.length, 2)
+  assert.equal(secondary.length, 3)
 })
 
 // ============ 内容精简 ============
@@ -166,9 +166,9 @@ test('首页顶层模块数量控制在 8 个以内', () => {
 
 // ============ 保留的核心能力 ============
 
-test('三大主行动仍在首页且可跳转', (t) => {
+test('四大主行动仍在首页且可跳转', (t) => {
   const { page, calls } = mountIndex(t)
-  assert.deepEqual(page.data.primaryActions.map((a) => a.key), ['ticket_entry', 'reservation_entry', 'upgrade_entry'])
+  assert.deepEqual(page.data.primaryActions.map((a) => a.key), ['ticket_entry', 'reservation_entry', 'upgrade_entry', 'insurance_entry'])
   page.onSectionTap({ currentTarget: { dataset: { key: 'upgrade_entry' } } })
   assert.equal(calls.navigate[0], '/pages/upgrade-info/upgrade-info')
 })
@@ -197,7 +197,25 @@ test('营地与溪降营业时间分别配置，不再共用一个字段', () =>
   const env = require(path.join(projectRoot, 'miniprogram/env.js'))
   const h = env.park.hours
   assert.ok(h && h.camp && h.creek, 'park.hours 需含 camp 与 creek')
+  assert.equal(h.camp.open, '09:30', '营地应于 09:30 开始营业')
   assert.notEqual(h.camp.close, h.creek.close, '两者结束时间本就不同，配成一样说明配错了')
+})
+
+test('营地 09:30 开始营业，21:00 后结束，溪降时段保持不变', () => {
+  const { computeOpenStatus } = require(path.join(projectRoot, 'miniprogram/utils/park-status.js'))
+  const campAt = (hour, minute) => computeOpenStatus(
+    new Date(2026, 6, 25, hour, minute)
+  ).items.find((item) => item.key === 'camp')
+  const creekAtNoon = computeOpenStatus(
+    new Date(2026, 6, 25, 12, 0)
+  ).items.find((item) => item.key === 'creek')
+
+  assert.equal(campAt(9, 29).isOpen, false)
+  assert.equal(campAt(9, 30).isOpen, true)
+  assert.equal(campAt(19, 1).state, 'partial')
+  assert.equal(campAt(21, 0).isOpen, true)
+  assert.equal(campAt(21, 1).isOpen, false)
+  assert.equal(creekAtNoon.range, '10:00-16:30')
 })
 
 test('营业状态按项目分别计算：营地未结束时溪降可能已结束', () => {
@@ -255,7 +273,7 @@ test('浏览类二级页面挂了常驻导航', () => {
 test('任务流页面不加常驻导航（误点会中断流程、丢失已填内容）', () => {
   const shouldNotHave = [
     'ticket/checkout/checkout', 'ticket/result/result',
-    'refund/detail/detail', 'service/lead/lead', 'feedback/create/create'
+    'refund/detail/detail', 'feedback/create/create'
   ]
   for (const name of shouldNotHave) {
     const wxml = fs.readFileSync(path.join(projectRoot, 'miniprogram/pages', name + '.wxml'), 'utf8')
@@ -300,7 +318,7 @@ test('挂了常驻导航的页面都留了底部避让空间', () => {
   assert.deepEqual(missing, [], '以下页面底部内容会被导航遮挡：\n  ' + missing.join('\n  '))
 })
 
-// ---- 三大主行动：方卡网格（业主 2026-07-25 指定的正方形块状布置）----
+// ---- 四大主行动：方卡网格（业主 2026-07-28 确认四宫格布置）----
 test('主行动网格跨度：落单的最后一张通栏，永不留半个空位', () => {
   const src = fs.readFileSync(indexPath, 'utf8')
   const m = src.match(/function actionSpan\(index, total\) \{\s*return ([^\n]+)\n\}/)
@@ -319,12 +337,12 @@ test('主行动网格跨度：落单的最后一张通栏，永不留半个空�
   }
 })
 
-test('三张主行动卡统一白底，不出现实心背景块', () => {
+test('四张主行动卡统一白底，不出现实心背景块', () => {
   const css = indexWxss
-  const block = css.slice(css.indexOf('/* ===== 三大主行动'))
+  const block = css.slice(css.indexOf('/* ===== 四大主行动'))
   assert.ok(/\.act \{[^}]*background: var\(--sr-bg-card\)/s.test(block), '.act 应为白底卡片')
   assert.ok(!/\.act--lead[^{]*\{[^}]*background:\s*var\(--sr-primary\)\s*;/.test(block),
-    '主卡不得使用品牌绿实心背景（业主要求三个都是白底）')
+    '主卡不得使用品牌绿实心背景（业主要求四个都是白底）')
   assert.ok(!/linear-gradient/.test(block), '主行动卡不得使用渐变')
 })
 
@@ -335,14 +353,16 @@ test('主行动卡底距与数量无关，不靠 nth-last-child 清零', () => {
     '3 张时倒数第二张在第一排，nth-last-child 清零会让两排贴死')
 })
 
-// 2026-07-26 真机：昵称飘到了屏幕中间。根因是 <button> 在小程序里自带
-// display:block 与 margin:auto，放进 flex 容器会顶开后面的内容。
-test('「我的」页头像按钮压掉了 button 的默认块级与居中', () => {
+// 2026-07-30 真机：即使重置了 margin，部分基础库里的原生 <button> 仍会
+// 生成大于声明宽度的运行时盒子。按钮必须脱离 flex 排版，仅覆盖固定头像容器。
+test('「我的」页头像按钮不参与身份组排版', () => {
   const css = fs.readFileSync(path.join(projectRoot, 'miniprogram/pages/mine/mine.wxss'), 'utf8')
   const block = css.slice(css.indexOf('.profile__avatar-btn {'), css.indexOf('.profile__avatar-btn::after'))
+  const wrap = css.slice(css.indexOf('.profile__avatar-wrap {'), css.indexOf('.profile__avatar-btn {'))
   assert.match(block, /margin:\s*0/, '必须显式清掉 button 的 margin:auto')
   assert.match(block, /padding:\s*0/, '必须清掉 button 的默认左右内边距')
-  assert.match(block, /flex-shrink:\s*0/, '头像不能被压缩')
+  assert.match(block, /position:\s*absolute/, '原生按钮必须脱离 flex 排版')
+  assert.match(wrap, /flex:\s*0\s+0\s+88rpx/, '固定头像容器不能被压缩或撑宽')
 })
 
 test('「我的」页信息区显式左对齐，不继承居中', () => {
@@ -358,4 +378,55 @@ test('「我的」页用户信息与页面其余模块同为白底卡片', () =>
   const block = css.slice(css.indexOf('.profile {'), css.indexOf('.profile__avatar-btn {'))
   assert.match(block, /background:\s*var\(--sr-bg-card\)/, '应为白底卡片')
   assert.match(block, /border-radius/, '应有圆角')
+})
+
+test('「我的」页头像与信息区使用紧凑间距', () => {
+  const css = fs.readFileSync(path.join(projectRoot, 'miniprogram/pages/mine/mine.wxss'), 'utf8')
+  const profile = css.slice(css.indexOf('.profile {'), css.indexOf('.profile__avatar-btn {'))
+  const avatarButton = css.slice(css.indexOf('.profile__avatar-btn {'), css.indexOf('.profile__avatar-btn::after'))
+  const avatar = css.slice(css.indexOf('.profile__avatar {'), css.indexOf('.profile__avatar-edit {'))
+  const info = css.slice(css.indexOf('.profile__info {'), css.indexOf('.profile__name {'))
+
+  assert.match(profile, /padding:\s*24rpx/, '身份卡内边距应收紧到 24rpx')
+  assert.match(avatarButton, /width:\s*88rpx;\s*height:\s*88rpx/, '头像按钮应收紧到 88rpx')
+  assert.match(avatar, /width:\s*88rpx;\s*height:\s*88rpx/, '头像应与按钮同为 88rpx')
+  assert.match(info, /margin-left:\s*16rpx/, '头像与信息区间距不应超过 16rpx')
+})
+
+test('「我的」页身份组按内容收缩，信息区不能占满卡片剩余宽度', () => {
+  const wxml = fs.readFileSync(path.join(projectRoot, 'miniprogram/pages/mine/mine.wxml'), 'utf8')
+  const css = fs.readFileSync(path.join(projectRoot, 'miniprogram/pages/mine/mine.wxss'), 'utf8')
+  const identity = css.slice(css.indexOf('.profile__identity {'), css.indexOf('.profile__avatar-wrap {'))
+  const avatarWrap = css.slice(css.indexOf('.profile__avatar-wrap {'), css.indexOf('.profile__avatar-btn {'))
+  const avatarButton = css.slice(css.indexOf('.profile__avatar-btn {'), css.indexOf('.profile__avatar-btn::after'))
+  const info = css.slice(css.indexOf('.profile__info {'), css.indexOf('.profile__name {'))
+
+  assert.match(
+    wxml,
+    /<view class="profile__identity">[\s\S]*<view class="profile__avatar-wrap">[\s\S]*class="profile__avatar-btn"[\s\S]*class="profile__info"[\s\S]*<\/view>\s*<\/view>/,
+    '头像与用户信息应放在同一个紧凑身份组内'
+  )
+  assert.match(identity, /display:\s*inline-flex/, '身份组应按内容宽度排列')
+  assert.match(identity, /align-items:\s*center/, '头像与信息需垂直居中')
+  assert.match(identity, /max-width:\s*100%/, '长昵称时身份组不能撑破卡片')
+  assert.match(avatarWrap, /width:\s*88rpx;\s*height:\s*88rpx/, '参与排版的头像容器必须固定为 88rpx')
+  assert.match(avatarWrap, /flex:\s*0\s+0\s+88rpx/, '头像容器不能被原生按钮撑宽')
+  assert.match(avatarButton, /position:\s*absolute/, '原生头像按钮应脱离 flex 排版')
+  assert.match(avatarButton, /inset:\s*0/, '透明按钮只能覆盖头像容器')
+  assert.match(info, /flex:\s*0\s+1\s+auto/, '信息区只允许收缩，不能占满卡片剩余宽度')
+  assert.doesNotMatch(info, /flex:\s*1(?:\s|;)/, 'flex:1 会重新制造头像与信息的大间隔')
+})
+
+test('首页品牌文案统一使用“峡谷溪降”', () => {
+  const files = [
+    'miniprogram/pages/index/index.js',
+    'miniprogram/components/ui/sr-park-header/index.js',
+    'cloudfunctions/getHomePortal/portal-core.js',
+    'cloudfunctions/seedPortalContent/seed-data.js'
+  ]
+  for (const file of files) {
+    const source = fs.readFileSync(path.join(projectRoot, file), 'utf8')
+    assert.match(source, /峡谷溪降/, file + ' 缺“峡谷溪降”')
+    assert.equal(source.includes('峡谷溯溪'), false, file + ' 仍有旧文案“峡谷溯溪”')
+  }
 })

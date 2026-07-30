@@ -1,0 +1,95 @@
+<view class="sr-page admin-order-page sr-enter">
+  <sr-skeleton wx:if="{{loading}}" type="card" rows="5" />
+  <sr-empty-state wx:if="{{loaded && denied}}"
+                  icon="help" title="无订单详情访问权限"
+                  desc="订单事实、退款与开票信息仅管理员可以查看" />
+  <sr-empty-state wx:if="{{loaded && notFound}}"
+                  icon="mine-orders" title="订单不存在"
+                  desc="订单号可能来自已清理的历史数据，请返回后核对" />
+  <sr-error-state wx:if="{{loaded && hasError && !loading}}" bind:retry="onRetry" />
+
+  <block wx:if="{{loaded && !loading && !denied && !notFound && !hasError && detail}}">
+    <view class="order-hero">
+      <view class="order-hero__head">
+        <text class="order-hero__type">{{detail.typeText}}</text>
+        <text class="order-hero__status">{{detail.statusText}}</text>
+      </view>
+      <text class="order-hero__title">{{detail.title}}</text>
+      <text class="order-hero__amount sr-num">¥{{detail.amountText}}</text>
+      <text class="order-hero__number sr-num">{{detail.outTradeNo}}</text>
+      <text class="order-hero__note">只读事实页 · 状态以对应业务流程的最终结果为准</text>
+    </view>
+
+    <view class="section-title">订单信息</view>
+    <view class="fact-card">
+      <view class="fact-row"><text>购买数量</text><text class="sr-num">{{detail.quantityText}}</text></view>
+      <view class="fact-row"><text>实际人数</text><text class="sr-num">{{detail.peopleText}}</text></view>
+      <view class="fact-row"><text>到访日期</text><text class="sr-num">{{detail.visitDateText}}</text></view>
+      <view class="fact-row"><text>联系人</text><text>{{detail.contactText}}</text></view>
+      <view class="fact-row"><text>经办员工</text><text>{{detail.staffText}}</text></view>
+      <text class="privacy-note">手机号仅显示后四位，历史缺失字段统一显示“未记录”。</text>
+    </view>
+
+    <view class="section-title">支付信息</view>
+    <view class="fact-card">
+      <view class="fact-row"><text>支付状态</text><text>{{detail.payment.statusText}}</text></view>
+      <view class="fact-row"><text>实付金额</text><text class="sr-num">¥{{detail.payment.amountText}}</text></view>
+      <view class="fact-row"><text>支付时间</text><text class="sr-num">{{detail.payment.paidAtText}}</text></view>
+      <view class="fact-row"><text>下单时间</text><text class="sr-num">{{detail.createdAtText}}</text></view>
+    </view>
+
+    <view class="section-title">退款信息</view>
+    <view class="fact-card" wx:if="{{detail.refund}}">
+      <view class="fact-row"><text>退款状态</text><text>{{detail.refund.statusText}}</text></view>
+      <view class="fact-row"><text>退款金额</text><text class="sr-num">¥{{detail.refund.refundFeeText}}</text></view>
+      <view class="fact-row"><text>申请时间</text><text class="sr-num">{{detail.refund.createdAtText}}</text></view>
+      <view class="fact-row" wx:if="{{detail.refund.reason}}"><text>退款原因</text><text>{{detail.refund.reason}}</text></view>
+    </view>
+    <sr-empty-state wx:else icon="mine-orders" title="没有退款记录"
+                    desc="本页不会发起或修改退款" />
+
+    <view class="section-title">票券与核销</view>
+    <view class="ticket-card" wx:for="{{detail.tickets}}" wx:key="ticketNo">
+      <view class="ticket-card__head">
+        <text>{{item.productName || detail.title}}</text>
+        <text>{{item.statusText}}</text>
+      </view>
+      <text class="ticket-card__count sr-num">{{item.countText}}</text>
+      <view class="ticket-card__meta">
+        <text class="sr-num">{{item.ticketNo}}</text>
+        <text>核销 {{item.usedAtText}}</text>
+        <text wx:if="{{item.refundedAt}}">退款 {{item.refundedAtText}}</text>
+      </view>
+    </view>
+    <sr-empty-state wx:if="{{!detail.tickets.length}}"
+                    icon="mine-orders" title="未记录票券明细"
+                    desc="会员卡、补差价或早期历史订单可能没有票券记录" />
+
+    <view class="section-title">开票信息</view>
+    <view class="fact-card" wx:if="{{detail.invoice}}">
+      <view class="fact-row"><text>开票状态</text><text>{{detail.invoice.statusText}}</text></view>
+      <view class="fact-row"><text>可开票金额</text><text class="sr-num">¥{{detail.invoice.invoiceAmountText}}</text></view>
+      <view class="fact-row"><text>申请时间</text><text class="sr-num">{{detail.invoice.submittedAtText}}</text></view>
+      <view class="fact-row" wx:if="{{detail.invoice.fileName}}"><text>发票文件</text><text>{{detail.invoice.fileName}}</text></view>
+      <view class="fact-row" wx:if="{{detail.invoice.issuedAt}}"><text>开具时间</text><text class="sr-num">{{detail.invoice.issuedAtText}}</text></view>
+    </view>
+    <sr-empty-state wx:else icon="mine-orders" title="没有开票申请"
+                    desc="订单完成后由用户从已完成订单发起申请" />
+
+    <view class="section-title">操作历史</view>
+    <view class="timeline-card" wx:if="{{detail.history.length}}">
+      <view class="timeline-row" wx:for="{{detail.history}}" wx:key="index">
+        <view class="timeline-row__dot"></view>
+        <view class="timeline-row__body">
+          <view class="timeline-row__head">
+            <text>{{item.label}}</text>
+            <text class="sr-num">{{item.atText}}</text>
+          </view>
+          <text class="timeline-row__note" wx:if="{{item.note}}">{{item.note}}</text>
+        </view>
+      </view>
+    </view>
+    <sr-empty-state wx:else icon="mine-orders" title="未记录操作历史"
+                    desc="早期订单可能只有当前状态快照" />
+  </block>
+</view>
