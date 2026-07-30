@@ -10,6 +10,7 @@ const hapticsPath = path.join(projectRoot, 'miniprogram/utils/haptics.js')
 const listPath = path.join(projectRoot, 'miniprogram/pages/staff/invoices/invoices.js')
 const detailPath = path.join(projectRoot, 'miniprogram/pages/staff/invoice-detail/invoice-detail.js')
 const servicePath = path.join(projectRoot, 'cloudfunctions/invoiceService/index.js')
+const persistencePath = path.join(projectRoot, 'cloudfunctions/invoiceService/invoice-persistence.js')
 
 function clone(value) { return JSON.parse(JSON.stringify(value)) }
 
@@ -265,6 +266,62 @@ test('绑定 PDF 的数据库写入只追加本次审计记录，不重写历史
   assert.equal(persistence.invoiceFile, patch.value.invoiceFile)
   assert.equal(persistence.updatedAt, patch.value.updatedAt)
   assert.equal(persistence.historyEntry, patch.value.history.at(-1))
+})
+
+test('绑定 PDF 先保存关键文件元数据，审计追加失败不应回滚文件', async () => {
+  const persistence = require(persistencePath)
+  const calls = []
+  const auditErrors = []
+  const historyEntry = { to: 'invoice_file_attached', note: '会员卡发票.pdf' }
+  const doc = {
+    async update(payload) {
+      calls.push(payload)
+      if (calls.length === 2) throw new Error('legacy history is not an array')
+      return { stats: { updated: 1 } }
+    }
+  }
+  const command = {
+    push(value) {
+      return { operator: 'push', value }
+    }
+  }
+
+  const result = await persistence.persistInvoiceFile({
+    doc,
+    command,
+    invoiceFile: { fileId: 'cloud://cloud1.example/invoice-files/inv-2/a.pdf' },
+    updatedAt: new Date('2026-07-28T10:00:00Z'),
+    historyEntry,
+    onAuditError(error) {
+      auditErrors.push(error)
+    }
+  })
+
+  assert.equal(calls.length, 2)
+  assert.deepEqual(Object.keys(calls[0].data).sort(), ['invoiceFile', 'updatedAt'])
+  assert.deepEqual(calls[1].data.history, { operator: 'push', value: historyEntry })
+  assert.equal(result.auditSaved, false)
+  assert.equal(auditErrors.length, 1)
+})
+
+test('绑定 PDF 的关键文件元数据保存失败时必须向上抛错', async () => {
+  const persistence = require(persistencePath)
+  const doc = {
+    async update() {
+      throw new Error('invoice file write failed')
+    }
+  }
+
+  await assert.rejects(
+    persistence.persistInvoiceFile({
+      doc,
+      command: { push(value) { return value } },
+      invoiceFile: { fileId: 'cloud://cloud1.example/invoice-files/inv-2/a.pdf' },
+      updatedAt: new Date('2026-07-28T10:00:00Z'),
+      historyEntry: { to: 'invoice_file_attached' }
+    }),
+    /invoice file write failed/
+  )
 })
 
 test('员工模式入口只对管理员显示开票管理', () => {

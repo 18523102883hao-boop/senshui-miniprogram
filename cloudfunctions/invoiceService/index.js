@@ -5,6 +5,7 @@ cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV })
 const db = cloud.database()
 const _ = db.command
 const core = require('./invoice-core.js')
+const persistence = require('./invoice-persistence.js')
 
 function response(code, msg, data) {
   const result = { code, msg }
@@ -255,13 +256,21 @@ async function attachInvoiceFile(openid, event) {
     return response(400, patch.msg)
   }
 
-  const persistence = core.buildInvoiceFilePersistence(patch)
+  const filePersistence = core.buildInvoiceFilePersistence(patch)
+  const requestDoc = db.collection('invoice_requests').doc(requestId)
   try {
-    await db.collection('invoice_requests').doc(requestId).update({
-      data: {
-        invoiceFile: persistence.invoiceFile,
-        updatedAt: persistence.updatedAt,
-        history: _.push([persistence.historyEntry])
+    await persistence.persistInvoiceFile({
+      doc: requestDoc,
+      command: _,
+      invoiceFile: filePersistence.invoiceFile,
+      updatedAt: filePersistence.updatedAt,
+      historyEntry: filePersistence.historyEntry,
+      onAuditError(error) {
+        console.warn('[invoiceService] invoice file saved without audit history', {
+          requestId,
+          errCode: error && (error.errCode || error.code),
+          errMsg: error && (error.errMsg || error.message)
+        })
       }
     })
   } catch (e) {
@@ -315,7 +324,9 @@ async function getInvoiceFileAccess(openid, event) {
     }
   )
   await db.collection('invoice_requests').doc(requestId).update({
-    data: { history: _.push([audit]) }
+    data: {
+      history: _.push(audit)
+    }
   })
   return response(0, 'ok', {
     fileName: request.invoiceFile.fileName,
