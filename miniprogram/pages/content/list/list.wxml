@@ -1,0 +1,44 @@
+<view class="sr-page sr-enter">
+  <!-- 分类筛选 -->
+  <scroll-view class="cats" scroll-x enable-flex show-scrollbar="{{false}}">
+    <view class="cat {{category === item.key ? 'cat--on' : ''}}"
+          wx:for="{{categories}}" wx:key="key" data-key="{{item.key}}" bindtap="onCategoryTap">
+      {{item.title}}
+    </view>
+  </scroll-view>
+
+  <!-- 弱网提示 -->
+  <view class="cache-tip" wx:if="{{fromCache}}">
+    <text>当前为离线缓存内容，联网后下拉刷新</text>
+  </view>
+
+  <!-- 骨架 / 加载 -->
+  <sr-skeleton wx:if="{{loading}}" type="card" rows="3" />
+
+  <!-- 列表 -->
+  <view class="list" wx:if="{{!loading && list.length}}">
+    <view class="item sr-touch" hover-class="sr-touch--card" hover-stay-time="60"
+          wx:for="{{list}}" wx:key="id" data-slug="{{item.slug}}" bindtap="onItemTap">
+      <image class="item__cover" wx:if="{{item.coverFileId}}" src="{{item.coverFileId}}" mode="aspectFill" />
+      <view class="item__body">
+        <text class="item__title">{{item.title}}</text>
+        <text class="item__summary">{{item.summary}}</text>
+      </view>
+      <image class="item__arrow" src="/assets/icons/forest/chevron-right.png" mode="aspectFit" />
+    </view>
+  </view>
+
+  <sr-empty-state wx:if="{{isEmpty && !loading && !hasError}}"
+                  icon="map-info" title="这个分类还没有内容"
+                  desc="换个分类看看，或稍后再来" />
+
+  <!-- 错误态 -->
+  <sr-error-state wx:if="{{hasError && !loading}}" bind:retry="onRetry" />
+
+  <!-- 加载更多 -->
+  <view class="more" wx:if="{{loadingMore}}">加载中…</view>
+  <view class="more" wx:if="{{!hasMore && list.length && !loadingMore}}">没有更多了</view>
+
+  <!-- 常驻底部导航：二级页面也能直接切 Tab -->
+  <sr-tabbar theme="light" />
+</view>

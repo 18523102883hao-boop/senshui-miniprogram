@@ -1,0 +1,76 @@
+<view class="sr-page export-page sr-enter">
+  <view class="export-head">
+    <text class="export-head__eyebrow">ADMIN EXPORT</text>
+    <text class="export-head__title">导出经营数据</text>
+    <text class="export-head__desc">生成一个 Excel 文件，每类数据一个工作表。统计口径会随表导出，便于留档与复核。</text>
+  </view>
+
+  <view class="mode-tabs" aria-label="今天、本月、自定义导出日期范围">
+    <view class="mode-tab {{mode === item.key ? 'mode-tab--on' : ''}} sr-touch"
+          wx:for="{{modes}}" wx:key="key" data-mode="{{item.key}}"
+          hover-class="sr-touch--press" hover-stay-time="60" bindtap="onModeTap">
+      {{item.label}}
+    </view>
+  </view>
+
+  <view class="range-card">
+    <view class="range-card__summary">
+      <text>导出范围</text>
+      <text class="sr-num">{{rangeText}}</text>
+    </view>
+    <view class="custom-range" wx:if="{{mode === 'custom'}}">
+      <picker mode="date" value="{{customFrom}}" bindchange="onCustomFromChange">
+        <view><text>开始日期</text><text class="sr-num">{{customFrom}}</text></view>
+      </picker>
+      <picker mode="date" value="{{customTo}}" bindchange="onCustomToChange">
+        <view><text>结束日期</text><text class="sr-num">{{customTo}}</text></view>
+      </picker>
+      <view class="query-button sr-touch" hover-class="sr-touch--press"
+            hover-stay-time="60" bindtap="onCustomQuery">应用日期</view>
+    </view>
+  </view>
+
+  <view class="section-head">
+    <text>选择工作表</text>
+    <text>可多选，并自定义每张表的字段</text>
+  </view>
+
+  <view class="dataset-card {{item.selected ? 'dataset-card--selected' : ''}}"
+        wx:for="{{datasets}}" wx:key="key">
+    <view class="dataset-card__head sr-touch" data-key="{{item.key}}"
+          hover-class="sr-touch--press" hover-stay-time="60"
+          bindtap="onDatasetToggle">
+      <view class="selection-box {{item.selected ? 'selection-box--on' : ''}}">
+        <text wx:if="{{item.selected}}">✓</text>
+      </view>
+      <view class="dataset-card__title">
+        <text>{{item.label}}</text>
+        <text>{{item.desc}}</text>
+      </view>
+    </view>
+
+    <view class="field-list" wx:if="{{item.selected}}">
+      <view class="field-chip {{field.selected ? 'field-chip--on' : ''}} {{field.required ? 'field-chip--required' : ''}} sr-touch"
+            wx:for="{{item.fields}}" wx:key="key" wx:for-item="field"
+            data-dataset="{{item.key}}" data-field="{{field.key}}"
+            hover-class="sr-touch--press" hover-stay-time="60"
+            bindtap="onFieldToggle">
+        {{field.label}}{{field.required ? ' · 必选' : ''}}
+      </view>
+    </view>
+  </view>
+
+  <view class="export-note">
+    <text>收入确认说明</text>
+    <text>订单收入：已支付但尚未核销的有效票款。</text>
+    <text>实际净收入：客户到园核销后确认的票面金额。</text>
+    <text>支付、退款与资金流水净额按资金实际发生时间单独统计。</text>
+  </view>
+
+  <view class="export-bottom">
+    <button class="export-button" loading="{{exporting}}" disabled="{{exporting}}"
+            bindtap="onExport">
+      {{exporting ? '正在生成 Excel…' : '导出并打开'}}
+    </button>
+  </view>
+</view>

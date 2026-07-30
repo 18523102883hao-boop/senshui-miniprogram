@@ -1,0 +1,17 @@
+.fb { background: var(--sr-bg-card); border-radius: var(--sr-radius); box-shadow: var(--sr-shadow);
+  padding: 28rpx 32rpx; margin-bottom: 20rpx; }
+.fb__head { display: flex; align-items: center; justify-content: space-between; }
+.fb__type { font-size: 28rpx; font-weight: 650; color: var(--sr-text); }
+.fb__status { font-size: 22rpx; padding: 6rpx 18rpx; border-radius: var(--sr-radius-sm);
+  background: var(--sr-bg-sunken); color: var(--sr-text-sub); }
+.fb__status--submitted { background: rgba(240,112,85,0.14); color: var(--sr-seal); font-weight: 600; }
+.fb__status--resolved { background: rgba(54,182,106,0.16); color: #2E9E5B; font-weight: 600; }
+.fb__content { display: block; font-size: 26rpx; color: var(--sr-text-sub); line-height: 1.7; margin-top: 14rpx; }
+.fb__reply { margin-top: 18rpx; padding-top: 18rpx; border-top: 1rpx solid var(--sr-line); }
+.fb__reply-label { display: block; font-size: 21rpx; color: var(--sr-primary); font-weight: 600; }
+.fb__reply-text { display: block; font-size: 25rpx; color: var(--sr-text); line-height: 1.7; margin-top: 8rpx; }
+.fb__new { text-align: center; padding: 24rpx 0; border-radius: 44rpx; background: var(--sr-primary);
+  color: var(--sr-text-invert); font-size: 28rpx; font-weight: 650; margin: 32rpx 0 40rpx; }
+
+/* 常驻底部导航避让 */
+.sr-page { padding-bottom: calc(150rpx + env(safe-area-inset-bottom)) !important; }

@@ -1,0 +1,24 @@
+
+.hero {
+  background: linear-gradient(135deg, var(--sr-primary) 0%, #173628 100%);
+  border-radius: var(--sr-radius-lg); padding: 44rpx 40rpx; margin-bottom: 24rpx;
+}
+.hero--cancelled, .hero--rejected { background: linear-gradient(135deg, #6B6B6B 0%, #4A4A4A 100%); }
+.hero__status { display: block; font-size: 40rpx; font-weight: 800; color: #F7F3EA; }
+.hero__hint { display: block; font-size: 24rpx; color: rgba(247, 243, 234, 0.78); margin-top: 14rpx; line-height: 1.6; }
+
+.kv { display: flex; align-items: flex-start; padding: 20rpx 0; border-bottom: 1rpx solid var(--sr-line); }
+.kv:last-child { border-bottom: none; }
+.kv__k { width: 170rpx; flex-shrink: 0; font-size: 25rpx; color: var(--sr-text-weak); }
+.kv__v { flex: 1; font-size: 27rpx; color: var(--sr-text); line-height: 1.6; }
+
+.acts { margin-top: 32rpx; }
+.acts__btn { text-align: center; padding: 26rpx 0; border-radius: 44rpx; background: var(--sr-primary); color: #fff; font-size: 29rpx; font-weight: 700; margin-bottom: 20rpx; }
+.acts__btn--ghost { background: transparent; color: var(--sr-primary); border: 2rpx solid var(--sr-primary); }
+.acts__btn--danger { background: transparent; color: var(--sr-seal); border: 2rpx solid var(--sr-seal); }
+
+.tail { font-size: 21rpx; color: var(--sr-text-weak); text-align: center; padding: 24rpx 0 40rpx; line-height: 1.6; }
+
+
+/* 常驻底部导航避让 */
+.sr-page { padding-bottom: calc(150rpx + env(safe-area-inset-bottom)) !important; }

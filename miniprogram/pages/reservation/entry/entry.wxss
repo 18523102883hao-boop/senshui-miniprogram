@@ -1,0 +1,13 @@
+.head { margin-bottom: var(--sr-gap-5); }
+.head__title { display: block; font-size: 38rpx; font-weight: 800; color: var(--sr-text); }
+.head__sub { display: block; font-size: 24rpx; color: var(--sr-text-sub); margin-top: 12rpx; line-height: 1.6; }
+
+.scene { background: var(--sr-bg-card); border-radius: var(--sr-radius); box-shadow: var(--sr-shadow);
+  padding: 26rpx 32rpx; margin-bottom: 16rpx; }
+.scene__title { display: block; font-size: 29rpx; font-weight: 650; color: var(--sr-text); }
+.scene__desc { display: block; font-size: 23rpx; color: var(--sr-text-sub); margin-top: 8rpx; }
+
+.tail { font-size: 21rpx; color: var(--sr-text-weak); text-align: center; padding: 32rpx 0 40rpx; line-height: 1.6; }
+
+/* 常驻底部导航避让 */
+.sr-page { padding-bottom: calc(150rpx + env(safe-area-inset-bottom)) !important; }

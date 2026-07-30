@@ -1,0 +1,134 @@
+<view class="sr-page details-page sr-enter">
+  <view class="details-head">
+    <view>
+      <text class="details-head__kicker">OPERATIONS DETAIL</text>
+      <text class="details-head__title">业务明细</text>
+      <text class="details-head__range sr-num">{{rangeText}}</text>
+    </view>
+    <text class="details-head__total sr-num" wx:if="{{loaded && !denied}}">{{total}} 条</text>
+  </view>
+
+  <view class="date-filter" wx:if="{{kind === 'business_data'}}">
+    <view class="date-filter__head">
+      <text class="date-filter__label">兑换时间范围</text>
+      <text class="date-filter__hint">含开始及结束当天</text>
+    </view>
+    <view class="date-filter__row">
+      <picker class="date-filter__picker" mode="date" value="{{fromDate}}"
+              bindchange="onFromDateChange">
+        <text class="date-filter__value sr-num">{{fromDate}}</text>
+      </picker>
+      <text class="date-filter__separator">至</text>
+      <picker class="date-filter__picker" mode="date" value="{{toDate}}"
+              bindchange="onToDateChange">
+        <text class="date-filter__value sr-num">{{toDate}}</text>
+      </picker>
+    </view>
+  </view>
+
+  <view class="business-summary" wx:if="{{kind === 'business_data'}}"
+        aria-label="实体兑电子、电子兑实体、会员卡兑换">
+    <view class="business-summary__head">
+      <text class="business-summary__title">三类业务汇总</text>
+      <text class="business-summary__hint">点击分类查看详情</text>
+    </view>
+    <view class="business-summary__grid">
+      <view class="business-summary__card {{subtypeOptions[subtypeIndex].key === item.key ? 'business-summary__card--on' : ''}} sr-touch"
+            wx:for="{{businessBreakdown}}" wx:key="key" data-subtype="{{item.key}}"
+            hover-class="sr-touch--press" hover-stay-time="60"
+            bindtap="onBusinessSummaryTap">
+        <text class="business-summary__label">{{item.label}}</text>
+        <text class="business-summary__quantity sr-num">{{item.quantity}} 令</text>
+        <text class="business-summary__count sr-num">{{item.count}} 条明细 ›</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="filter-card">
+    <view class="filter-card__pickers">
+      <picker class="filter-card__picker" mode="selector" range="{{staffOptions}}"
+              range-key="staffName" value="{{staffIndex}}" bindchange="onStaffChange">
+        <text class="filter-card__label">经办员工</text>
+        <text class="filter-card__value">{{staffOptions[staffIndex].staffName}} ›</text>
+      </picker>
+      <view class="filter-card__line"></view>
+      <picker class="filter-card__picker" mode="selector" range="{{subtypeOptions}}"
+              range-key="label" value="{{subtypeIndex}}" bindchange="onSubtypeChange">
+        <text class="filter-card__label">业务类型</text>
+        <text class="filter-card__value">{{subtypeOptions[subtypeIndex].label}} ›</text>
+      </picker>
+    </view>
+    <view class="search-row">
+      <input class="search-row__input" type="text" value="{{keyword}}"
+             placeholder="订单号、票号、会员码、员工或手机尾号"
+             maxlength="40" confirm-type="search"
+             bindinput="onKeywordInput" bindconfirm="onSearchConfirm" />
+      <view class="search-row__reset sr-touch" hover-class="sr-touch--press"
+            hover-stay-time="60" bindtap="onResetFilters">重置</view>
+    </view>
+  </view>
+
+  <view class="limit-note" wx:if="{{truncated}}">
+    当前范围数据较多，结果可能不完整；请缩短日期范围后重新查询。
+  </view>
+
+  <sr-skeleton wx:if="{{loading}}" type="card" rows="4" />
+  <sr-empty-state wx:if="{{loaded && denied}}"
+                  icon="help" title="无业务账访问权限"
+                  desc="资金、核销和业务数据明细仅管理员可以查看" />
+  <sr-error-state wx:if="{{loaded && hasError && !loading}}" bind:retry="onRetry" />
+
+  <block wx:if="{{loaded && !loading && !denied && !hasError}}">
+    <view class="detail-card" wx:for="{{list}}" wx:key="reference">
+      <view class="detail-card__head">
+        <text class="detail-card__type">{{item.subtypeLabel}}</text>
+        <text class="detail-card__time sr-num">{{item.timeText}}</text>
+      </view>
+      <text class="detail-card__title">{{item.title}}</text>
+      <view class="detail-card__refs">
+        <text class="detail-card__ref sr-num" wx:if="{{item.reference}}">{{item.reference}}</text>
+        <text class="detail-card__ref sr-num" wx:if="{{item.secondaryReference}}">关联 {{item.secondaryReference}}</text>
+      </view>
+      <view class="detail-card__foot">
+        <view class="detail-card__meta">
+          <text>{{item.staffName}}</text>
+          <text class="sr-num" wx:if="{{item.phoneTail}}">手机尾号 {{item.phoneTail}}</text>
+        </view>
+        <view class="detail-card__measure">
+          <block wx:if="{{kind === 'funds'}}">
+            <text class="detail-card__amount detail-card__amount--{{item.eventKind}} sr-num">
+              {{item.eventKind === 'refund' ? '−' : ''}}¥{{item.amountText}}
+            </text>
+            <text class="detail-card__measure-label">{{item.eventKind === 'refund' ? '实际退款' : '实收'}}</text>
+          </block>
+          <block wx:elif="{{kind === 'ticket_verifications'}}">
+            <text class="detail-card__amount sr-num">¥{{item.amountText}}</text>
+            <text class="detail-card__measure-label">{{item.priceMissing ? '历史票价未记录' : '对应票面金额'}}</text>
+          </block>
+          <block wx:elif="{{kind === 'member_verifications'}}">
+            <text class="detail-card__amount sr-num">{{item.quantity || 1}} 次</text>
+            <text class="detail-card__measure-label">权益核销</text>
+          </block>
+          <block wx:else>
+            <text class="detail-card__amount detail-card__amount--ling sr-num">{{item.quantity}}</text>
+            <text class="detail-card__measure-label">长河令</text>
+          </block>
+        </view>
+      </view>
+    </view>
+
+    <view class="loading-more" wx:if="{{loadingMore}}">正在加载更多…</view>
+    <view class="loading-more" wx:elif="{{list.length && !hasMore}}">已显示全部 {{total}} 条记录</view>
+
+    <sr-empty-state wx:if="{{!list.length}}"
+                    icon="mine-orders" title="没有符合条件的记录"
+                    desc="可以更换员工、业务类型或清空关键词"
+                    actionText="重置筛选" bind:action="onResetFilters" />
+
+    <button class="sr-btn sr-btn--ghost export-button {{exporting ? 'export-button--busy' : ''}}"
+            disabled="{{exporting}}" bindtap="onExport">
+      {{exporting ? '整理数据中…' : '复制当前筛选 CSV'}}
+    </button>
+    <text class="export-note">复制后可直接粘贴到 Excel；手机号仅保留后四位。</text>
+  </block>
+</view>

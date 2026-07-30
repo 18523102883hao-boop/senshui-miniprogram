@@ -16,6 +16,7 @@
         <view class="vrow__info">
           <text class="vrow__name">{{item.name}}</text>
           <text class="vrow__state">{{item.stateText}}</text>
+          <text wx:if="{{item.type === 'birthday'}}" class="vrow__identity-note">请客户出示本人身份证，核对证件生日与会员生日一致</text>
         </view>
         <button
           wx:if="{{item.canVerify}}"
@@ -30,4 +31,7 @@
   </block>
 
   <view wx:else class="hint">扫描游客出示的会员码，核销其会员权益</view>
+
+  <!-- 隐私授权弹窗：扫码前由微信触发 -->
+  <privacy-popup />
 </view>

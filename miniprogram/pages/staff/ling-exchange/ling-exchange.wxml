@@ -21,6 +21,28 @@
         <view class="sr-row-between cust-bal">
           <text class="sr-text-sub">当前电子令</text><text class="bal">{{customer.balance}}</text>
         </view>
+        <view class="quota" wx:if="{{customer.hasQuota}}">
+          <view class="quota__head">
+            <text class="quota__title">今日实体转电子额度</text>
+            <text class="quota__role">{{customer.roleLabel}}</text>
+          </view>
+          <view class="quota__metrics">
+            <view class="quota__metric">
+              <text class="quota__label">角色上限</text>
+              <text class="quota__value">{{customer.dailyLimit}} 令</text>
+            </view>
+            <view class="quota__metric">
+              <text class="quota__label">今日已用</text>
+              <text class="quota__value">{{customer.dailyUsed}} 令</text>
+            </view>
+            <view class="quota__metric quota__metric--strong">
+              <text class="quota__label">今日剩余</text>
+              <text class="quota__value">{{customer.dailyRemaining}} 令</text>
+            </view>
+          </view>
+          <text class="quota__note">按客户、北京时间自然日累计；电子兑实体不占用此额度。</text>
+        </view>
+        <text class="tip" wx:else>额度数据尚未同步，请重新扫码；最终以云端校验结果为准。</text>
       </view>
 
       <view class="sr-card">
@@ -46,4 +68,7 @@
       </view>
     </block>
   </block>
+
+  <!-- 隐私授权弹窗：调用相册/摄像头等接口前由微信触发 -->
+  <privacy-popup />
 </view>

@@ -1,0 +1,12 @@
+.sk__b { background: var(--sr-bg-sunken); border-radius: var(--sr-radius-xs); animation: sk-pulse 1.4s ease-in-out infinite; }
+@keyframes sk-pulse { 0%, 100% { opacity: 0.55; } 50% { opacity: 0.9; } }
+
+.sk__card { height: 220rpx; border-radius: var(--sr-radius); margin-bottom: 24rpx; }
+.sk__row { display: flex; align-items: center; margin-bottom: 24rpx; }
+.sk__thumb { width: 180rpx; height: 132rpx; border-radius: var(--sr-radius-sm); flex-shrink: 0; }
+.sk__lines { flex: 1; margin-left: 24rpx; }
+.sk__line { height: 28rpx; margin-bottom: 16rpx; }
+.sk__title { height: 56rpx; width: 60%; margin-bottom: 28rpx; }
+.sk__field { height: 110rpx; border-radius: var(--sr-radius); margin-bottom: 20rpx; }
+
+.sk--dark .sk__b { background: var(--sr-dark-card-2); }

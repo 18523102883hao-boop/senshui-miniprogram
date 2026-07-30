@@ -1,32 +1,40 @@
 <view class="sr-page sr-page--tab sr-enter">
   <!-- 用户信息 -->
   <view class="profile">
-    <button class="profile__avatar-btn" open-type="chooseAvatar" bindchooseavatar="onChooseAvatar">
-      <image class="profile__avatar" src="{{userInfo.avatarUrl || '/assets/icons/forest/mine-profile.png'}}" mode="aspectFill" />
-      <view class="profile__avatar-edit">
-        <image src="/assets/icons/forest/edit.png" mode="aspectFit" />
+    <view class="profile__identity">
+      <view class="profile__avatar-wrap">
+        <image class="profile__avatar" src="{{userInfo.avatarUrl || '/assets/icons/forest/mine-profile.png'}}" mode="aspectFill" />
+        <view class="profile__avatar-edit">
+          <image src="/assets/icons/forest/edit.png" mode="aspectFit" />
+        </view>
+        <button
+          class="profile__avatar-btn"
+          open-type="chooseAvatar"
+          bindchooseavatar="onChooseAvatar"
+          aria-label="更换头像"
+        />
       </view>
-    </button>
-    <view class="profile__info">
-      <text class="profile__name">{{userInfo.nickName || '森水游客'}}</text>
-      <button
-        wx:if="{{!hasPhone}}"
-        class="profile__login"
-        open-type="getPhoneNumber"
-        bindgetphonenumber="onGetPhone"
-      >
-        <image class="profile__login-icon" src="/assets/icons/forest/mine-phone.png" mode="aspectFit" />
-        <text>手机号一键登录</text>
-      </button>
-      <view wx:else class="profile__phone-done">
-        <image class="profile__done-icon" src="/assets/icons/status/status-success.png" mode="aspectFit" />
-        <text>已登录 · {{phoneMask}}</text>
+      <view class="profile__info">
+        <text class="profile__name">{{userInfo.nickName || '森水游客'}}</text>
+        <button
+          wx:if="{{!hasPhone}}"
+          class="profile__login"
+          open-type="getPhoneNumber"
+          bindgetphonenumber="onGetPhone"
+        >
+          <image class="profile__login-icon" src="/assets/icons/forest/mine-phone.png" mode="aspectFit" />
+          <text>手机号一键登录</text>
+        </button>
+        <view wx:else class="profile__phone-done">
+          <image class="profile__done-icon" src="/assets/icons/status/status-success.png" mode="aspectFit" />
+          <text>已登录 · {{phoneMask}}</text>
+        </view>
       </view>
     </view>
   </view>
 
   <!-- 会员卡（黑金 · 整卡可点） -->
-  <view class="mcard sr-goldcard sr-gold-hairline sr-touch" hover-class="sr-touch--press" hover-stay-time="60" bindtap="goMember">
+  <view class="mcard sr-goldcard sr-gold-hairline sr-touch" hover-class="sr-touch--card" hover-stay-time="60" bindtap="goMember">
     <view class="mcard__left">
       <text class="mcard__title">森水会员卡</text>
       <text class="mcard__desc">{{member ? '有效期至 ' + member.expireText : '9.9 元 · 1000 长河令 + 生日 85 折'}}</text>
@@ -34,22 +42,35 @@
     <text class="mcard__action">{{member ? '查看卡包' : '立即开卡'}}</text>
   </view>
 
-  <!-- 我的服务（整行可点） -->
+  <!-- 我的行程（票券/预约/订单/卡券 · 首屏优先） -->
+  <sr-section-header title="我的行程" />
   <view class="svc-list">
     <view class="svc sr-touch" hover-class="sr-touch--press" hover-stay-time="60"
-          wx:for="{{grid}}" wx:key="key" data-key="{{item.key}}" bindtap="onGrid">
+          wx:for="{{tripGrid}}" wx:key="key" data-key="{{item.key}}" bindtap="onGrid">
       <image class="svc__icon" src="{{item.icon}}" mode="aspectFit" />
       <text class="svc__title">{{item.title}}</text>
       <text class="svc__sub">{{item.sub}}</text>
-      <image class="svc__arrow" src="/assets/icons/forest/chevron-right.png" mode="aspectFit" />
+      <sr-icon name="chevron-right" theme="light" size="sm" />
+    </view>
+  </view>
+
+  <!-- 资产与服务 -->
+  <sr-section-header title="资产与服务" />
+  <view class="svc-list">
+    <view class="svc sr-touch" hover-class="sr-touch--press" hover-stay-time="60"
+          wx:for="{{assetGrid}}" wx:key="key" data-key="{{item.key}}" bindtap="onGrid">
+      <image class="svc__icon" src="{{item.icon}}" mode="aspectFit" />
+      <text class="svc__title">{{item.title}}</text>
+      <text class="svc__sub">{{item.sub}}</text>
+      <sr-icon name="chevron-right" theme="light" size="sm" />
     </view>
 
     <!-- 联系前台 -->
     <view class="svc sr-touch" hover-class="sr-touch--press" hover-stay-time="60" bindtap="callFront">
-      <image class="svc__icon" src="/assets/icons/forest/customer-service.png" mode="aspectFit" />
-      <text class="svc__title">联系前台 / 客服</text>
+      <image class="svc__icon" src="/assets/icons/forest/mine-phone.png" mode="aspectFit" />
+      <text class="svc__title">联系前台</text>
       <text class="svc__sub sr-num">{{frontPhone}}</text>
-      <image class="svc__arrow" src="/assets/icons/forest/chevron-right.png" mode="aspectFit" />
+      <sr-icon name="chevron-right" theme="light" size="sm" />
     </view>
   </view>
 

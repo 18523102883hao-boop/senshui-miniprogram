@@ -1,0 +1,190 @@
+.reconciliation-page {
+  padding-bottom: calc(var(--sr-gap-8) + env(safe-area-inset-bottom));
+}
+
+.mode-tabs,
+.filter-card,
+.bill-card {
+  border-radius: var(--sr-radius-lg);
+  box-shadow: var(--sr-shadow);
+}
+
+.mode-tabs {
+  display: flex;
+  padding: var(--sr-gap-1);
+  background: var(--sr-bg-card);
+}
+
+.mode-tab {
+  flex: 1;
+  padding: var(--sr-gap-2) var(--sr-gap-1);
+  border-radius: var(--sr-radius);
+  color: var(--sr-text-sub);
+  font-size: 25rpx;
+  text-align: center;
+}
+
+.mode-tab--on {
+  background: var(--sr-primary);
+  color: var(--sr-text-invert);
+  font-weight: 730;
+}
+
+.filter-card {
+  margin-top: var(--sr-gap-3);
+  padding: var(--sr-gap-3);
+  background: var(--sr-bg-card);
+}
+
+.date-field,
+.custom-date,
+.empty-switch,
+.bill-card__head,
+.bill-card__money {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.date-field {
+  min-height: 72rpx;
+}
+
+.date-field__label,
+.custom-date,
+.empty-switch,
+.update-note {
+  color: var(--sr-text-sub);
+  font-size: 22rpx;
+}
+
+.date-field__value {
+  color: var(--sr-primary);
+  font-size: 24rpx;
+  font-weight: 690;
+}
+
+.custom-filter {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--sr-gap-2);
+}
+
+.custom-date {
+  flex-direction: column;
+  align-items: flex-start;
+  padding: var(--sr-gap-2);
+  border-radius: var(--sr-radius-sm);
+  background: var(--sr-bg-sunken);
+}
+
+.custom-date text:last-child {
+  margin-top: 2rpx;
+  color: var(--sr-text);
+  font-weight: 690;
+}
+
+.query-button {
+  grid-column: 1 / 3;
+  padding: var(--sr-gap-2);
+  border-radius: var(--sr-radius-sm);
+  background: var(--sr-primary);
+  color: var(--sr-text-invert);
+  font-size: 24rpx;
+  font-weight: 720;
+  text-align: center;
+}
+
+.empty-switch {
+  justify-content: flex-start;
+  margin-top: var(--sr-gap-3);
+  padding-top: var(--sr-gap-3);
+  border-top: 1rpx solid var(--sr-line);
+}
+
+.empty-switch__box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34rpx;
+  height: 34rpx;
+  margin-right: var(--sr-gap-2);
+  border: 2rpx solid var(--sr-border);
+  border-radius: var(--sr-radius-xs);
+  color: var(--sr-text-invert);
+  font-size: 20rpx;
+}
+
+.empty-switch__box--on {
+  border-color: var(--sr-primary);
+  background: var(--sr-primary);
+}
+
+.update-note {
+  padding: var(--sr-gap-3) var(--sr-gap-1) var(--sr-gap-1);
+}
+
+.limit-note {
+  margin-top: var(--sr-gap-2);
+  padding: var(--sr-gap-3);
+  border-radius: var(--sr-radius);
+  background: var(--sr-bg-sunken);
+  color: var(--sr-warning);
+  font-size: 21rpx;
+}
+
+.bill-card {
+  margin-top: var(--sr-gap-3);
+  padding: var(--sr-gap-4);
+  background: var(--sr-bg-card);
+}
+
+.bill-card__title,
+.bill-card__orders,
+.bill-card__value {
+  display: block;
+}
+
+.bill-card__title {
+  color: var(--sr-text);
+  font-size: 28rpx;
+  font-weight: 750;
+}
+
+.bill-card__orders {
+  margin-top: 4rpx;
+  color: var(--sr-text-weak);
+  font-size: 20rpx;
+}
+
+.bill-card__value {
+  color: var(--sr-primary-deep);
+  font-size: 30rpx;
+  font-weight: 770;
+}
+
+.bill-card__arrow {
+  margin-left: var(--sr-gap-1);
+  color: var(--sr-primary);
+  font-size: 40rpx;
+}
+
+.bill-card__metrics {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--sr-gap-2);
+  margin-top: var(--sr-gap-3);
+  padding-top: var(--sr-gap-3);
+  border-top: 1rpx solid var(--sr-line);
+  color: var(--sr-text-sub);
+  font-size: 21rpx;
+}
+
+.bill-card__risk {
+  margin-top: var(--sr-gap-3);
+  padding: var(--sr-gap-2);
+  border-radius: var(--sr-radius-sm);
+  background: var(--sr-bg-sunken);
+  color: var(--sr-warning);
+  font-size: 20rpx;
+}

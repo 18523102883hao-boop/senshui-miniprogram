@@ -1,0 +1,39 @@
+.who { display: flex; align-items: baseline; margin-bottom: 24rpx; }
+.who__name { font-size: 32rpx; font-weight: 700; color: var(--sr-text); }
+.who__role { font-size: 23rpx; color: var(--sr-primary); background: var(--sr-primary-weak); padding: 6rpx 18rpx; border-radius: 8rpx; margin-left: 16rpx; }
+
+.acts { margin-bottom: 24rpx; }
+.acts__scan {
+  display: flex; align-items: center; justify-content: center;
+  background: var(--sr-primary); color: #fff; border-radius: var(--sr-radius);
+  padding: 40rpx; font-size: 32rpx; font-weight: 700;
+}
+.acts__icon { width: 48rpx; height: 48rpx; margin-right: 16rpx; filter: brightness(0) invert(1); }
+.manual { display: flex; align-items: center; margin-top: 20rpx; }
+.manual__input {
+  flex: 1; background: var(--sr-bg-card); border-radius: var(--sr-radius-sm);
+  padding: 22rpx 26rpx; font-size: 27rpx; color: var(--sr-text); box-shadow: var(--sr-shadow);
+}
+.manual__btn {
+  margin-left: 16rpx; padding: 22rpx 40rpx; border-radius: var(--sr-radius-sm);
+  background: var(--sr-bg-card); color: var(--sr-primary); font-size: 27rpx; font-weight: 600; box-shadow: var(--sr-shadow);
+}
+
+.err { display: flex; align-items: center; background: rgba(240, 112, 85, 0.12); border-radius: var(--sr-radius-sm); padding: 24rpx 26rpx; margin-bottom: 20rpx; }
+.err__icon { width: 36rpx; height: 36rpx; flex-shrink: 0; }
+.err__text { flex: 1; font-size: 26rpx; color: var(--sr-seal); font-weight: 600; margin-left: 16rpx; }
+
+.tk { background: var(--sr-bg-card); border-radius: var(--sr-radius); box-shadow: var(--sr-shadow); padding: 30rpx 32rpx; }
+.tk__row { display: flex; align-items: center; padding: 18rpx 0; border-bottom: 1rpx solid var(--sr-line); }
+.tk__k { width: 160rpx; flex-shrink: 0; font-size: 25rpx; color: var(--sr-text-weak); }
+.tk__v { flex: 1; font-size: 27rpx; color: var(--sr-text); }
+.tk__v--unused { color: var(--sr-primary); font-weight: 700; }
+.tk__v--used { color: var(--sr-text-weak); }
+.tk__v--refund_pending, .tk__v--refunded { color: var(--sr-seal); font-weight: 600; }
+
+.tk__ok { display: flex; align-items: center; justify-content: center; margin-top: 28rpx; font-size: 30rpx; font-weight: 700; color: #36B66A; }
+.tk__ok-icon { width: 44rpx; height: 44rpx; margin-right: 12rpx; }
+.tk__btn { margin-top: 28rpx; text-align: center; padding: 26rpx 0; border-radius: 44rpx; background: var(--sr-seal); color: #fff; font-size: 30rpx; font-weight: 700; }
+.tk__btn--off { opacity: 0.6; }
+.tk__reset { margin-top: 18rpx; text-align: center; font-size: 25rpx; color: var(--sr-primary); }
+

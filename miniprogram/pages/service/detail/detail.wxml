@@ -1,0 +1,48 @@
+<view class="sr-page svc-page sr-enter">
+  <view class="hero">
+    <view class="hero__glow"></view>
+    <text class="hero__title">{{title}}</text>
+    <text class="hero__intro">{{fallbackIntro}}</text>
+  </view>
+
+  <view class="sr-card" wx:if="{{points.length}}">
+    <text class="sr-subtitle">我们能做什么</text>
+    <view class="sr-divider"></view>
+    <view class="pt" wx:for="{{points}}" wx:key="*this">
+      <view class="pt__dot"></view>
+      <text class="pt__text">{{item}}</text>
+    </view>
+  </view>
+
+  <!-- 云端配置的结构化内容（有就渲染，没有就只显示本地兜底） -->
+  <block wx:for="{{blocks}}" wx:key="index">
+    <text class="b-text" wx:if="{{item.type === 'text'}}">{{item.data.text}}</text>
+    <view class="b-list sr-card" wx:elif="{{item.type === 'list'}}">
+      <text class="b-list__title" wx:if="{{item.data.title}}">{{item.data.title}}</text>
+      <view class="pt" wx:for="{{item.data.items}}" wx:key="*this" wx:for-item="li">
+        <view class="pt__dot"></view>
+        <text class="pt__text">{{li}}</text>
+      </view>
+    </view>
+    <view class="b-grid" wx:elif="{{item.type === 'feature_grid'}}">
+      <view class="b-grid__cell" wx:for="{{item.data.items}}" wx:key="title" wx:for-item="cell">
+        <text class="b-grid__title">{{cell.title}}</text>
+        <text class="b-grid__desc">{{cell.desc}}</text>
+      </view>
+    </view>
+    <view class="b-notice" wx:elif="{{item.type === 'notice'}}">
+      <text>{{item.data.text}}</text>
+    </view>
+  </block>
+
+  <!-- 业主 2026-07-26：去掉填表入口，客户直接加管家企微；
+       卡片内已含二维码与致电，底部不再重复一条 CTA 栏 -->
+  <sr-contact-card scene="{{qrScene}}"
+                   title="加顾问微信，说清需求"
+                   desc="方案、价格与档期一次沟通到位" />
+
+  <view class="tail">具体方案、价格与档期以管家沟通确认为准。</view>
+
+  <!-- 常驻底部导航：二级页面也能直接切 Tab -->
+  <sr-tabbar theme="light" />
+</view>

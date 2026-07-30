@@ -1,0 +1,33 @@
+.res-page { padding-top: 60rpx; }
+.res { display: flex; flex-direction: column; align-items: center; }
+.res__icon { width: 120rpx; height: 120rpx; }
+.res__spin {
+  width: 88rpx; height: 88rpx; border-radius: 50%;
+  border: 8rpx solid var(--sr-bg-sunken); border-top-color: var(--sr-primary);
+  animation: res-spin 0.9s linear infinite;
+}
+@keyframes res-spin { to { transform: rotate(360deg); } }
+.res__title { font-size: 36rpx; font-weight: 800; color: var(--sr-text); margin-top: 32rpx; }
+.res__sub { font-size: 25rpx; color: var(--sr-text-sub); margin-top: 14rpx; text-align: center; line-height: 1.6; }
+.res__no { font-size: 22rpx; color: var(--sr-text-weak); margin-top: 18rpx; }
+
+.res__support {
+  background: rgba(213, 164, 58, 0.12); border-radius: var(--sr-radius);
+  padding: 28rpx 32rpx; margin-top: 40rpx; display: flex; flex-direction: column; align-items: center;
+}
+.res__support-text { font-size: 23rpx; color: var(--sr-text); line-height: 1.7; text-align: center; }
+
+.tk {
+  width: 100%; box-sizing: border-box;
+  background: var(--sr-bg-card); border-radius: var(--sr-radius);
+  box-shadow: var(--sr-shadow); padding: 26rpx 32rpx; margin-top: 20rpx;
+}
+.tk__name { display: block; font-size: 28rpx; font-weight: 600; color: var(--sr-text); }
+.tk__no { display: block; font-size: 22rpx; color: var(--sr-text-weak); margin-top: 8rpx; }
+
+.res__acts { display: flex; flex-direction: column; align-items: center; width: 100%; margin-top: 48rpx; }
+.res__btn {
+  width: 70%; text-align: center; padding: 24rpx 0; border-radius: 44rpx;
+  background: var(--sr-primary); color: #fff; font-size: 29rpx; font-weight: 700; margin-top: 20rpx;
+}
+.res__btn--ghost { background: transparent; color: var(--sr-primary); border: 2rpx solid var(--sr-primary); }

@@ -2,9 +2,15 @@
 
 .vrow { display: flex; align-items: center; justify-content: space-between; padding: 24rpx 0; border-bottom: 1rpx solid var(--sr-line); }
 .vrow:last-child { border-bottom: none; }
-.vrow__info { display: flex; flex-direction: column; }
+.vrow__info { display: flex; flex: 1; flex-direction: column; padding-right: var(--sr-gap-3); }
 .vrow__name { font-size: 28rpx; color: var(--sr-text); }
 .vrow__state { font-size: 24rpx; color: var(--sr-text-sub); margin-top: 4rpx; }
+.vrow__identity-note {
+  margin-top: var(--sr-gap-2);
+  font-size: 22rpx;
+  line-height: 1.5;
+  color: var(--sr-seal);
+}
 .vrow__btn {
   margin: 0; height: 60rpx; line-height: 60rpx; padding: 0 32rpx;
   font-size: 26rpx; color: #fff; background: var(--sr-seal); border-radius: 30rpx;

@@ -7,9 +7,17 @@
       <text class="asset__label">我的长河令</text>
       <image class="asset__icon" src="/assets/icons/ivory/activity-token.png" mode="aspectFit" />
     </view>
-    <view class="asset__balance">
+    <!-- 余额：加载中用骨架，失败可重试；避免「0 令」与「没加载出来」混淆 -->
+    <view class="asset__balance" wx:if="{{!balanceLoading && !balanceError}}">
       <text class="asset__num sr-num">{{myLing}}</text>
       <text class="asset__unit">令</text>
+    </view>
+    <view class="asset__balance asset__balance--sk" wx:elif="{{balanceLoading}}">
+      <view class="asset__sk"></view>
+    </view>
+    <view class="asset__balance asset__balance--err" wx:else bindtap="onRetryBalance">
+      <text class="asset__err">余额加载失败</text>
+      <text class="asset__retry">点击重试</text>
     </view>
     <view class="asset__actions">
       <view class="asset__cta sr-touch" hover-class="sr-touch--cta" hover-stay-time="60" bindtap="goMycode">

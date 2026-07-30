@@ -4,6 +4,7 @@ const cloud = require('wx-server-sdk')
 cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV })
 const db = cloud.database()
 const crypto = require('crypto')
+const quotaCore = require('./quota-core.js')
 
 const SECRET = process.env.MEMBER_QR_SECRET || 'sr-dev-secret-change-me'
 const TTL = 90
@@ -49,6 +50,39 @@ function maskOpenid(openid) {
   return openid.slice(0, 4) + '****' + openid.slice(-4)
 }
 
+function isMissingDocumentError(error) {
+  const text = `${error && error.errCode || ''} ${error && error.message || ''}`
+  return (
+    (error && error.errCode === -1) ||
+    /not[\s_-]*(exist|found)|document.*不存在|DATABASE_DOCUMENT_NOT_FOUND/i.test(text)
+  )
+}
+
+async function getTodayQuota(userOpenid, role) {
+  const dayKey = quotaCore.beijingDayKey()
+  const quotaId = quotaCore.dailyQuotaDocId(userOpenid, dayKey)
+  let record = null
+  try {
+    const result = await db.collection('ling_daily_quotas').doc(quotaId).get()
+    record = result && result.data ? result.data : null
+  } catch (error) {
+    if (!isMissingDocumentError(error)) throw error
+  }
+  const used = record ? Number(record.total) || 0 : 0
+  const snapshot = quotaCore.evaluateDailyQuota({
+    role,
+    direction: 'd2p',
+    used,
+    amount: 0
+  })
+  return {
+    dailyLimit: snapshot.limit,
+    dailyUsed: snapshot.used,
+    dailyRemaining: snapshot.remaining,
+    dayKey
+  }
+}
+
 exports.main = async (event) => {
   const { OPENID } = cloud.getWXContext()
   const staff = await requireStaff(OPENID)
@@ -59,6 +93,16 @@ exports.main = async (event) => {
 
   const acc = await db.collection('ling_accounts').where({ _openid: resolved.openid }).limit(1).get()
   const balance = acc.data.length ? acc.data[0].balance : 0
+  const quota = await getTodayQuota(resolved.openid, staff.role)
 
-  return { code: 0, msg: 'ok', data: { userOpenid: resolved.openid, userLabel: maskOpenid(resolved.openid), balance } }
+  return {
+    code: 0,
+    msg: 'ok',
+    data: Object.assign({
+      userOpenid: resolved.openid,
+      userLabel: maskOpenid(resolved.openid),
+      balance,
+      role: staff.role
+    }, quota)
+  }
 }

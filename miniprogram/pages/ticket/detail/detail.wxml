@@ -1,0 +1,109 @@
+<view class="sr-page detail-page sr-enter">
+  <sr-skeleton wx:if="{{loading}}" type="card" rows="3" />
+
+  <block wx:if="{{product && !loading}}">
+    <!-- 轮播图（无图时不占位） -->
+    <swiper class="gallery" wx:if="{{product.galleryFileIds.length}}" indicator-dots circular>
+      <swiper-item wx:for="{{product.galleryFileIds}}" wx:key="*this" wx:for-item="fid">
+        <image class="gallery__img" src="{{fid}}" mode="aspectFill" />
+      </swiper-item>
+    </swiper>
+    <image class="cover" wx:elif="{{product.coverFileId}}" src="{{product.coverFileId}}" mode="aspectFill" />
+
+    <!-- 价格与名称 -->
+    <view class="sr-card">
+      <view class="price">
+        <text class="price__cur">¥</text>
+        <text class="price__num sr-num">{{product.priceText}}</text>
+        <text class="price__market sr-num" wx:if="{{product.marketPriceText}}">¥{{product.marketPriceText}}</text>
+      </view>
+      <text class="name">{{product.name}}</text>
+      <text class="highlight" wx:if="{{product.highlight}}">{{product.highlight}}</text>
+      <view class="tags">
+        <text class="tag" wx:if="{{product.refundTag}}">{{product.refundTag}}</text>
+        <text class="tag">{{product.reservationRequired ? '需预约' : '无需预约'}}</text>
+        <text class="tag" wx:if="{{product.purchaseLimit}}">每单限购 {{product.purchaseLimit}} 份</text>
+      </view>
+    </view>
+
+    <!-- 适用人群 -->
+    <view class="sr-card">
+      <text class="sr-subtitle">适用人群</text>
+      <view class="sr-divider"></view>
+      <text class="para">{{product.audience}}</text>
+    </view>
+
+    <!-- 包含 / 不包含 -->
+    <view class="sr-card">
+      <text class="sr-subtitle">费用包含</text>
+      <view class="sr-divider"></view>
+      <view class="li" wx:for="{{product.benefits}}" wx:key="*this" wx:for-item="b">
+        <view class="li__dot li__dot--in"></view>
+        <text class="li__text">{{b}}</text>
+      </view>
+      <block wx:if="{{product.exclusions.length}}">
+        <text class="sub-title">费用不包含</text>
+        <view class="li" wx:for="{{product.exclusions}}" wx:key="*this" wx:for-item="ex">
+          <view class="li__dot li__dot--out"></view>
+          <text class="li__text">{{ex}}</text>
+        </view>
+      </block>
+    </view>
+
+    <!-- 使用说明 -->
+    <view class="sr-card">
+      <text class="sr-subtitle">使用说明</text>
+      <view class="sr-divider"></view>
+      <view class="kv"><text class="kv__k">有效期</text><text class="kv__v">{{product.validityRule.desc || product.validityText}}</text></view>
+      <view class="kv"><text class="kv__k">是否预约</text><text class="kv__v">{{product.reservationRequired ? (product.leadTimeDays > 0 ? '需提前 ' + product.leadTimeDays + ' 天预约' : '需提前预约') : '无需预约，高峰期可能排队'}}</text></view>
+      <view class="kv"><text class="kv__k">取票方式</text><text class="kv__v">无需取票，凭券码或券号直接入园</text></view>
+      <view class="kv" wx:if="{{product.blackoutDates.length}}">
+        <text class="kv__k">不可用日期</text>
+        <text class="kv__v">{{product.blackoutDates}}</text>
+      </view>
+    </view>
+
+    <!-- 安全限制 -->
+    <view class="sr-card" wx:if="{{product.restrictions.length}}">
+      <text class="sr-subtitle">安全与限制</text>
+      <view class="sr-divider"></view>
+      <view class="li" wx:for="{{product.restrictions}}" wx:key="*this" wx:for-item="r">
+        <view class="li__dot li__dot--warn"></view>
+        <text class="li__text">{{r}}</text>
+      </view>
+    </view>
+
+    <!-- 退款规则 -->
+    <view class="sr-card" wx:if="{{product.refundRule}}">
+      <text class="sr-subtitle">退款规则</text>
+      <view class="sr-divider"></view>
+      <text class="para">{{product.refundRule.summary}}</text>
+      <view class="li" wx:for="{{product.refundRule.details}}" wx:key="*this" wx:for-item="d">
+        <view class="li__dot"></view>
+        <text class="li__text">{{d}}</text>
+      </view>
+    </view>
+
+    <view class="tail">最终解释与现场执行以园区公示为准，如有疑问请联系前台或管家。</view>
+  </block>
+
+  <sr-error-state wx:if="{{hasError && !loading}}" bind:retry="onRetry" />
+
+  <!-- 底部固定购买栏 -->
+  <view class="bar" wx:if="{{product && !loading}}">
+    <view class="bar__call sr-touch" hover-class="sr-touch--press" hover-stay-time="60" bindtap="onCallFront">
+      <image class="bar__icon" src="/assets/icons/forest/customer-service.png" mode="aspectFit" />
+      <text>客服</text>
+    </view>
+    <view class="bar__price">
+      <text class="bar__cur">¥</text>
+      <text class="bar__num sr-num">{{product.priceText}}</text>
+    </view>
+    <view class="bar__cta sr-touch" hover-class="sr-touch--cta" hover-stay-time="60" bindtap="onCtaTap">
+      {{cta.text}}
+    </view>
+  </view>
+
+  <!-- 常驻底部导航：二级页面也能直接切 Tab -->
+  <sr-tabbar theme="light" />
+</view>

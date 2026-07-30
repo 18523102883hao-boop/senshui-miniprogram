@@ -28,3 +28,6 @@
 .empty-card { padding: 120rpx 40rpx; display: flex; flex-direction: column; align-items: center; }
 .empty-card__text { font-size: 28rpx; color: var(--sr-text-sub); margin-bottom: 40rpx; }
 .empty-card__btn { width: 60%; }
+
+/* 常驻底部导航避让 */
+.sr-page { padding-bottom: calc(150rpx + env(safe-area-inset-bottom)) !important; }

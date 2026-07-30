@@ -1,0 +1,6 @@
+<view class="err err--{{theme}}">
+  <sr-icon name="status-warning" theme="status" size="xl" />
+  <text class="err__title">{{title}}</text>
+  <text class="err__desc" wx:if="{{desc}}">{{desc}}</text>
+  <view class="err__btn sr-touch" hover-class="sr-touch--cta" hover-stay-time="60" bindtap="onRetry">{{actionText}}</view>
+</view>

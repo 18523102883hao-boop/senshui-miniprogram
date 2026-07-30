@@ -33,3 +33,6 @@
 .result__title { font-size: 34rpx; font-weight: 700; color: var(--sr-text); }
 .result__amount { font-size: 64rpx; font-weight: 700; color: var(--sr-seal); margin-top: 20rpx; }
 .result__label { font-size: 26rpx; color: var(--sr-text-sub); margin-top: 8rpx; }
+
+/* 常驻底部导航避让 */
+.sr-page { padding-bottom: calc(150rpx + env(safe-area-inset-bottom)) !important; }

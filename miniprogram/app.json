@@ -1,5 +1,6 @@
 {
   "pages": [
+    "pages/park/park",
     "pages/index/index",
     "pages/ling/ling",
     "pages/mine/mine",
@@ -7,13 +8,22 @@
     "pages/member/card/card",
     "pages/coupon/coupon",
     "pages/ticket/ticket",
+    "pages/insurance/insurance",
     "pages/order/order",
+    "pages/invoice/apply/apply",
+    "pages/invoice/detail/detail",
     "pages/staff/entry/entry",
+    "pages/staff/operations/operations",
+    "pages/staff/data-export/data-export",
+    "pages/staff/finance/finance",
+    "pages/staff/reconciliation/reconciliation",
+    "pages/staff/bill-detail/bill-detail",
+    "pages/staff/verification-data/verification-data",
+    "pages/staff/order-detail/order-detail",
+    "pages/staff/operation-details/operation-details",
+    "pages/staff/invoices/invoices",
+    "pages/staff/invoice-detail/invoice-detail",
     "pages/staff/verify/verify",
-    "pages/booking/list/list",
-    "pages/booking/detail/detail",
-    "pages/booking/create/create",
-    "pages/staff/creek/creek",
     "pages/staff/charge/charge",
     "pages/staff/charge-summary/charge-summary",
     "pages/pay/upgrade/upgrade",
@@ -24,7 +34,23 @@
     "pages/upgrade-info/upgrade-info",
     "pages/staff/maps/maps",
     "pages/legal/privacy/privacy",
-    "pages/legal/agreement/agreement"
+    "pages/legal/agreement/agreement",
+    "pages/content/list/list",
+    "pages/content/detail/detail",
+    "pages/guide/guide",
+    "pages/concierge/concierge",
+    "pages/ticket/detail/detail",
+    "pages/ticket/checkout/checkout",
+    "pages/ticket/result/result",
+    "pages/ticket/wallet/wallet",
+    "pages/staff/ticket-verify/ticket-verify",
+    "pages/refund/detail/detail",
+    "pages/reservation/entry/entry",
+    "pages/reservation/detail/detail",
+    "pages/service/detail/detail",
+    "pages/feedback/create/create",
+    "pages/feedback/list/list",
+    "pages/webview/webview"
   ],
   "window": {
     "backgroundTextStyle": "dark",
@@ -45,6 +71,10 @@
         "text": "向导"
       },
       {
+        "pagePath": "pages/park/park",
+        "text": "园区"
+      },
+      {
         "pagePath": "pages/ling/ling",
         "text": "长河令"
       },
@@ -54,7 +84,18 @@
       }
     ]
   },
-  "usingComponents": {},
+  "usingComponents": {
+    "sr-icon": "/components/ui/sr-icon/index",
+    "sr-empty-state": "/components/ui/sr-empty-state/index",
+    "sr-error-state": "/components/ui/sr-error-state/index",
+    "sr-skeleton": "/components/ui/sr-skeleton/index",
+    "sr-section-header": "/components/ui/sr-section-header/index",
+    "sr-qrcode": "/components/ui/sr-qrcode/index",
+    "sr-contact-card": "/components/ui/sr-contact-card/index",
+    "privacy-popup": "/components/privacy-popup/index",
+    "sr-park-header": "/components/ui/sr-park-header/index",
+    "sr-tabbar": "/components/ui/sr-tabbar/index"
+  },
   "sitemapLocation": "sitemap.json",
   "style": "v2",
   "lazyCodeLoading": "requiredComponents",

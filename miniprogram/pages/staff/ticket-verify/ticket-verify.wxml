@@ -1,0 +1,50 @@
+<view class="sr-page sr-enter">
+  <block wx:if="{{checked && !allowed}}">
+    <sr-empty-state icon="help" title="无检票权限"
+                    desc="请用前台 / 溪降 / 管理员身份在「员工模式」登记" />
+  </block>
+
+  <block wx:if="{{allowed}}">
+    <view class="who">
+      <text class="who__name">{{staffName}}</text>
+      <text class="who__role">{{role === 'creek' ? '溪降检票' : (role === 'front' ? '前台' : '管理员')}}</text>
+    </view>
+
+    <view class="acts">
+      <view class="acts__scan sr-touch" hover-class="sr-touch--cta" hover-stay-time="60" bindtap="onScan">
+        <image class="acts__icon" src="/assets/icons/forest/activity-scan.png" mode="aspectFit" />
+        <text>扫游客入园码</text>
+      </view>
+      <view class="manual">
+        <input class="manual__input" placeholder="或手输票号" value="{{input}}" bindinput="onInput" maxlength="40" />
+        <view class="manual__btn sr-touch" hover-class="sr-touch--press" hover-stay-time="60" bindtap="onManualQuery">查询</view>
+      </view>
+    </view>
+
+    <view class="err" wx:if="{{errorMsg}}">
+      <image class="err__icon" src="/assets/icons/status/status-warning.png" mode="aspectFit" />
+      <text class="err__text">{{errorMsg}}</text>
+    </view>
+
+    <view class="tk" wx:if="{{ticket}}">
+      <view class="tk__row"><text class="tk__k">票种</text><text class="tk__v">{{ticket.productName}}</text></view>
+      <view class="tk__row"><text class="tk__k">票号</text><text class="tk__v sr-num">{{ticket.ticketNo}}</text></view>
+      <view class="tk__row" wx:if="{{ticket.total > 1}}"><text class="tk__k">序号</text><text class="tk__v sr-num">{{ticket.seq}} / {{ticket.total}}</text></view>
+      <view class="tk__row" wx:if="{{ticket.visitDate}}"><text class="tk__k">使用日期</text><text class="tk__v">{{ticket.visitDate}}</text></view>
+      <view class="tk__row"><text class="tk__k">状态</text><text class="tk__v tk__v--{{ticket.status}}">{{ticket.status}}</text></view>
+
+      <view class="tk__ok" wx:if="{{verified}}">
+        <image class="tk__ok-icon" src="/assets/icons/status/status-success.png" mode="aspectFit" />
+        <text>已核销</text>
+      </view>
+
+      <view class="tk__btn {{submitting ? 'tk__btn--off' : ''}}" wx:if="{{canVerify && !verified}}" bindtap="onConfirm">
+        {{submitting ? '处理中…' : '确认核销'}}
+      </view>
+      <view class="tk__reset" bindtap="onReset">扫下一张</view>
+    </view>
+  </block>
+
+  <!-- 隐私授权弹窗：调用相册/摄像头等接口前由微信触发 -->
+  <privacy-popup />
+</view>

@@ -1,0 +1,10 @@
+<view class="sh sh--{{theme}}">
+  <view class="sh__left">
+    <view class="sh__bar"></view>
+    <text class="sh__title">{{title}}</text>
+  </view>
+  <view class="sh__right" wx:if="{{extra || icon}}" bindtap="onExtra">
+    <text class="sh__extra" wx:if="{{extra}}">{{extra}}</text>
+    <sr-icon wx:if="{{icon}}" name="{{icon}}" theme="{{theme}}" size="sm" />
+  </view>
+</view>

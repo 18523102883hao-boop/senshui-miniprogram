@@ -7,10 +7,14 @@ const db = cloud.database()
 
 const COLLECTIONS = [
   'users', 'members', 'coupons', 'orders', 'products',
-  'ling_accounts', 'ling_ledger', 'activities', 'notices',
+  'ling_accounts', 'ling_ledger', 'ling_daily_quotas', 'activities', 'notices',
   'staff', 'verifications',
   // 下一阶段（溪降）/ V2（商城）预建
-  'sessions', 'bookings', 'rentals'
+  'sessions', 'bookings', 'rentals',
+  // 本轮功能扩展（PRD §17 数据模型）
+  'home_configs', 'articles', 'ticket_products', 'tickets',
+  'visit_reservations', 'feedback', 'itineraries',
+  'invoice_requests'
 ]
 
 async function ensureCollection(name) {
@@ -33,14 +37,19 @@ exports.main = async (event) => {
     const now = new Date()
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
     try {
-      await db.collection('activities').add({
-        data: { name: '钓小龙虾擂台', category: 'ling', time: '14:00', location: '溪畔', date: today, rewardLing: 30, joinLing: 10, enabled: true, createdAt: now }
-      })
-      await db.collection('activities').add({
-        data: { name: '摸鱼捉螃蟹', category: 'ling', time: '10:30', location: '滩涂营地', date: today, rewardLing: 20, joinLing: 0, enabled: true, createdAt: now }
-      })
+      // 种子活动必须与首页/长河令页的固定日程一致，避免旧测试数据回流覆盖前端文案
+      const seedActivities = [
+        { name: '侠客滩捕鱼', time: '13:00', location: '侠客滩' },
+        { name: '侠客打擂乐园', time: '14:20', location: '打擂台' },
+        { name: '海鲜大拍卖', time: '17:00', location: '主舞台' }
+      ]
+      for (const a of seedActivities) {
+        await db.collection('activities').add({
+          data: Object.assign({}, a, { category: 'ling', date: today, rewardLing: 0, joinLing: 0, enabled: true, createdAt: now })
+        })
+      }
       await db.collection('notices').add({
-        data: { type: 'home', content: '欢迎来到森水长河 · 本周六「海鲜盛宴大拍卖」18:00 擂台见', enabled: true, createdAt: now }
+        data: { type: 'home', content: '欢迎来到森水长河 · 今日 17:00「海鲜大拍卖」主舞台见', enabled: true, createdAt: now }
       })
       
       // 溪降场次种子数据（今日 + 明日）

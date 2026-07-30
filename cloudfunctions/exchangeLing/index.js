@@ -6,10 +6,11 @@ cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV })
 const db = cloud.database()
 const _ = db.command
 const crypto = require('crypto')
+const quotaCore = require('./quota-core.js')
 
 const SECRET = process.env.MEMBER_QR_SECRET || 'sr-dev-secret-change-me'
 const TTL = 90
-const MAX_AMOUNT = 1000000 // 单笔上限（令），不限额但防误输极端值
+const MAX_AMOUNT = 10000
 
 async function requireStaff(openid) {
   const r = await db.collection('staff').where({ _openid: openid, status: 'approved' }).limit(1).get()
@@ -44,6 +45,24 @@ async function resolveOpenid(input) {
   return { openid: m.data[0]._openid }
 }
 
+function isMissingDocumentError(error) {
+  const text = `${error && error.errCode || ''} ${error && error.message || ''}`
+  return (
+    (error && error.errCode === -1) ||
+    /not[\s_-]*(exist|found)|document.*不存在|DATABASE_DOCUMENT_NOT_FOUND/i.test(text)
+  )
+}
+
+async function getQuotaRecord(collection, docId) {
+  try {
+    const result = await collection.doc(docId).get()
+    return result && result.data ? result.data : null
+  } catch (error) {
+    if (isMissingDocumentError(error)) return null
+    throw error
+  }
+}
+
 exports.main = async (event) => {
   const { OPENID } = cloud.getWXContext()
   const staff = await requireStaff(OPENID)
@@ -60,14 +79,43 @@ exports.main = async (event) => {
 
   try {
     let newBalance
+    let quotaSnapshot
     await db.runTransaction(async (t) => {
       const accCol = t.collection('ling_accounts')
       const exist = await accCol.where({ _openid: uOpenid }).limit(1).get()
       const cur = exist.data.length ? exist.data[0].balance : 0
       const now = new Date()
+      const dayKey = quotaCore.beijingDayKey(now)
+      const quotaId = quotaCore.dailyQuotaDocId(uOpenid, dayKey)
+      const quotaCol = t.collection('ling_daily_quotas')
+      const quotaRecord = await getQuotaRecord(quotaCol, quotaId)
+      const used = quotaRecord ? Number(quotaRecord.total) || 0 : 0
+      const quota = quotaCore.evaluateDailyQuota({
+        role: staff.role,
+        direction,
+        used,
+        amount
+      })
+
+      if (!quota.allowed) {
+        throw new Error(
+          `该客户今日实体转电子额度不足：${staff.role === 'admin' ? '管理员' : '普通员工'}上限 ${quota.limit} 令，已用 ${quota.used} 令，剩余 ${quota.remaining} 令`
+        )
+      }
 
       if (direction === 'p2d') {
         newBalance = cur + amount
+        await quotaCol.doc(quotaId).set({
+          data: {
+            userOpenid: uOpenid,
+            dayKey,
+            total: quota.nextUsed,
+            lastRole: staff.role,
+            lastStaffOpenid: OPENID,
+            createdAt: quotaRecord && quotaRecord.createdAt ? quotaRecord.createdAt : now,
+            updatedAt: now
+          }
+        })
         if (exist.data.length) {
           await accCol.doc(exist.data[0]._id).update({ data: { balance: _.inc(amount), updatedAt: now } })
         } else {
@@ -90,8 +138,15 @@ exports.main = async (event) => {
           createdAt: now
         }
       })
+
+      quotaSnapshot = {
+        dailyLimit: quota.limit,
+        dailyUsed: quota.nextUsed,
+        dailyRemaining: quota.remaining,
+        dayKey
+      }
     })
-    return { code: 0, msg: 'ok', data: { balance: newBalance } }
+    return { code: 0, msg: 'ok', data: Object.assign({ balance: newBalance }, quotaSnapshot) }
   } catch (e) {
     return { code: 409, msg: e.message || '兑换失败' }
   }

@@ -21,3 +21,6 @@
 .coupon--used .coupon__status, .coupon--expired .coupon__status { color: var(--sr-text-weak); }
 
 .empty { text-align: center; color: var(--sr-text-weak); font-size: 26rpx; padding: 120rpx 60rpx; line-height: 1.8; }
+
+/* 常驻底部导航避让 */
+.sr-page { padding-bottom: calc(150rpx + env(safe-area-inset-bottom)) !important; }

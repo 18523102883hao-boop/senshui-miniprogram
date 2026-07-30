@@ -682,6 +682,74 @@
   line-height: 1.55;
 }
 
+.quantity-panel {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 112rpx;
+  margin-top: 22rpx;
+  padding: 8rpx 8rpx 8rpx 24rpx;
+  border: 1rpx solid var(--sr-border);
+  border-radius: var(--sr-radius-sm);
+  background: var(--sr-primary-weak);
+  box-sizing: border-box;
+}
+
+.quantity-panel__copy {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  flex-direction: column;
+  padding-right: 16rpx;
+}
+
+.quantity-panel__label {
+  color: var(--sr-text);
+  font-size: 27rpx;
+  font-weight: 700;
+}
+
+.quantity-panel__desc {
+  margin-top: 4rpx;
+  color: var(--upgrade-muted);
+  font-size: 21rpx;
+}
+
+.quantity-stepper {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  overflow: hidden;
+  border: 1rpx solid var(--sr-border);
+  border-radius: 44rpx;
+  background: var(--sr-bg-card);
+}
+
+.quantity-stepper__button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 88rpx;
+  height: 88rpx;
+  color: var(--sr-primary);
+  font-size: 40rpx;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.quantity-stepper__button--disabled {
+  color: var(--sr-text-weak);
+  opacity: 0.42;
+}
+
+.quantity-stepper__value {
+  min-width: 48rpx;
+  color: var(--sr-text);
+  font-size: 31rpx;
+  font-weight: 750;
+  text-align: center;
+}
+
 .sheet__price {
   display: flex;
   align-items: flex-end;
@@ -714,6 +782,17 @@
   font-size: 60rpx;
   font-weight: 850;
   line-height: 1;
+}
+
+.sheet__ticket-notice {
+  display: block;
+  margin: -2rpx 0 24rpx;
+  padding: 18rpx 22rpx;
+  border-radius: var(--sr-radius-sm);
+  color: var(--sr-text-sub);
+  background: var(--sr-bg-sunken);
+  font-size: 24rpx;
+  line-height: 1.55;
 }
 
 .staff-disclosure {
@@ -819,3 +898,6 @@
   line-height: 1.55;
   text-align: center;
 }
+
+/* 常驻底部导航避让 */
+.sr-page { padding-bottom: calc(150rpx + env(safe-area-inset-bottom)) !important; }

@@ -1,0 +1,91 @@
+<view class="sr-page sr-enter">
+  <view class="cache-tip" wx:if="{{fromCache}}">
+    <text>当前为离线缓存内容，联网后可重新加载</text>
+  </view>
+
+  <sr-skeleton wx:if="{{loading}}" type="card" rows="3" />
+
+  <block wx:if="{{article && !loading}}">
+    <!-- 结构化区块渲染：类型白名单在 detail.js，未知类型已被丢弃 -->
+    <block wx:for="{{blocks}}" wx:key="index" wx:for-index="index">
+
+      <view class="b-hero" wx:if="{{item.type === 'hero'}}">
+        <view class="b-hero__glow"></view>
+        <text class="b-hero__title">{{item.data.title}}</text>
+        <text class="b-hero__sub" wx:if="{{item.data.subtitle}}">{{item.data.subtitle}}</text>
+      </view>
+
+      <text class="b-text" wx:elif="{{item.type === 'text'}}">{{item.data.text}}</text>
+
+      <view class="b-image" wx:elif="{{item.type === 'image'}}">
+        <image class="b-image__img" src="{{item.data.fileId}}" mode="widthFix" />
+        <text class="b-image__cap" wx:if="{{item.data.caption}}">{{item.data.caption}}</text>
+      </view>
+
+      <view class="b-gallery" wx:elif="{{item.type === 'gallery'}}">
+        <image class="b-gallery__img" wx:for="{{item.data.fileIds}}" wx:key="*this" wx:for-item="fid"
+               src="{{fid}}" mode="aspectFill" />
+      </view>
+
+      <view class="b-list sr-card" wx:elif="{{item.type === 'list'}}">
+        <text class="b-list__title" wx:if="{{item.data.title}}">{{item.data.title}}</text>
+        <view class="b-list__item" wx:for="{{item.data.items}}" wx:key="*this" wx:for-item="li">
+          <view class="b-list__dot"></view>
+          <text class="b-list__text">{{li}}</text>
+        </view>
+      </view>
+
+      <view class="b-notice" wx:elif="{{item.type === 'notice'}}">
+        <image class="b-notice__icon" src="/assets/icons/status/status-warning.png" mode="aspectFit" />
+        <text class="b-notice__text">{{item.data.text}}</text>
+      </view>
+
+      <view class="b-grid" wx:elif="{{item.type === 'feature_grid'}}">
+        <view class="b-grid__cell" wx:for="{{item.data.items}}" wx:key="title" wx:for-item="cell">
+          <text class="b-grid__title">{{cell.title}}</text>
+          <text class="b-grid__desc">{{cell.desc}}</text>
+        </view>
+      </view>
+
+      <view class="b-svc sr-card" wx:elif="{{item.type === 'service_list'}}">
+        <view class="b-svc__row" wx:for="{{item.data.items}}" wx:key="title" wx:for-item="row">
+          <text class="b-svc__title">{{row.title}}</text>
+          <text class="b-svc__desc">{{row.desc}}</text>
+        </view>
+      </view>
+
+      <view class="b-tl sr-card" wx:elif="{{item.type === 'timeline'}}">
+        <view class="b-tl__item" wx:for="{{item.data.items}}" wx:key="title" wx:for-item="node">
+          <view class="b-tl__dot"></view>
+          <view class="b-tl__body">
+            <text class="b-tl__time" wx:if="{{node.time}}">{{node.time}}</text>
+            <text class="b-tl__title">{{node.title}}</text>
+            <text class="b-tl__desc" wx:if="{{node.desc}}">{{node.desc}}</text>
+          </view>
+        </view>
+      </view>
+
+      <view class="b-faq sr-card" wx:elif="{{item.type === 'faq'}}">
+        <view class="b-faq__item" wx:for="{{item.data.items}}" wx:key="q" wx:for-item="qa">
+          <text class="b-faq__q">Q · {{qa.q}}</text>
+          <text class="b-faq__a">{{qa.a}}</text>
+        </view>
+      </view>
+
+      <view class="b-cta sr-touch" wx:elif="{{item.type === 'cta'}}"
+            hover-class="sr-touch--cta" hover-stay-time="60"
+            data-index="{{index}}" bindtap="onCtaTap">
+        <text>{{item.data.text}}</text>
+        <text class="b-cta__arrow">›</text>
+      </view>
+
+    </block>
+
+    <view class="tail">内容由森水长河运营维护，实际以现场公示为准。</view>
+  </block>
+
+  <sr-error-state wx:if="{{hasError && !loading}}" bind:retry="onRetry" />
+
+  <!-- 常驻底部导航：二级页面也能直接切 Tab -->
+  <sr-tabbar theme="light" />
+</view>

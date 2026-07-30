@@ -1,0 +1,33 @@
+.svc-page { padding-bottom: calc(40rpx + env(safe-area-inset-bottom)); }
+.hero {
+  position: relative; overflow: hidden;
+  background: linear-gradient(135deg, var(--sr-primary) 0%, #173628 100%);
+  border-radius: var(--sr-radius-lg); padding: 44rpx 40rpx; margin-bottom: 28rpx;
+}
+.hero__glow { position: absolute; right: -60rpx; top: -80rpx; width: 300rpx; height: 300rpx; border-radius: 50%;
+  background: radial-gradient(circle, rgba(213,164,58,0.28) 0%, rgba(213,164,58,0) 70%); }
+.hero__title { position: relative; display: block; font-size: 42rpx; font-weight: 800; color: #F7F3EA; }
+.hero__intro { position: relative; display: block; font-size: 24rpx; color: rgba(247,243,234,0.78); margin-top: 16rpx; line-height: 1.7; }
+
+.pt { display: flex; align-items: flex-start; padding: 12rpx 0; }
+.pt__dot { width: 12rpx; height: 12rpx; border-radius: 50%; background: var(--sr-seal); margin: 14rpx 18rpx 0 0; flex-shrink: 0; }
+.pt__text { flex: 1; font-size: 26rpx; color: var(--sr-text-sub); line-height: 1.7; }
+
+.b-text { display: block; font-size: 27rpx; color: var(--sr-text); line-height: 1.8; margin-bottom: 24rpx; }
+.b-list { margin-bottom: 24rpx; }
+.b-list__title { display: block; font-size: 28rpx; font-weight: 700; color: var(--sr-text); margin-bottom: 12rpx; }
+.b-grid { display: flex; flex-wrap: wrap; justify-content: space-between; margin-bottom: 24rpx; }
+.b-grid__cell { width: 48.5%; box-sizing: border-box; background: var(--sr-bg-card); border-radius: var(--sr-radius);
+  box-shadow: var(--sr-shadow); padding: 26rpx 24rpx; margin-bottom: 20rpx; }
+.b-grid__title { display: block; font-size: 27rpx; font-weight: 700; color: var(--sr-text); }
+.b-grid__desc { display: block; font-size: 22rpx; color: var(--sr-text-weak); margin-top: 8rpx; line-height: 1.6; }
+.b-notice { background: rgba(240,112,85,0.1); border-left: 6rpx solid var(--sr-seal); border-radius: var(--sr-radius-sm);
+  padding: 24rpx 26rpx; margin-bottom: 24rpx; font-size: 25rpx; color: var(--sr-text); line-height: 1.7; }
+
+.tail { font-size: 21rpx; color: var(--sr-text-weak); text-align: center; padding: 20rpx 0 24rpx; }
+
+/* 常驻底部导航避让。
+   底部操作栏已移除（业主 2026-07-26：联系方式统一由 sr-contact-card 承载，
+   底部再放一条「加顾问微信」是重复），因此这里只需给 sr-tabbar 留位，
+   不再叠加操作栏的那份高度，否则页尾会空出一大片。 */
+.sr-page { padding-bottom: calc(150rpx + env(safe-area-inset-bottom)) !important; }

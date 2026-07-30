@@ -4,6 +4,10 @@ const cloud = require('wx-server-sdk')
 cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV })
 const db = cloud.database()
 const _ = db.command
+const core = require('./booking-core.js')
+
+// 开场前多少分钟截止改签/取消（业务可调）
+const CUTOFF_MINUTES = Number(process.env.BOOKING_CUTOFF_MINUTES || 60)
 
 exports.main = async (event, context) => {
   const { bookingId, newSessionId } = event
@@ -30,6 +34,13 @@ exports.main = async (event, context) => {
     // 3. 状态校验
     if (booking.status !== 'reserved') {
       return { code: 409, msg: '当前状态不可改签' }
+    }
+
+    // 3.5 开场前截止校验：太接近开场不允许改签（PRD §9.5）
+    const oldSessionRes0 = await db.collection('sessions').doc(booking.sessionId).get().catch(() => null)
+    if (oldSessionRes0 && oldSessionRes0.data) {
+      const cut = core.checkCutoff(oldSessionRes0.data, new Date(), CUTOFF_MINUTES)
+      if (!cut.ok) return { code: 409, msg: cut.msg }
     }
 
     // 4. 改签次数校验

@@ -18,4 +18,7 @@
     <text class="tip">· 想换回实体令：出示此码，工作人员核减电子令后发放等量实体令。</text>
     <text class="tip">· 令码每分钟刷新，仅本人当面出示有效，截图无效。</text>
   </view>
+
+  <!-- 常驻底部导航：二级页面也能直接切 Tab -->
+  <sr-tabbar theme="dark" />
 </view>

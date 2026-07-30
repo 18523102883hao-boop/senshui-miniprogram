@@ -1,0 +1,6 @@
+<view class="qr qr--{{theme}}" wx:if="{{enabled}}">
+  <text class="qr__title">{{title || label}}</text>
+  <image class="qr__img" src="{{url}}" mode="aspectFit" bindtap="onPreview" show-menu-by-longpress />
+  <text class="qr__desc">{{desc}}</text>
+  <text class="qr__fallback" wx:if="{{fallback}}">由园区管家统一对接</text>
+</view>

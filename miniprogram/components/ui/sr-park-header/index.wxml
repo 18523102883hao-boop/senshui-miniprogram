@@ -1,0 +1,38 @@
+<view class="ph">
+  <view class="ph__glow"></view>
+
+  <!-- 品牌 + 导航 -->
+  <view class="ph__top">
+    <view class="ph__brand">
+      <text class="ph__name">{{parkName}}</text>
+      <text class="ph__tagline">{{tagline}}</text>
+    </view>
+    <view class="ph__nav sr-touch" hover-class="sr-touch--cta" hover-stay-time="60" bindtap="onNavigate">
+      <sr-icon name="map-navigation" theme="light" size="md" />
+      <text class="ph__navtext">{{canNavigate ? '导航' : '地址'}}</text>
+    </view>
+  </view>
+
+  <!-- 营地与溪降分别标注（两者时间不同，合并会误导） -->
+  <view class="ph__hours">
+    <view class="ph__hour {{item.state === 'open' ? 'is-open' : ''}} {{item.state === 'partial' ? 'is-partial' : ''}}" wx:for="{{status.items}}" wx:key="key">
+      <text class="ph__hour-label">{{item.label}}</text>
+      <text class="ph__hour-range sr-num">{{item.range}}</text>
+      <text class="ph__hour-state">{{item.text}}</text>
+    </view>
+  </view>
+
+  <!-- 地址 -->
+  <view class="ph__row" wx:if="{{address}}">
+    <sr-icon name="map-info" theme="light" size="sm" invert />
+    <text class="ph__rowtext">{{address}}</text>
+  </view>
+
+  <!-- 会员条（非会员才推） -->
+  <view class="ph__member sr-touch" wx:if="{{showMember}}"
+        hover-class="sr-touch--press" hover-stay-time="60" bindtap="onMember">
+    <text class="ph__badge">{{memberBadge}}</text>
+    <text class="ph__memtext">9.9 元开会员卡 · 1000 长河令 + 生日 85 折</text>
+    <text class="ph__memcta">立即开卡 ›</text>
+  </view>
+</view>

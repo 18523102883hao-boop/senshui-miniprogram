@@ -1,0 +1,21 @@
+<view class="sk sk--{{theme}}">
+  <block wx:if="{{type === 'list'}}">
+    <view class="sk__row" wx:for="{{items}}" wx:key="*this">
+      <view class="sk__thumb sk__b"></view>
+      <view class="sk__lines">
+        <view class="sk__line sk__b" style="width:60%"></view>
+        <view class="sk__line sk__b" style="width:90%"></view>
+      </view>
+    </view>
+  </block>
+  <block wx:elif="{{type === 'article'}}">
+    <view class="sk__title sk__b"></view>
+    <view class="sk__line sk__b" wx:for="{{items}}" wx:key="*this" style="width:{{index % 3 === 2 ? '70%' : '100%'}}"></view>
+  </block>
+  <block wx:elif="{{type === 'form'}}">
+    <view class="sk__field sk__b" wx:for="{{items}}" wx:key="*this"></view>
+  </block>
+  <block wx:else>
+    <view class="sk__card sk__b" wx:for="{{items}}" wx:key="*this"></view>
+  </block>
+</view>

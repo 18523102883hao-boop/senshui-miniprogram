@@ -1,12 +1,41 @@
-.chan { display: flex; align-items: center; justify-content: space-between; padding: 24rpx 0; border-bottom: 1rpx solid var(--sr-line); }
-.chan:last-child { border-bottom: none; }
-.chan__info { display: flex; flex-direction: column; }
-.chan__name { font-size: 30rpx; color: var(--sr-text); font-weight: 600; }
-.chan__desc { font-size: 24rpx; color: var(--sr-text-sub); margin-top: 4rpx; }
-.chan__action { font-size: 26rpx; color: var(--sr-primary); }
+/* 门票中心 · 列表 */
+.cats { white-space: nowrap; margin-bottom: 24rpx; }
+.cat {
+  display: inline-block; vertical-align: top;
+  padding: 14rpx 32rpx; margin-right: 16rpx;
+  font-size: 26rpx; color: var(--sr-text-sub);
+  background: var(--sr-bg-card); border-radius: 32rpx; box-shadow: var(--sr-shadow);
+}
+.cat--on { background: var(--sr-primary); color: #fff; font-weight: 600; }
 
-.price { display: flex; align-items: center; justify-content: space-between; padding: 18rpx 0; }
-.price__name { font-size: 28rpx; color: var(--sr-text); }
-.price__val { font-size: 26rpx; color: var(--sr-seal); }
 
-.note { font-size: 26rpx; color: var(--sr-text-sub); line-height: 1.8; }
+.plist { display: flex; flex-direction: column; }
+.pcard {
+  background: var(--sr-bg-card); border-radius: var(--sr-radius);
+  box-shadow: var(--sr-shadow); margin-bottom: 24rpx; overflow: hidden;
+}
+.pcard__cover { width: 100%; height: 300rpx; display: block; background: var(--sr-bg-sunken); }
+.pcard__body { padding: 28rpx 32rpx 26rpx; }
+.pcard__name { display: block; font-size: 32rpx; font-weight: 700; color: var(--sr-text); }
+.pcard__audience { display: block; font-size: 23rpx; color: var(--sr-text-sub); margin-top: 8rpx; }
+
+.pcard__tags { display: flex; flex-wrap: wrap; margin-top: 16rpx; }
+.tag {
+  font-size: 20rpx; color: var(--sr-primary); background: var(--sr-primary-weak);
+  padding: 6rpx 16rpx; border-radius: 8rpx; margin-right: 12rpx; margin-bottom: 8rpx;
+}
+.pcard__benefits { display: flex; flex-wrap: wrap; margin-top: 12rpx; }
+.ben { font-size: 21rpx; color: var(--sr-text-weak); margin-right: 18rpx; margin-bottom: 6rpx; }
+
+.pcard__foot { display: flex; align-items: flex-end; justify-content: space-between; margin-top: 20rpx; }
+.pcard__price { display: flex; align-items: baseline; }
+.pcard__cur { font-size: 24rpx; color: var(--sr-seal); font-weight: 700; }
+.pcard__num { font-size: 46rpx; font-weight: 800; color: var(--sr-seal); line-height: 1; }
+.pcard__market { font-size: 22rpx; color: var(--sr-text-weak); text-decoration: line-through; margin-left: 14rpx; }
+.pcard__cta {
+  font-size: 26rpx; font-weight: 700; color: #fff; background: var(--sr-primary);
+  padding: 14rpx 30rpx; border-radius: 34rpx;
+}
+
+/* 常驻底部导航避让 */
+.sr-page { padding-bottom: calc(150rpx + env(safe-area-inset-bottom)) !important; }

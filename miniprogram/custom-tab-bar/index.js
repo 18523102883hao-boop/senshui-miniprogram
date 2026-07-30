@@ -12,21 +12,28 @@ Component({
         text: '向导',
         icon: '/assets/icons/tabbar/tab-guide-default.png',
         iconActive: '/assets/icons/tabbar/tab-guide-active.png',
-        iconDark: '/assets/icons/ivory/map-compass.png'
+        iconDark: '/assets/icons/tabbar/tab-guide-dark-default.png'
+      },
+      {
+        pagePath: '/pages/park/park',
+        text: '园区',
+        icon: '/assets/icons/tabbar/tab-park-default.png',
+        iconActive: '/assets/icons/tabbar/tab-park-active.png',
+        iconDark: '/assets/icons/tabbar/tab-park-dark.png'
       },
       {
         pagePath: '/pages/ling/ling',
         text: '长河令',
         icon: '/assets/icons/tabbar/tab-token-default.png',
         iconActive: '/assets/icons/tabbar/tab-token-active.png',
-        iconDark: '/assets/icons/ivory/activity-token.png'
+        iconDark: '/assets/icons/tabbar/tab-token-dark-active.png'
       },
       {
         pagePath: '/pages/mine/mine',
         text: '我的',
         icon: '/assets/icons/tabbar/tab-mine-default.png',
         iconActive: '/assets/icons/tabbar/tab-mine-active.png',
-        iconDark: '/assets/icons/ivory/mine-profile.png'
+        iconDark: '/assets/icons/tabbar/tab-mine-dark-default.png'
       }
     ]
   },

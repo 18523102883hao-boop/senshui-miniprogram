@@ -18,3 +18,6 @@
 .card__qr-canvas { width: 320rpx; height: 320rpx; }
 .card__qr-tip { font-size: 24rpx; color: var(--sr-text); font-weight: 600; margin-top: 20rpx; }
 .card__qr-sub { font-size: 22rpx; color: var(--sr-text-weak); margin-top: 6rpx; }
+
+/* 常驻底部导航避让 */
+.sr-page { padding-bottom: calc(150rpx + env(safe-area-inset-bottom)) !important; }

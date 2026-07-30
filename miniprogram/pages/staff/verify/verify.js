@@ -56,9 +56,37 @@ Page({
 
   doVerify(e) {
     const type = e.currentTarget.dataset.type
-    if (this.data.busy) return
+    if (this.data.busy) return Promise.resolve()
+    if (type === 'birthday') {
+      return this.confirmBirthdayIdentity()
+        .then((confirmed) => {
+          if (!confirmed) return null
+          return this.submitVerification(type, true)
+        })
+    }
+    return this.submitVerification(type, false)
+  },
+
+  confirmBirthdayIdentity() {
+    return new Promise((resolve) => {
+      wx.showModal({
+        title: '核对本人身份证',
+        content: '请客户出示本人身份证，并确认是持卡本人、证件生日与会员生日一致。',
+        confirmText: '已核对',
+        cancelText: '暂不核销',
+        success: (result) => resolve(Boolean(result.confirm)),
+        fail: () => resolve(false)
+      })
+    })
+  },
+
+  submitVerification(type, identityChecked) {
     this.setData({ busy: true })
-    request.callWithLoading('verifyBenefit', { memberCode: this.data.memberCode, benefitType: type }, '核销中')
+    return request.callWithLoading('verifyBenefit', {
+      memberCode: this.data.memberCode,
+      benefitType: type,
+      identityChecked
+    }, '核销中')
       .then(() => {
         wx.showToast({ title: '核销成功', icon: 'success' })
         return this.reload()

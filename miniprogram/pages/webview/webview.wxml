@@ -1,0 +1,15 @@
+<web-view wx:if="{{url && !failed}}" src="{{url}}" binderror="onLoadError" />
+
+<!-- 打不开时不要只说「打不开」——给一条能立刻走通的路。 -->
+<view class="fail" wx:if="{{failed}}">
+  <view class="fail__iconbox">
+    <sr-icon name="home-activity" theme="light" size="lg" />
+  </view>
+  <text class="fail__title">在微信里打开{{displayTitle}}</text>
+  <text class="fail__desc">复制链接后，在微信任意聊天窗口粘贴即可打开</text>
+  <view class="fail__btn sr-touch" hover-class="sr-touch--cta" hover-stay-time="60" bindtap="copyUrl">复制链接</view>
+  <view class="fail__alt sr-touch" hover-class="sr-touch--press" hover-stay-time="60" bindtap="goConcierge">
+    <sr-icon name="customer-service" theme="light" size="sm" />
+    <text>问管家</text>
+  </view>
+</view>

@@ -1,4 +1,8 @@
 {
   "navigationBarTitleText": "员工模式",
+  "navigationBarBackgroundColor": "#101512",
+  "navigationBarTextStyle": "white",
+  "backgroundColor": "#101512",
+  "enablePullDownRefresh": true,
   "usingComponents": {}
 }

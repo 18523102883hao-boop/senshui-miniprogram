@@ -6,6 +6,7 @@ const cloud = require('wx-server-sdk')
 cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV })
 const db = cloud.database()
 const _ = db.command
+const verificationCore = require('./verification-core.js')
 
 async function requireStaff(openid) {
   const r = await db.collection('staff').where({ _openid: openid, status: 'approved' }).limit(1).get()
@@ -30,7 +31,16 @@ async function grantLing(t, openid, amount, memberCode, staff) {
     await col.add({ data: { _openid: openid, balance: amount, createdAt: now, updatedAt: now } })
   }
   await t.collection('ling_ledger').add({
-    data: { _openid: openid, change: amount, type: 'member_grant', memo: '会员卡赠送', memberCode, staffName: staff.name, createdAt: now }
+    data: {
+      _openid: openid,
+      change: amount,
+      type: 'member_grant',
+      memo: '会员卡赠送',
+      memberCode,
+      staffName: staff.name,
+      staffOpenid: staff._openid,
+      createdAt: now
+    }
   })
 }
 
@@ -43,6 +53,8 @@ exports.main = async (event) => {
   // 1) 员工权限
   const staff = await requireStaff(OPENID)
   if (!staff) return { code: 403, msg: '无核销权限' }
+  const identityCheck = verificationCore.validateIdentityCheck(benefitType, event.identityChecked)
+  if (!identityCheck.ok) return { code: 400, msg: identityCheck.message }
 
   // 2) 定位会员卡 + 前置校验
   const memRes = await db.collection('members').where({ memberCode }).limit(1).get()
@@ -81,6 +93,7 @@ exports.main = async (event) => {
           userOpenid: member._openid,
           staffOpenid: OPENID,
           staffName: staff.name,
+          identityChecked: benefitType === 'birthday' ? true : false,
           createdAt: now
         }
       })

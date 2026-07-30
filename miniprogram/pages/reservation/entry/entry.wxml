@@ -1,0 +1,23 @@
+<view class="sr-page sr-enter">
+  <view class="head">
+    <text class="head__title">团队到园预约</text>
+    <text class="head__sub">公司团建、学校研学、亲友聚会都可安排。加管家微信或直接来电，由工作人员为你登记与确认。</text>
+  </view>
+
+  <!-- 唯一路径：加企微 / 打电话（自助表单已取消，避免漏单） -->
+  <sr-contact-card scene="{{contactScene}}"
+                   title="加管家微信，直接沟通"
+                   desc="人数、日期、餐食与活动安排，一次说清" />
+
+  <!-- 可安排的场景说明 -->
+  <sr-section-header title="可以安排什么" />
+  <view class="scene" wx:for="{{scenes}}" wx:key="key">
+    <text class="scene__title">{{item.title}}</text>
+    <text class="scene__desc">{{item.desc}}</text>
+  </view>
+
+  <view class="tail">团队预约由管家统一登记确认，确认前请勿安排车辆与行程。</view>
+
+  <!-- 常驻底部导航：二级页面也能直接切 Tab -->
+  <sr-tabbar theme="light" />
+</view>

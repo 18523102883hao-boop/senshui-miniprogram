@@ -1,0 +1,242 @@
+.operations-page {
+  padding-bottom: calc(var(--sr-gap-8) + env(safe-area-inset-bottom));
+}
+
+.hero-card,
+.today-card,
+.primary-entry,
+.secondary-card {
+  border-radius: var(--sr-radius-lg);
+  box-shadow: var(--sr-shadow);
+}
+
+.hero-card {
+  padding: var(--sr-gap-4);
+  background: var(--sr-primary-deep);
+  color: var(--sr-text-invert);
+}
+
+.hero-card__kicker,
+.hero-card__title,
+.hero-card__note,
+.hero-card__time,
+.money-metric__label,
+.money-metric__value,
+.income-definition,
+.admission-strip__label,
+.admission-strip__value,
+.primary-entry__eyebrow,
+.primary-entry__title,
+.primary-entry__desc,
+.secondary-card__title,
+.secondary-card__value,
+.secondary-card__desc,
+.risk-note__title,
+.risk-note__desc {
+  display: block;
+}
+
+.hero-card__kicker {
+  color: var(--sr-primary-light);
+  font-size: 20rpx;
+  font-weight: 750;
+  letter-spacing: 2rpx;
+}
+
+.hero-card__title {
+  margin-top: var(--sr-gap-1);
+  font-size: 40rpx;
+  font-weight: 780;
+}
+
+.hero-card__note,
+.hero-card__time {
+  margin-top: var(--sr-gap-2);
+  color: var(--sr-text-invert);
+  font-size: 21rpx;
+  opacity: .68;
+}
+
+.today-card {
+  margin-top: var(--sr-gap-3);
+  padding: var(--sr-gap-4);
+  background: var(--sr-bg-card);
+}
+
+.today-card__head,
+.money-grid,
+.admission-strip,
+.primary-entry,
+.secondary-grid {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.today-card__title {
+  color: var(--sr-text);
+  font-size: 29rpx;
+  font-weight: 750;
+}
+
+.today-card__meta,
+.money-metric__label,
+.admission-strip__label {
+  color: var(--sr-text-weak);
+  font-size: 20rpx;
+}
+
+.money-grid {
+  margin-top: var(--sr-gap-4);
+}
+
+.money-metric {
+  min-width: 30%;
+}
+
+.money-metric__value {
+  margin-top: 4rpx;
+  color: var(--sr-text);
+  font-size: 31rpx;
+  font-weight: 760;
+}
+
+.income-definition {
+  margin-top: var(--sr-gap-3);
+  color: var(--sr-text-weak);
+  font-size: 20rpx;
+  line-height: 1.55;
+}
+
+.admission-strip {
+  margin-top: var(--sr-gap-4);
+  padding: var(--sr-gap-3);
+  border-radius: var(--sr-radius);
+  background: var(--sr-primary-weak);
+}
+
+.admission-strip > view {
+  flex: 1;
+}
+
+.admission-strip__value {
+  margin-top: 4rpx;
+  color: var(--sr-primary-deep);
+  font-size: 28rpx;
+  font-weight: 760;
+}
+
+.admission-strip__value--warn {
+  color: var(--sr-warning);
+}
+
+.risk-note,
+.limit-note {
+  margin-top: var(--sr-gap-3);
+  padding: var(--sr-gap-3);
+  border-radius: var(--sr-radius);
+  background: var(--sr-bg-sunken);
+  color: var(--sr-warning);
+}
+
+.risk-note__title {
+  font-size: 24rpx;
+  font-weight: 720;
+}
+
+.risk-note__desc,
+.limit-note {
+  margin-top: 4rpx;
+  font-size: 21rpx;
+}
+
+.section-title {
+  padding: var(--sr-gap-5) var(--sr-gap-1) var(--sr-gap-2);
+  color: var(--sr-text);
+  font-size: 30rpx;
+  font-weight: 750;
+}
+
+.primary-entry {
+  min-height: 166rpx;
+  box-sizing: border-box;
+  margin-bottom: var(--sr-gap-3);
+  padding: var(--sr-gap-4);
+  background: var(--sr-bg-card);
+}
+
+.primary-entry--finance {
+  background: var(--sr-primary-weak);
+}
+
+.primary-entry--business {
+  background: var(--sr-bg-card);
+}
+
+.primary-entry__body {
+  min-width: 0;
+  flex: 1;
+}
+
+.primary-entry__summary {
+  display: flex;
+  gap: var(--sr-gap-3);
+  margin-top: var(--sr-gap-2);
+  color: var(--sr-primary);
+  font-size: 20rpx;
+  font-weight: 680;
+}
+
+.primary-entry__eyebrow {
+  color: var(--sr-primary);
+  font-size: 19rpx;
+  font-weight: 720;
+  letter-spacing: 2rpx;
+}
+
+.primary-entry__title {
+  margin-top: 4rpx;
+  color: var(--sr-text);
+  font-size: 32rpx;
+  font-weight: 760;
+}
+
+.primary-entry__desc {
+  margin-top: 4rpx;
+  color: var(--sr-text-weak);
+  font-size: 21rpx;
+}
+
+.primary-entry__arrow {
+  color: var(--sr-primary);
+  font-size: 48rpx;
+}
+
+.secondary-grid {
+  align-items: stretch;
+}
+
+.secondary-card {
+  width: calc(50% - var(--sr-gap-2) / 2);
+  box-sizing: border-box;
+  padding: var(--sr-gap-3);
+  background: var(--sr-bg-card);
+}
+
+.secondary-card__title {
+  color: var(--sr-text-sub);
+  font-size: 22rpx;
+}
+
+.secondary-card__value {
+  margin-top: var(--sr-gap-2);
+  color: var(--sr-primary-deep);
+  font-size: 34rpx;
+  font-weight: 760;
+}
+
+.secondary-card__desc {
+  margin-top: 4rpx;
+  color: var(--sr-text-weak);
+  font-size: 19rpx;
+}

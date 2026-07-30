@@ -22,7 +22,10 @@ Page({
     npcSchedule: [
       { id: 'n1', name: '长河大侠巡游', time: '11:00 / 16:00', route: '主街 → 营地' }
     ],
-    preview: null // 长按兑换预览 { name, cost }
+    preview: null, // 长按兑换预览 { name, cost }
+    // 余额加载态：避免"0 令"与"没加载出来"混淆（弱网时尤其重要）
+    balanceLoading: true,
+    balanceError: false
   },
 
   onLoad() {
@@ -32,7 +35,7 @@ Page({
   onShow() {
     this.loadMyLing()
     if (typeof this.getTabBar === 'function' && this.getTabBar()) {
-      this.getTabBar().setData({ selected: 1, theme: 'dark' })
+      this.getTabBar().setData({ selected: 2, theme: 'dark' })
     }
   },
 
@@ -50,9 +53,16 @@ Page({
 
   loadMyLing() {
     // 会员卡发放的令先记电子账（ling_accounts），未登录/未开卡则为 0
-    request.call('getLingBalance', {})
-      .then((d) => this.setData({ myLing: (d && d.balance) || 0 }))
-      .catch(() => {})
+    this.setData({ balanceLoading: true, balanceError: false })
+    return request.call('getLingBalance', {})
+      .then((d) => this.setData({ myLing: (d && d.balance) || 0, balanceLoading: false, balanceError: false }))
+      // 失败不能静默：0 令与加载失败必须能区分，否则用户以为令没了
+      .catch(() => this.setData({ balanceLoading: false, balanceError: true }))
+  },
+
+  onRetryBalance() {
+    haptic('light')
+    return this.loadMyLing()
   },
 
   goMycode() {

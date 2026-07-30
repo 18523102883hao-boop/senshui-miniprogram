@@ -4,6 +4,10 @@ const cloud = require('wx-server-sdk')
 cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV })
 const db = cloud.database()
 const _ = db.command
+const core = require('./booking-core.js')
+
+// 开场前多少分钟截止取消（业务可调）
+const CUTOFF_MINUTES = Number(process.env.BOOKING_CUTOFF_MINUTES || 60)
 
 exports.main = async (event, context) => {
   const { bookingId } = event
@@ -32,6 +36,13 @@ exports.main = async (event, context) => {
       return { code: 409, msg: '当前状态不可取消' }
     }
 
+    // 3.5 开场前截止校验：太接近开场不允许取消（PRD §9.5）
+    const sessionRes = await db.collection('sessions').doc(booking.sessionId).get().catch(() => null)
+    if (sessionRes && sessionRes.data) {
+      const cut = core.checkCutoff(sessionRes.data, new Date(), CUTOFF_MINUTES)
+      if (!cut.ok) return { code: 409, msg: cut.msg }
+    }
+
     // 4. 更新预约状态
     await db.collection('bookings')
       .doc(bookingId)
@@ -41,6 +52,14 @@ exports.main = async (event, context) => {
           updatedAt: new Date()
         }
       })
+
+    // 取消后释放占用的小程序票，让它能再次用于预约
+    if (booking.ticketRef && booking.ticketRef.source === 'native' && booking.ticketRef.ticketNo) {
+      await db.collection('tickets')
+        .where({ ticketNo: booking.ticketRef.ticketNo, status: 'reserved' })
+        .update({ data: { status: 'unused', updatedAt: new Date() } })
+        .catch(() => {})
+    }
 
     // 5. 释放场次名额
     await db.collection('sessions')

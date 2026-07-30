@@ -1,0 +1,8 @@
+.sh { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24rpx; }
+.sh__left { display: flex; align-items: center; }
+.sh__bar { width: 6rpx; height: 30rpx; border-radius: 4rpx; background: var(--sr-seal); margin-right: 14rpx; }
+.sh__title { font-size: 34rpx; font-weight: 650; color: var(--sr-text); }
+.sh__right { display: flex; align-items: center; }
+.sh__extra { font-size: 24rpx; color: var(--sr-text-sub); margin-right: 6rpx; }
+.sh--dark .sh__title { color: var(--sr-dark-text); }
+.sh--dark .sh__extra { color: var(--sr-dark-muted); }

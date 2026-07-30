@@ -1,0 +1,3 @@
+<image wx:if="{{src}}" class="sr-ico {{invert ? 'sr-ico--invert' : ''}}"
+       style="width:{{sizeRpx}}rpx;height:{{sizeRpx}}rpx;"
+       src="{{src}}" mode="aspectFit" />

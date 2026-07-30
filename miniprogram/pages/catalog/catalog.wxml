@@ -4,7 +4,7 @@
     <view class="tabs">
       <view wx:for="{{sections}}" wx:key="key"
             class="tab sr-touch {{activeKey === item.key ? 'tab--on' : ''}}"
-            hover-class="sr-touch--press" hover-stay-time="60"
+            hover-class="sr-touch--card" hover-stay-time="60"
             data-key="{{item.key}}" bindtap="switchTab">
         <image class="tab__icon" src="{{item.iconPath}}" mode="aspectFit" />
         <text class="tab__text">{{item.title}}</text>
@@ -56,7 +56,22 @@
     </view>
   </block>
 
-  <!-- 加载 / 空态 -->
-  <view wx:if="{{!loaded}}" class="state">加载中…</view>
-  <view wx:if="{{loaded && !sections.length}}" class="state">目录整备中，敬请期待。</view>
+  <!-- 下单与咨询：看完价目直接找工作人员（酒水可送到营位） -->
+  <block wx:if="{{!loading && !hasError && sections.length}}">
+    <sr-section-header title="下单与咨询" />
+    <sr-contact-card scene="concierge"
+                     title="加管家微信下单"
+                     desc="酒水与小卖部商品可送到营位，租赁按现场库存安排" />
+  </block>
+
+  <sr-skeleton wx:if="{{loading}}" type="card" rows="3" />
+
+  <sr-empty-state wx:if="{{isEmpty && !loading && !hasError}}"
+                  icon="home-store" title="目录整备中"
+                  desc="酒水、小卖部与租赁价目稍后上线，可先咨询管家" />
+
+  <sr-error-state wx:if="{{hasError && !loading}}" bind:retry="onRetry" />
+
+  <!-- 常驻底部导航：二级页面也能直接切 Tab -->
+  <sr-tabbar theme="light" />
 </view>

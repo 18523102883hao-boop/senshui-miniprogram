@@ -1,0 +1,143 @@
+<view class="sr-page bill-detail-page sr-enter">
+  <view class="bill-head">
+    <text class="bill-head__eyebrow">BUSINESS LEDGER</text>
+    <text class="bill-head__title">账单详情</text>
+    <text class="bill-head__range sr-num">{{rangeText}}</text>
+    <text class="bill-head__note">收入按核销确认；支付与退款作为资金流水单独核对</text>
+  </view>
+
+  <view class="detail-tabs" aria-label="账单统计、账单明细">
+    <view class="detail-tab {{tab === item.key ? 'detail-tab--on' : ''}} sr-touch"
+          wx:for="{{tabs}}" wx:key="key" data-tab="{{item.key}}"
+          hover-class="sr-touch--press" hover-stay-time="60" bindtap="onTabTap">
+      {{item.label}}
+    </view>
+  </view>
+
+  <sr-skeleton wx:if="{{loading}}" type="card" rows="4" />
+  <sr-empty-state wx:if="{{loaded && denied}}"
+                  icon="help" title="无账单详情访问权限"
+                  desc="支付、退款和异常信息仅管理员可以查看" />
+  <sr-error-state wx:if="{{loaded && hasError && !loading}}" bind:retry="onRetry" />
+  <view class="limit-note" wx:if="{{truncated}}">
+    当前范围数据已截断，请缩小日期范围。
+  </view>
+
+  <block wx:if="{{loaded && !loading && !denied && !hasError && tab === 'summary' && summary}}">
+    <view class="summary-card">
+      <text class="summary-card__label">实际净收入</text>
+      <text class="summary-card__value sr-num">¥{{summary.finance.actualNetIncomeText}}</text>
+      <view class="summary-card__grid">
+        <view>
+          <text>订单收入</text>
+          <text class="sr-num">¥{{summary.finance.orderIncomeText}}</text>
+          <text class="sr-num">{{summary.finance.orderIncomeCount || 0}} 笔未核销</text>
+        </view>
+        <view>
+          <text>支付金额</text>
+          <text class="sr-num">¥{{summary.finance.grossText}}</text>
+          <text class="sr-num">{{summary.finance.paidCount || 0}} 笔</text>
+        </view>
+        <view>
+          <text>退款金额</text>
+          <text class="sr-num">¥{{summary.finance.refundsText}}</text>
+          <text class="sr-num">{{summary.finance.refundCount || 0}} 笔</text>
+        </view>
+        <view>
+          <text>资金流水净额</text>
+          <text class="sr-num">¥{{summary.finance.netText}}</text>
+          <text class="sr-num">支付减退款</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="section-title">实际净收入构成</view>
+    <view class="breakdown-card" wx:if="{{summary.incomeBreakdown.length}}">
+      <view class="breakdown-row" wx:for="{{summary.incomeBreakdown}}" wx:key="key">
+        <view>
+          <text class="breakdown-row__label">{{item.label}}</text>
+          <text class="breakdown-row__count sr-num">{{item.count}} 笔</text>
+        </view>
+        <text class="breakdown-row__amount sr-num">¥{{item.amountText}}</text>
+      </view>
+    </view>
+    <sr-empty-state wx:if="{{!summary.incomeBreakdown.length}}"
+                    icon="mine-orders" title="当前范围没有实际净收入"
+                    desc="只有已完成门票核销的票面金额才在此确认" />
+
+    <view class="section-title" wx:if="{{summary.anomalies.total}}">异常事项</view>
+    <view class="anomaly-card sr-touch" wx:for="{{summary.anomalies.list}}" wx:key="reference"
+          data-order-no="{{item.orderTradeNo}}" hover-class="sr-touch--card"
+          hover-stay-time="60" bindtap="onAnomalyTap">
+      <view>
+        <text class="anomaly-card__title">{{item.label}}</text>
+        <text class="anomaly-card__ref sr-num">{{item.reference}} · {{item.timeText}}</text>
+      </view>
+      <text class="anomaly-card__arrow">›</text>
+    </view>
+  </block>
+
+  <block wx:if="{{tab === 'details' && !denied}}">
+    <view class="filter-card">
+      <view class="event-tabs" aria-label="全部收支、支付、退款">
+        <view class="event-tab {{eventKind === item.key ? 'event-tab--on' : ''}} sr-touch"
+              wx:for="{{eventKinds}}" wx:key="key" data-kind="{{item.key}}"
+              hover-class="sr-touch--press" hover-stay-time="60" bindtap="onEventKindTap">
+          {{item.label}}
+        </view>
+      </view>
+      <view class="picker-row">
+        <picker mode="selector" range="{{subtypeOptions}}" range-key="label"
+                value="{{subtypeIndex}}" bindchange="onSubtypeChange">
+          <text>订单类型</text>
+          <text>{{subtypeOptions[subtypeIndex].label}} ›</text>
+        </picker>
+        <picker mode="selector" range="{{staffOptions}}" range-key="staffName"
+                value="{{staffIndex}}" bindchange="onStaffChange">
+          <text>经办员工</text>
+          <text>{{staffOptions[staffIndex].staffName}} ›</text>
+        </picker>
+      </view>
+      <view class="search-row">
+        <input value="{{keyword}}" maxlength="40" confirm-type="search"
+               placeholder="订单号、商品、员工或手机尾号"
+               bindinput="onKeywordInput" bindconfirm="onSearchConfirm" />
+        <text class="search-row__reset" bindtap="onResetFilters">重置</text>
+      </view>
+    </view>
+
+    <view class="fund-card sr-touch" wx:for="{{list}}" wx:key="reference"
+          data-order-no="{{item.orderTradeNo}}" hover-class="sr-touch--card"
+          hover-stay-time="60" bindtap="onDetailTap">
+      <view class="fund-card__head">
+        <text class="fund-card__type">{{item.eventKind === 'refund' ? '退款' : '支付'}} · {{item.subtypeLabel}}</text>
+        <text class="fund-card__time sr-num">{{item.timeText}}</text>
+      </view>
+      <text class="fund-card__title">{{item.title}}</text>
+      <view class="fund-card__foot">
+        <view>
+          <text class="fund-card__order sr-num">{{item.orderTradeNo}}</text>
+          <text class="fund-card__staff">{{item.staffName}}{{item.phoneTail ? ' · 手机尾号 ' + item.phoneTail : ''}}</text>
+        </view>
+        <text class="fund-card__amount fund-card__amount--{{item.eventKind}} sr-num">
+          {{item.eventKind === 'refund' ? '−' : ''}}¥{{item.amountText}} ›
+        </text>
+      </view>
+    </view>
+
+    <view class="loading-more" wx:if="{{loadingMore}}">正在加载更多…</view>
+    <view class="loading-more" wx:elif="{{loaded && list.length && !hasMore}}">
+      已显示全部 {{total}} 条记录
+    </view>
+    <sr-empty-state wx:if="{{loaded && !loading && !hasError && !list.length}}"
+                    icon="mine-orders" title="没有符合条件的账单明细"
+                    desc="更换收支类型、订单类型、员工或清空关键词"
+                    actionText="重置筛选" bind:action="onResetFilters" />
+
+    <button class="sr-btn sr-btn--ghost export-button"
+            disabled="{{exporting}}" bindtap="onExport">
+      {{exporting ? '整理数据中…' : '复制当前筛选 CSV'}}
+    </button>
+    <text class="export-note">手机号只保留后四位，复制后可粘贴到 Excel。</text>
+  </block>
+</view>

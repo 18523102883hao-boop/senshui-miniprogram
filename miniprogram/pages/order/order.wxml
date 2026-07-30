@@ -1,6 +1,52 @@
-<view class="sr-page">
-  <view class="soon">
-    <text class="soon__title">营地点单 · 秋季开放</text>
-    <text class="soon__desc">小卖部租售、森水酒吧送营位，敬请期待</text>
+<view class="sr-page sr-enter">
+  <view class="tabs">
+    <view class="tab {{tab === item.key ? 'tab--on' : ''}}"
+          wx:for="{{tabs}}" wx:key="key" data-key="{{item.key}}" bindtap="onTabTap">{{item.title}}</view>
   </view>
+
+  <sr-skeleton wx:if="{{loading}}" type="card" rows="3" />
+
+  <view class="ord" wx:if="{{!loading && list.length}}" wx:for="{{list}}" wx:key="orderId">
+    <view class="ord__head">
+      <text class="ord__type">{{item.typeText}}</text>
+      <text class="ord__status ord__status--{{item.status}}">{{item.statusText}}</text>
+    </view>
+    <view class="ord__body">
+      <text class="ord__title">{{item.title}}</text>
+      <text class="ord__sub" wx:if="{{item.subtitle}}">{{item.subtitle}}</text>
+    </view>
+    <view class="ord__foot">
+      <view class="ord__price">
+        <text class="ord__cur">¥</text>
+        <text class="ord__amount sr-num">{{item.amountText}}</text>
+      </view>
+      <view class="ord__acts">
+        <view class="ord__btn ord__btn--cancel sr-touch {{cancellingNo === item.outTradeNo ? 'is-busy' : ''}}"
+              wx:if="{{item.canCancel}}"
+              hover-class="sr-touch--press" hover-stay-time="60"
+              data-no="{{item.outTradeNo}}" catchtap="onCancelOrder">{{cancellingNo === item.outTradeNo ? '取消中' : '取消订单'}}</view>
+        <view class="ord__btn ord__btn--pay sr-touch {{paying ? 'is-busy' : ''}}" wx:if="{{item.canPay}}"
+              hover-class="sr-touch--cta" hover-stay-time="60"
+              data-no="{{item.outTradeNo}}" data-type="{{item.type}}" catchtap="onPay">{{paying ? '处理中' : '继续支付'}}</view>
+        <view class="ord__btn sr-touch" wx:if="{{item.canRefund}}"
+              hover-class="sr-touch--press" hover-stay-time="60"
+              data-no="{{item.outTradeNo}}" catchtap="onRefund">申请退款</view>
+        <view class="ord__btn ord__btn--invoice sr-touch" wx:if="{{item.invoiceActionText}}"
+              hover-class="sr-touch--press" hover-stay-time="60"
+              data-no="{{item.outTradeNo}}" data-target="{{item.invoiceTarget}}"
+              catchtap="onInvoice">{{item.invoiceActionText}}</view>
+      </view>
+    </view>
+    <text class="ord__no sr-num">订单号 {{item.outTradeNo}}</text>
+  </view>
+
+  <sr-empty-state wx:if="{{isEmpty && !loading && !hasError}}"
+                  icon="mine-orders" title="还没有订单"
+                  desc="购票、开卡与补差价的记录都会显示在这里"
+                  actionText="去看看门票" bind:action="goBuy" />
+
+  <sr-error-state wx:if="{{hasError && !loading}}" bind:retry="onRetry" />
+
+  <!-- 常驻底部导航：二级页面也能直接切 Tab -->
+  <sr-tabbar theme="light" />
 </view>

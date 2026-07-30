@@ -1,0 +1,80 @@
+<view class="sr-page sr-page--tab sr-enter">
+  <!-- 1. 今日营业：营地与溪降时间不同，必须分列，否则客人会按溪降时间理解整个园区 -->
+  <view class="hours">
+    <text class="hours__date">{{todayText}}</text>
+    <view class="hours__list">
+      <text class="hours__item {{item.state === 'open' ? 'is-open' : ''}} {{item.state === 'partial' ? 'is-partial' : ''}}"
+            wx:for="{{hours}}" wx:key="key">{{item.label}} {{item.range}}</text>
+    </view>
+  </view>
+  <text class="hours__note" wx:if="{{campNote}}">{{campNote}}</text>
+
+  <!-- 2. 园区地图：园内最高频，点开看大图找路（业主 2026-07-26 要求前置） -->
+  <sr-section-header title="园区地图" extra="点击看大图" />
+  <view class="maps">
+    <view class="mapc sr-touch" hover-class="sr-touch--card" hover-stay-time="60" data-key="camp" bindtap="openMap">
+      <image src="{{campMapUrl || '/images/map-camp.jpg'}}" mode="aspectFill" class="mapc__img" />
+      <view class="mapc__label"><sr-icon name="map-campsite" theme="light" size="sm" /><text>营地游览图</text></view>
+    </view>
+    <view class="mapc sr-touch" hover-class="sr-touch--card" hover-stay-time="60" data-key="creek" bindtap="openMap">
+      <image src="{{creekMapUrl || '/images/map-creek.jpg'}}" mode="aspectFill" class="mapc__img" />
+      <view class="mapc__label"><sr-icon name="map-stream-descent" theme="light" size="sm" /><text>溪降游览图</text></view>
+    </view>
+  </view>
+
+  <!-- 3. 现场服务：在园区里能用到的东西 -->
+  <sr-section-header title="现场服务" />
+  <view class="svc-grid">
+    <view class="svc sr-touch" hover-class="sr-touch--card" hover-stay-time="60"
+          wx:for="{{services}}" wx:key="key" data-key="{{item.key}}" bindtap="onServiceTap">
+      <view class="svc__iconbox"><image class="svc__icon" src="{{item.iconPath}}" mode="aspectFit" /></view>
+      <view class="svc__body">
+        <text class="svc__title">{{item.title}}</text>
+        <text class="svc__desc">{{item.desc}}</text>
+      </view>
+      <sr-icon name="chevron-right" theme="light" size="sm" />
+    </view>
+  </view>
+
+  <!-- 4. 园区活动：只列玩法名称。
+       每日场次时间与内容都在变，写死时间会让客人白等，所以提示条必须显眼且排在列表之前 -->
+  <sr-section-header title="园区活动" />
+  <view class="acts">
+    <view class="acts__notice">
+      <sr-icon name="booking-safety" theme="light" size="sm" />
+      <text class="acts__notice-text">{{activityDisclaimer}}</text>
+    </view>
+    <view class="acts__list">
+      <view class="acts__item" wx:for="{{activities}}" wx:key="id">
+        <view class="acts__dot"></view>
+        <text class="acts__name">{{item.name}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 5. 到园与求助：还没到的人导航，到了的人找人 -->
+  <view class="help">
+    <view class="help__btn sr-touch" hover-class="sr-touch--press" hover-stay-time="60" bindtap="onNavigate">
+      <sr-icon name="map-navigation" theme="light" size="md" />
+      <text>{{canNavigate ? '导航到园区' : '复制园区地址'}}</text>
+    </view>
+    <view class="help__btn sr-touch" hover-class="sr-touch--press" hover-stay-time="60" bindtap="onCallFront">
+      <sr-icon name="mine-phone" theme="light" size="md" />
+      <text>联系前台 {{frontPhone}}</text>
+    </view>
+  </view>
+
+  <!-- 全屏地图查看（双指缩放 + 拖动） -->
+  <view class="map-viewer" wx:if="{{mapViewer}}">
+    <movable-area class="mv-area" scale-area>
+      <movable-view class="mv-view" direction="all" scale scale-min="1" scale-max="4" scale-value="1"
+                    style="width:{{mapViewW}}px;height:{{mapViewH}}px;">
+        <image src="{{mapViewer}}" style="width:{{mapViewW}}px;height:{{mapViewH}}px;" mode="scaleToFill" />
+      </movable-view>
+    </movable-area>
+    <view class="mv-hint">双指缩放查看 · 拖动移动</view>
+    <view class="map-viewer__close sr-touch" hover-class="sr-touch--press" hover-stay-time="60" bindtap="closeMapViewer">
+      <sr-icon name="close" theme="light" size="sm" invert />
+    </view>
+  </view>
+</view>

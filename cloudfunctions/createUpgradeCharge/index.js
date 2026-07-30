@@ -5,10 +5,10 @@
 //   ③ 收款单 staffOpenid 由 getWXContext().OPENID 写入 → 员工归属不可篡改
 //   ④ 生成小程序码（云调用 wxacode.getUnlimited），scene 带 chargeId，客户扫码进支付页
 const cloud = require('wx-server-sdk')
+const chargeCore = require('./charge-core.js')
 cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV })
 const db = cloud.database()
 
-const MAX_AMOUNT = 1000000        // 单笔上限 100 万分（1 万元），防手输多打一个 0
 const CHARGE_TTL = 30 * 60 * 1000 // pending 收款单有效期 30 分钟
 const PAY_PAGE = 'pages/pay/upgrade/upgrade'
 // 小程序码指向的版本：正式版填 'release'；体验版调试填 'trial'；开发版填 'develop'
@@ -30,24 +30,23 @@ exports.main = async (event) => {
   if (!['front', 'admin'].includes(staff.role)) return { code: 403, msg: '当前角色无收款权限' }
 
   // 2) 确定金额与项目（金额一律由云端决定）
-  let amount, itemId = null, itemLabel = ''
+  let charge
   if (event.itemId) {
     // 预设升级项：从 notices.upgradeList 查价，杜绝前端篡改价格
     const cfg = await db.collection('notices').where({ type: 'ticket_config' }).limit(1).get()
     const list = (cfg.data[0] && cfg.data[0].upgradeList) || []
     const item = list.find(i => i.id === event.itemId && i.enabled !== false)
-    if (!item || !Number.isInteger(item.price)) return { code: 404, msg: '升级项不存在或已下架' }
-    amount = item.price
-    itemId = item.id
-    itemLabel = item.label || '票种升级'
+    if (!item) return { code: 404, msg: '升级项不存在或已下架' }
+    charge = chargeCore.resolveCharge({ item, quantity: event.quantity })
   } else {
     // 手输金额兜底
-    amount = parseInt(event.amount, 10)
-    itemLabel = String(event.itemLabel || '票种升级').slice(0, 40)
+    charge = chargeCore.resolveCharge({
+      amount: event.amount,
+      itemLabel: event.itemLabel
+    })
   }
-  if (!Number.isInteger(amount) || amount <= 0 || amount > MAX_AMOUNT) {
-    return { code: 400, msg: '金额不合法（1 分 ~ 1 万元）' }
-  }
+  if (!charge.ok) return { code: 400, msg: charge.msg }
+  const { amount, unitPrice, quantity, itemId, itemLabel } = charge
 
   // 3) 建 pending 收款单
   const outTradeNo = genOutTradeNo()
@@ -65,6 +64,8 @@ exports.main = async (event) => {
       payerOpenid: '',
       itemId,
       itemLabel,
+      unitPrice,
+      quantity,
       _openid: OPENID,
       createdAt: now,
       updatedAt: now,
@@ -89,5 +90,18 @@ exports.main = async (event) => {
     console.error('[createUpgradeCharge] wxacode 失败', e && (e.errMsg || e.message))
   }
 
-  return { code: 0, msg: 'ok', data: { chargeId, outTradeNo, amount, itemLabel, qrBase64, expireAt } }
+  return {
+    code: 0,
+    msg: 'ok',
+    data: {
+      chargeId,
+      outTradeNo,
+      amount,
+      unitPrice,
+      quantity,
+      itemLabel,
+      qrBase64,
+      expireAt
+    }
+  }
 }

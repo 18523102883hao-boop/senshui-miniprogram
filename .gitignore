@@ -13,7 +13,9 @@ miniprogram/miniprogram_npm/
 ._*
 .AppleDouble
 .LSOverride
-Icon?
+# macOS 自定义文件夹图标（文件名是 "Icon" + 回车符）
+# 注意：不能写成 Icon?，macOS 大小写不敏感会把 assets/icons 整个目录一起忽略
+Icon[\r]
 *.icloud
 .iCloud/
 .Trashes
@@ -30,6 +32,15 @@ Icon?
 .scratch/
 tmp/
 *.log
+# 已废弃的保险业务域名校验文件，仅保留在本机备查
+FXQhW5hIws.txt
 
 # 参考截图（计划要求不入库）
 设计方法/长河落日圆参考图/
+
+# UI 交付包（图标全集，仅作取图来源，不参与打包）
+森水长河_Vibe_UI交付包_v1.0/
+森水长河_Vibe_UI交付包_v2.0/
+森水长河_透明PNG图标包_v2.0/
+*.zip
+菜单图标/

@@ -1,0 +1,44 @@
+.co-page { padding-bottom: calc(180rpx + env(safe-area-inset-bottom)); }
+
+.sum { display: flex; align-items: center; }
+.sum__cover { width: 160rpx; height: 120rpx; border-radius: var(--sr-radius-sm); background: var(--sr-bg-sunken); flex-shrink: 0; }
+.sum__body { flex: 1; display: flex; flex-direction: column; margin-left: 24rpx; min-width: 0; }
+.sum__name { font-size: 30rpx; font-weight: 700; color: var(--sr-text); }
+.sum__audience { font-size: 22rpx; color: var(--sr-text-sub); margin-top: 8rpx; }
+.sum__price { display: flex; align-items: baseline; margin-top: 12rpx; }
+.sum__cur { font-size: 22rpx; color: var(--sr-seal); font-weight: 700; }
+.sum__num { font-size: 36rpx; font-weight: 800; color: var(--sr-seal); line-height: 1; }
+
+.row { display: flex; align-items: center; justify-content: space-between; padding: 20rpx 0; }
+.row__label { font-size: 28rpx; color: var(--sr-text); flex-shrink: 0; }
+.row__value { font-size: 27rpx; color: var(--sr-text-sub); }
+.row__input { flex: 1; text-align: right; font-size: 27rpx; color: var(--sr-text); }
+.row__hint { display: block; font-size: 21rpx; color: var(--sr-text-weak); }
+
+.stepper { display: flex; align-items: center; }
+.stepper__btn {
+  width: 64rpx; height: 64rpx;
+  /* 内容是 <sr-icon>（image，块级），line-height/text-align 对它无效——
+     必须用 flex 居中，否则图标在圆里偏上 */
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 50%; background: var(--sr-bg-sunken);
+  color: var(--sr-text);
+}
+.stepper__btn--off { color: var(--sr-text-weak); opacity: 0.5; }
+.stepper__val { min-width: 88rpx; text-align: center; margin: 0 4rpx; font-size: 32rpx; font-weight: 700; color: var(--sr-text); }
+
+.para { display: block; font-size: 24rpx; color: var(--sr-text-sub); line-height: 1.7; margin-top: 10rpx; }
+
+.bar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 50;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18rpx 28rpx calc(18rpx + env(safe-area-inset-bottom));
+  background: var(--sr-bg-card); box-shadow: 0 -4rpx 24rpx rgba(0, 0, 0, 0.06);
+}
+.bar__total { display: flex; align-items: baseline; }
+.bar__label { font-size: 24rpx; color: var(--sr-text-sub); margin-right: 12rpx; }
+.bar__cur { font-size: 24rpx; color: var(--sr-seal); font-weight: 700; }
+.bar__num { font-size: 46rpx; font-weight: 800; color: var(--sr-seal); line-height: 1; }
+.bar__cta { padding: 24rpx 64rpx; border-radius: 44rpx; background: var(--sr-primary); color: #fff; font-size: 30rpx; font-weight: 700; }
+.bar__cta--off { opacity: 0.6; }
+

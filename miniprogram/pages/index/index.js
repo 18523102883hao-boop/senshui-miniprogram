@@ -1,36 +1,188 @@
-// 首页 · 向导（T05 / T25 Vibe UI）
-// 数据来源：notices 集合（公告/地图）；今日活动为前端固定日程。
+// 首页 · 游客服务门户（T05 / T25 Vibe UI / 功能扩展 Task 3）
+// 模块顺序、可配置性与降级策略见 PRD §7。
+// 数据链路：getHomePortal（新）→ getHomeData（旧，兼容未部署新函数的环境）→ 本地默认配置。
 const request = require('../../utils/request.js')
+const env = require('../../env.js')
+const externalLink = require('../../utils/external-link.js')
 const { haptic } = require('../../utils/haptics.js')
+const { makePhoneCall } = require('../../utils/util.js')
+const { resolveHomeState } = require('../../utils/home-state.js')
+
+// 本地默认门户配置：弱网、云函数未部署或云端无配置时使用，保证首页永不白屏。
+// ⚠️ key 与 sort 必须与 cloudfunctions/seedPortalContent/seed-data.js 的 DEFAULT_SECTIONS 对应。
+const LOCAL_SECTIONS = [
+  { key: 'hero', type: 'hero', title: '森水长河', subtitle: '峡谷溪降 · 山野露营 · 长河令江湖', route: '', params: {}, visible: true, sort: 10 },
+  // 园区介绍 / 精彩活动都直接跳公众号文章，不再进二级列表（业主 2026-07-26）
+  { key: 'quick_park_intro', type: 'quick_entry', title: '园区介绍', subtitle: '图文详解', route: 'external:article', params: { url: env.links.parkIntroArticle, title: '园区介绍' }, visible: true, sort: 20 },
+  { key: 'quick_activities', type: 'quick_entry', title: '精彩活动', subtitle: '图文详解', route: 'external:article', params: { url: env.links.activitiesArticle, title: '精彩活动' }, visible: true, sort: 30 },
+  { key: 'quick_guide', type: 'quick_entry', title: '入园攻略', subtitle: '交通与装备', route: '/pages/guide/guide', params: {}, visible: true, sort: 40 },
+  { key: 'quick_concierge', type: 'quick_entry', title: '管家服务', subtitle: '有人对接', route: '/pages/concierge/concierge', params: {}, visible: true, sort: 50 },
+  { key: 'ticket_entry', type: 'primary_action', title: '门票购买', subtitle: '在线选票 · 入园扫码', route: '/pages/ticket/ticket', params: {}, visible: true, sort: 60 },
+  { key: 'reservation_entry', type: 'primary_action', title: '立即预约', subtitle: '团队到园 · 研学 · 亲友聚会', route: '/pages/reservation/entry/entry', params: {}, visible: true, sort: 70 },
+  { key: 'upgrade_entry', type: 'primary_action', title: '补差价升级', subtitle: '单项票升套票 · 现场办理', route: '/pages/upgrade-info/upgrade-info', params: {}, visible: true, sort: 75 },
+  { key: 'insurance_entry', type: 'primary_action', title: '溪降保险', subtitle: '下水前投保 · 安心体验', route: '/pages/insurance/insurance', params: {}, visible: true, sort: 78 },
+  { key: 'user_status', type: 'user_status', title: '我的行程', subtitle: '未使用门票与即将到来的预约', route: '', params: {}, visible: true, sort: 80 },
+  { key: 'service_birthday', type: 'service_card', title: '生日宴请', subtitle: '在山水间过一个生日', route: '/pages/service/detail/detail', params: { type: 'birthday' }, visible: true, sort: 90 },
+  { key: 'service_teambuilding', type: 'service_card', title: '公司团建', subtitle: '定制行程与场地', route: '/pages/service/detail/detail', params: { type: 'teambuilding' }, visible: true, sort: 100 },
+  { key: 'service_brand', type: 'service_card', title: '品牌合作', subtitle: '场地拍摄与联名活动', route: '/pages/service/detail/detail', params: { type: 'brand' }, visible: true, sort: 110 },
+  { key: 'member_entry', type: 'member', title: '森水会员卡 · 长河令', subtitle: '9.9 元开卡 · 1000 长河令 + 生日 85 折', route: '/pages/member/detail/detail', params: {}, visible: true, sort: 120 },
+  { key: 'today_activities', type: 'activities', title: '今日江湖事', subtitle: '', route: '', params: {}, visible: true, sort: 130 },
+  { key: 'park_map', type: 'map', title: '园区地图', subtitle: '营地图 · 溪降图', route: '', params: {}, visible: true, sort: 140 },
+  { key: 'footer', type: 'footer', title: '联系与帮助', subtitle: '客服电话 · 协议与政策', route: '', params: {}, visible: true, sort: 150 }
+]
+
+// 图标由前端按 key 映射（云端配置只管文案与跳转，换图不必改数据库）
+const SECTION_ICONS = {
+  quick_park_intro: '/assets/icons/forest/map-info.png',
+  quick_activities: '/assets/icons/forest/home-activity.png',
+  quick_guide: '/assets/icons/forest/map-route.png',
+  quick_concierge: '/assets/icons/forest/customer-service.png',
+  ticket_entry: '/assets/icons/forest/home-ticket.png',
+  reservation_entry: '/assets/icons/forest/home-reservation.png',
+  upgrade_entry: '/assets/icons/forest/home-upgrade.png',
+  insurance_entry: '/assets/icons/forest/booking-safety.png',
+  service_birthday: '/assets/icons/forest/activity-reward.png',
+  service_teambuilding: '/assets/icons/forest/booking-people.png',
+  service_brand: '/assets/icons/forest/activity-badge.png',
+  member_entry: '/assets/icons/forest/home-member.png'
+}
+
+// 四大主行动的层级（业主反馈：不用特别标识，靠排版体现轻重缓急）
+// 四张卡统一白底，只用「方卡网格 + 标题色」拉开主次
+const ACTION_STYLE = {
+  ticket_entry: { level: 'primary' },
+  reservation_entry: { level: 'secondary' },
+  upgrade_entry: { level: 'secondary' },
+  insurance_entry: { level: 'secondary' }
+}
+// 云端新增未知主行动时按次卡渲染，保证不会出现没有层级定义的卡片
+const ACTION_STYLE_FALLBACK = { level: 'secondary' }
+
+// 网格跨度：两列排布，落单的最后一张通栏，永远不留半个空位。
+// 3 张 → 方/方/通栏；4 张 → 全方卡；1 张 → 通栏。数量随云端配置变也不会塌。
+function actionSpan(index, total) {
+  return (total % 2 === 1 && index === total - 1) ? 'full' : 'half'
+}
+
+// tabBar 页必须用 switchTab，navigateTo 会直接失败
+const TAB_PAGES = ['/pages/index/index', '/pages/park/park', '/pages/ling/ling', '/pages/mine/mine']
+const FALLBACK_NOTICE = '欢迎来到森水长河 · 入园即入江湖'
+const EMPTY_SUMMARY = { unusedTicketCount: 0, upcomingReservation: null }
+
+// 内容迁移映射（业主 2026-07-26）
+// 园区介绍与精彩活动的内容都搬到了公众号，站内二级列表页对这两个分类不再有内容。
+// 但云端 home_configs 存的还是搬家途中的旧 route，而云端配置会整体覆盖本地兜底
+// （见 applyPortal），所以这里按 key 重定向一次，不必等云端配置同步。
+//
+// 幂等：云端同步到位后这段不会再改变任何东西，可以安全删除。
+const CONTENT_MIGRATED = {
+  quick_park_intro: {
+    route: externalLink.ARTICLE,
+    params: { url: env.links.parkIntroArticle, title: '园区介绍' },
+    subtitle: '图文详解'
+  },
+  quick_activities: {
+    route: externalLink.ARTICLE,
+    params: { url: env.links.activitiesArticle, title: '精彩活动' },
+    subtitle: '图文详解'
+  },
+  // 保险服务商域名无法作为小程序 web-view 业务域名时，改走二维码识别引导页。
+  // 云端旧配置仍是 external:webview，客户端需立即迁移，不能等重新播种。
+  insurance_entry: {
+    route: '/pages/insurance/insurance',
+    params: {},
+    subtitle: '下水前投保 · 安心体验'
+  }
+}
+
+// 这些都是内容搬家途中留下的旧目标，云端配置里可能还是它们：
+//   /pages/content/list/list —— 站内二级列表页，这两个分类的内容已清空
+//   external:channels        —— 视频号跳转，业主 2026-07-26 改用公众号图文
+const STALE_ROUTES = ['/pages/content/list/list', externalLink.CHANNELS, externalLink.WEBVIEW]
+
+function isStaleRoute(route) {
+  if (!route) return true
+  return STALE_ROUTES.some((r) => route.indexOf(r) === 0)
+}
+
+function migrateSection(section) {
+  const next = CONTENT_MIGRATED[section.key]
+  if (!next) return section
+
+  // 已经是同类外链：保留云端的标题与显隐，但**链接以本地为准**。
+  // 换文章要能立刻生效，不该卡在「等云端配置同步」上。
+  if (section.route === next.route) {
+    return Object.assign({}, section, { params: next.params })
+  }
+
+  // 云端配了别的页面（不在过时清单里）就尊重云端，不越权接管
+  if (!isStaleRoute(section.route)) return section
+
+  return Object.assign({}, section, next)
+}
+
+// 旧版 home_configs 没有保险入口。客户端在不覆盖其他云端文案/排序的前提下
+// 自动补齐必需入口，避免必须等运营重新播种配置才能使用。
+function ensureRequiredSections(sections) {
+  const list = Array.isArray(sections) ? sections.slice() : []
+  const insurance = LOCAL_SECTIONS.find((s) => s.key === 'insurance_entry')
+  if (insurance && !list.some((s) => s && s.key === insurance.key)) {
+    list.push(Object.assign({}, insurance, { params: Object.assign({}, insurance.params) }))
+  }
+  return list
+}
+
+// 把扁平的 sections 配置分组成页面可直接渲染的结构
+function groupSections(sections) {
+  const list = ensureRequiredSections(sections)
+    .filter((s) => s && s.visible !== false)
+    .sort((a, b) => (a.sort || 0) - (b.sort || 0))
+    .map(migrateSection)
+    .map((s) => Object.assign({}, s, { params: s.params || {}, icon: SECTION_ICONS[s.key] || '' }))
+
+  const byType = (type) => list.filter((s) => s.type === type)
+  const sectionMap = {}
+  list.forEach((s) => { sectionMap[s.key] = s })
+
+  // 主行动附加视觉标识；云端下发的也会被补齐，避免缺样式
+  const actionList = byType('primary_action')
+  const primaryActions = actionList.map((s, i) => Object.assign(
+    {}, s, ACTION_STYLE[s.key] || ACTION_STYLE_FALLBACK,
+    { span: actionSpan(i, actionList.length) }
+  ))
+
+  return {
+    sections: list,
+    sectionMap,
+    hero: byType('hero')[0] || null,
+    quickEntries: byType('quick_entry'),
+    primaryActions,
+    serviceCards: byType('service_card'),
+    memberSection: byType('member')[0] || null,
+    footerSection: byType('footer')[0] || null,
+    hasUserStatusSection: !!sectionMap.user_status,
+    showActivities: byType('activities').length > 0,
+    showMap: byType('map').length > 0
+  }
+}
 
 Page({
-  data: {
+  data: Object.assign({
     notice: '',
-    // 固定日程（旺季）：前端直接控制，每天稳定显示；如需改活动跟我说
-    activities: [
-      { id: 1, time: '13:00-13:45', name: '侠客滩捕鱼', note: '巡游带客 · 捕鱼' },
-      { id: 2, time: '14:20-15:00', name: '侠客打擂乐园', note: '巡游带客 · 打擂台' },
-      { id: 3, time: '16:00-16:45', name: '侠客滩捕鱼', note: '巡游带客 · 捕鱼' },
-      { id: 4, time: '17:00-17:45', name: '森水长河夺宝大会', note: '巡游 · 拍卖' }
-    ],
-    campMapUrl: '', // 营地游览图云端临时链接（管理员上传后覆盖本地图）
-    creekMapUrl: '', // 溪降游览图云端临时链接
-    mapViewer: '', // 全屏查看的地图 src（空=关闭）
-    mapViewW: 0, // 查看器图片宽（px）
-    mapViewH: 0, // 查看器图片高（px，按原图比例）
-    // 园区指南入口（会员卡在上方独立卡片，见 wxml）
-    quickLinks: [
-      { key: 'catalog', title: '商品与服务', desc: '酒水·小卖部·租赁', icon: '/assets/icons/forest/home-store.png' },
-      { key: 'upgrade', title: '补差价升级', desc: '单项票升套票', icon: '/assets/icons/forest/home-upgrade.png' },
-      { key: 'notice', title: '溪降须知', desc: '开放·安全须知', icon: '/assets/icons/forest/booking-safety.png' }
-    ]
-  },
+    userSummary: EMPTY_SUMMARY,
+    // 状态驱动（阶段4）
+    homeStage: 'first',
+    quickBar: null,
+    showMemberPromo: true,
+    frontPhone: env.frontDeskPhone
+  }, groupSections(LOCAL_SECTIONS)),
 
   onLoad() {
     this.loadData()
   },
 
   onShow() {
+    this.loadData() // 返回首页时刷新票券/预约摘要
     if (typeof this.getTabBar === 'function' && this.getTabBar()) {
       this.getTabBar().setData({ selected: 0, theme: 'light' })
     }
@@ -40,72 +192,111 @@ Page({
     this.loadData().then(() => wx.stopPullDownRefresh())
   },
 
-  // TODO：接入 getHomeData 云函数或直接读集合（见 specs/T05）。失败降级为占位内容。
   loadData() {
-    return request
-      .call('getHomeData', {})
+    return request.call('getHomePortal', {})
+      .then((d) => this.applyPortal(d))
+      .catch(() => this.loadLegacy()) // 新云函数未部署/异常时不影响使用
+  },
+
+  applyPortal(portal) {
+    const d = portal || {}
+    const noticeText = d.notice && typeof d.notice === 'object' ? d.notice.content : d.notice
+    const sections = Array.isArray(d.sections) && d.sections.length ? d.sections : LOCAL_SECTIONS
+    const grouped = groupSections(sections)
+    const summary = d.userSummary || EMPTY_SUMMARY
+    const stateInfo = resolveHomeState(summary)
+    this.setData(Object.assign({}, grouped, {
+      notice: noticeText || FALLBACK_NOTICE,
+      userSummary: summary,
+      // 状态驱动：顶部快捷条与会员推广随用户状态变化
+      homeStage: stateInfo.stage,
+      quickBar: stateInfo.quickBar,
+      // 会员卡模块：非会员才推（已是会员则隐藏开卡卡）
+      showMemberPromo: stateInfo.showMemberPromo && !!grouped.memberSection
+    }))
+  },
+
+  // 旧接口降级：只补公告与地图，入口结构用本地默认配置
+  loadLegacy() {
+    return request.call('getHomeData', {})
       .then((d) => {
-        this.setData({ notice: d.notice || '' })
-        this.loadMaps((d && d.maps) || {})
+        this.setData({ notice: (d && d.notice) || FALLBACK_NOTICE })
       })
-      .catch(() => {
-        this.setData({ notice: '欢迎来到森水长河 · 入园即入江湖' })
-      })
+      .catch(() => this.setData({ notice: FALLBACK_NOTICE }))
   },
 
-  // 地图存云存储 fileID，换成临时链接用于展示与放大预览
-  loadMaps(maps) {
-    const fileList = [maps.camp, maps.creek].filter(Boolean)
-    if (!fileList.length) return
-    wx.cloud.getTempFileURL({ fileList })
-      .then((res) => {
-        const byId = {}
-        ;(res.fileList || []).forEach((f) => { byId[f.fileID] = f.tempFileURL })
-        this.setData({ campMapUrl: byId[maps.camp] || '', creekMapUrl: byId[maps.creek] || '' })
-      })
-      .catch(() => {})
+  buildUrl(route, params) {
+    const p = params || {}
+    const qs = Object.keys(p)
+      .filter((k) => p[k] !== undefined && p[k] !== null && p[k] !== '')
+      .map((k) => encodeURIComponent(k) + '=' + encodeURIComponent(p[k]))
+      .join('&')
+    return qs ? route + '?' + qs : route
   },
 
-  onTapQuick(e) {
-    const key = e.currentTarget.dataset.key
-    const routes = {
-      catalog: '/pages/catalog/catalog',
-      upgrade: '/pages/upgrade-info/upgrade-info',
-      notice: '/pages/creek-notice/creek-notice'
-      // 溪降预约 / 买门票暂不开放，后续恢复：
-      // creek: '/pages/booking/list/list', ticket: '/pages/ticket/ticket'
-    }
-    if (routes[key]) {
-      haptic('light')
-      wx.navigateTo({ url: routes[key] })
-    }
-  },
-
-  goMember() {
+  // 统一跳转：tab 页走 switchTab，未上线页面给出提示而不是静默失败（PRD §7.4）
+  goRoute(route, params) {
+    if (!route) return
     haptic('light')
-    wx.navigateTo({ url: '/pages/member/detail/detail' })
-  },
-
-  // 打开全屏地图查看（云端图优先，否则用本地打包图）；支持双指缩放
-  openMap(e) {
-    const key = e.currentTarget.dataset.key
-    const src = key === 'creek'
-      ? (this.data.creekMapUrl || '/images/map-creek.jpg')
-      : (this.data.campMapUrl || '/images/map-camp.jpg')
-    haptic('light')
-    const winW = (wx.getWindowInfo && wx.getWindowInfo().windowWidth) || 375
-    wx.getImageInfo({
-      src,
-      success: (info) => {
-        const h = Math.round(winW * info.height / info.width)
-        this.setData({ mapViewer: src, mapViewW: winW, mapViewH: h })
-      },
-      fail: () => this.setData({ mapViewer: src, mapViewW: winW, mapViewH: winW })
+    // 公众号文章 / 视频号不走页面路由
+    if (externalLink.open(route, params)) return
+    if (TAB_PAGES.indexOf(route) >= 0) {
+      wx.switchTab({ url: route })
+      return
+    }
+    wx.navigateTo({
+      url: this.buildUrl(route, params),
+      fail: () => wx.showToast({ title: '该功能即将开放', icon: 'none' })
     })
   },
 
-  closeMapViewer() {
-    this.setData({ mapViewer: '', mapViewW: 0, mapViewH: 0 })
+  onSectionTap(e) {
+    const key = e.currentTarget.dataset.key
+    const section = this.data.sectionMap[key]
+    if (!section) return
+    this.goRoute(section.route, section.params)
+  },
+
+  // 状态卡：有票看入园码，有预约看预约详情
+  // 顶部快捷条：有票→入园码，有预约→预约详情
+  // 会员条来自 sr-park-header 组件的事件
+  onMemberTap() {
+    const sec = this.data.sectionMap && this.data.sectionMap.member_entry
+    haptic('light')
+    wx.navigateTo({
+      url: (sec && sec.route) || '/pages/member/detail/detail',
+      fail: () => wx.showToast({ title: '请稍后重试', icon: 'none' })
+    })
+  },
+
+  onQuickBar() {
+    const q = this.data.quickBar
+    if (!q) return
+    haptic('light')
+    const url = q.param ? q.route + '?id=' + encodeURIComponent(q.param) : q.route
+    wx.navigateTo({ url, fail: () => wx.showToast({ title: '请稍后重试', icon: 'none' }) })
+  },
+
+  goMyTickets() {
+    this.goRoute('/pages/ticket/wallet/wallet', {})
+  },
+
+  goMyReservation() {
+    const r = this.data.userSummary.upcomingReservation
+    if (!r) return
+    this.goRoute('/pages/reservation/detail/detail', { id: r.reservationId })
+  },
+
+  callFront() {
+    makePhoneCall(this.data.frontPhone)
+  },
+
+  goPrivacy() {
+    wx.navigateTo({ url: '/pages/legal/privacy/privacy' })
+  },
+
+  goAgreement() {
+    wx.navigateTo({ url: '/pages/legal/agreement/agreement' })
   },
 
   onShareAppMessage() {

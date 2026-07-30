@@ -1,0 +1,10 @@
+{
+  "name": "adminOperationsLedger",
+  "version": "1.0.0",
+  "description": "管理员小程序业务账、核销与长河令运营报表",
+  "main": "index.js",
+  "dependencies": {
+    "exceljs": "^4.4.0",
+    "wx-server-sdk": "4.0.2"
+  }
+}

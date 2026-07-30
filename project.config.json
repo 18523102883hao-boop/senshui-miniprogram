@@ -28,7 +28,16 @@
   "compileType": "miniprogram",
   "simulatorPluginLibVersion": {},
   "packOptions": {
-    "ignore": [],
+    "ignore": [
+      {
+        "type": "glob",
+        "value": "**/.DS_Store"
+      },
+      {
+        "type": "glob",
+        "value": "**/*.js.map"
+      }
+    ],
     "include": []
   },
   "appid": "wx8092c5040e6f9ceb",
